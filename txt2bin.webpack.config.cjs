@@ -1,12 +1,12 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
-/**    ------------------------------------------------------------------
+/**    ----------------------------------------------------------------
+ *     txt2bin.webpack.config.cjs
+ *     ----------------------------------------------------------------
  *     Copyright ©
  *       Pellegrino Prevete
- *         2025, 2026
+ *         2024, 2025, 2026
  * 
  *     All rights reserved
- *     ------------------------------------------------------------------
+ *     ----------------------------------------------------------------
  * 
  *     This program is free software: you can redistribute it and/or
  *     modify it under the terms of the GNU General Public License as
@@ -32,25 +32,37 @@ const
     _path.resolve(
       __dirname);
 const
-  _file_name =
-    "ahsi.js";
+  _input_file_name =
+    `tmcsplit`;
+const
+  _input_file_path =
+    `./${_input_file_name}`;
+const
+  _output_file_name =
+    `${_input_file_name}.js`;
 const
   _output = {
     path:
       _output_dir,
     filename:
-      _file_name
+      _output_file_name
 };
 const
-  _yargs_ignore = {
-    resourceRegExp:
-      /^yargs$/
-}
+  _utils_ignore =
+  { resourceRegExp:
+      /^utils$/ };
 const
-  _yargs_helpers_ignore = {
-    resourceRegExp:
-      /^yargs\/helpers$/
-}
+  _web_worker_ignore =
+  { resourceRegExp:
+      /^web-worker$/ };
+const
+  _yargs_ignore =
+  { resourceRegExp:
+      /^yargs$/ };
+const
+  _yargs_helpers_ignore =
+  { resourceRegExp:
+      /^yargs\/helpers$/ };
 const
   _webpack =
     require(
@@ -58,6 +70,14 @@ const
 const
   _ignore_plugin =
     _webpack.IgnorePlugin; 
+const
+  _utils_ignore_plugin =
+    new _ignore_plugin(
+          _utils_ignore);
+const
+  _web_worker_ignore_plugin =
+    new _ignore_plugin(
+          _web_worker_ignore);
 const
   _yargs_ignore_plugin =
     new _ignore_plugin(
@@ -68,38 +88,53 @@ const
           _yargs_helpers_ignore);
 module.exports = {
   entry:
-    './ahsi',
+    _input_file_path,
   output:
     _output,
   optimization: {
     moduleIds: 'deterministic',
   },
   resolve: {
-    fallback: {
+    alias: {
       "fs":
-        false,
-      "happy-opfs":
         _path.resolve(
           __dirname,
-          'node_modules/happy-opfs/dist/main.mjs'),
+          'node_modules/fs/fs'),
       "path":
+        _path.resolve(
+          __dirname,
+          'node_modules/path/mod.js'),
+      "web-worker":
+        _path.resolve(
+          __dirname,
+          'node_modules/web-worker/mod.js'),
+      "yargs":
+        _path.resolve(
+          __dirname,
+          'node_modules/yargs/browser.mjs'),
+      "yargs/helpers":
+        _path.resolve(
+          __dirname,
+          'node_modules/yargs/helpers/helpers.mjs'),
+      "yargs-parser":
+        _path.resolve(
+          __dirname,
+          'node_modules/yargs-parser/browser.mjs'),
+    },
+    fallback: {
+      "utils":
         false,
-      "@std/path":
-        _path.resolve(
-          __dirname,
-          'node_modules/@std/path/mod.js'),
-      "fs-worker":
-        _path.resolve(
-          __dirname,
-          'node_modules/crash-bash/crash/bash/fs-worker'),
+      "web-worker":
+        false,
       "yargs":
         false,
       "yargs/helpers":
-        false
-    },
+        false,
+    }
   },
   externals:
-    { yargs: 'yargs' },
+    { yargs:
+        'yargs' },
   plugins: [
     _yargs_ignore_plugin,
     _yargs_helpers_ignore_plugin

@@ -11,8 +11,10 @@
     "url":
       "https://patreon.com/tallero"
   },
-  "man":
-    "./man/ahsi.1",
+  "man": [
+    "./man/bin2txt.js.1",
+    "./man/txt2bin.js.1"
+  ],
   "files": [
     "AUTHORS.rst",
     "COPYING",
@@ -20,7 +22,6 @@
     "bin2txt",
     "libbin2txt",
     "libtxt2bin",
-    "ahsi",
     "fs-worker.js",
     "fs-worker.webpack.config.js",
     "index.html",

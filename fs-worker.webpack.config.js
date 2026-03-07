@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/**    ------------------------------------------------------------------
+/**    ----------------------------------------------------------------
+ *     fs-worker.webpack.config.js
+ *     ----------------------------------------------------------------
  *     Copyright ©
  *       Pellegrino Prevete
  *         2024, 2025, 2026
  * 
  *     All rights reserved
- *     ------------------------------------------------------------------
+ *     ----------------------------------------------------------------
  * 
  *     This program is free software: you can redistribute it and/or
  *     modify it under the terms of the GNU General Public License as
