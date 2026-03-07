@@ -20,7 +20,8 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 PREFIX ?= /usr/local
-_PROJECT=encoding-tools.js
+_PROJECT_NPM=encoding-tools
+_PROJECT=$(_PROJECT_NPM).js
 _NAMESPACE=themartiancompany
 DOC_DIR=$(DESTDIR)$(PREFIX)/share/doc/$(_PROJECT)
 USR_DIR=$(DESTDIR)$(PREFIX)
@@ -45,9 +46,6 @@ DOC_FILES=\
       *.rst) \
   $(wildcard \
       *.md)
-SCRIPT_FILES=\
-  $(wildcard \
-      $(_PROJECT)/*)
 NPM_FILES=\
   "README.md" \
   "COPYING" \
@@ -79,16 +77,19 @@ install: install-scripts install-doc install-examples install-man
 
 install-scripts:
 
-	$(_INSTALL_EXE) \
-	  "$(_PROJECT)" \
-	  "$(LIB_DIR)/$(_PROJECT)"
-	$(_INSTALL_EXE) \
-	  "lib$(_PROJECT)" \
-	  "$(LIB_DIR)/lib$(_PROJECT)"
+	for _file in $(NPM_FILES); do
+	  $(_INSTALL_FILE) \
+	    "$${_file}" \
+	    "$(LIB_DIR)/$${_file}"; \
+	done
 	ln \
 	  -s \
-	  "$(PREFIX)/lib/$(_PROJECT)/$(_PROJECT)" \
-	  "$(BIN_DIR)/$(_PROJECT)"
+	  "$(PREFIX)/lib/$(_PROJECT)/bin2txt" \
+	  "$(BIN_DIR)/bin2txt"
+	ln \
+	  -s \
+	  "$(PREFIX)/lib/$(_PROJECT)/bin2txt" \
+	  "$(BIN_DIR)/bin2txt"
 
 build-man:
 
