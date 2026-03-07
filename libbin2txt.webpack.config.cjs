@@ -1,5 +1,5 @@
 /**    ----------------------------------------------------------------------
- *     libtmcsplit.webpack.config.cjs
+ *     libbin2txt.webpack.config.cjs
  *     ----------------------------------------------------------------------
  *     Copyright ©
  *       Pellegrino Prevete
@@ -32,7 +32,7 @@ const
       __dirname);
 const
   _input_file_name =
-    `libtmcsplit`;
+    `libbin2txt`;
 const
   _input_file_path =
     `./${_input_file_name}`;
