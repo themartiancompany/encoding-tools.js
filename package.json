@@ -20,6 +20,7 @@
     "COPYING",
     "README.md",
     "bin2txt",
+    "encoding-tools",
     "libbin2txt",
     "libtxt2bin",
     "fs-worker.js",
