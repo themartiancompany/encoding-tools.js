@@ -19,6 +19,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+SHELL=bash
 PREFIX ?= /usr/local
 _PROJECT_NPM=encoding-tools
 _PROJECT=$(_PROJECT_NPM).js
@@ -155,12 +156,12 @@ install-npm:
 	_npm_opts=( \
 	  -g \
 	  --prefix \
-	    "$(USR_DIR)" \
+	    '$(USR_DIR)' \
 	); \
 	_version="$$( \
 	  npm \
 	    view \
-	      "$$(pwd)" \
+	      "$${PWD}" \
 	      "version")"; \
 	npm \
 	  install \
