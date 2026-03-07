@@ -61,7 +61,7 @@
     "crash-js-webpack":
       "^0.0.3",
     "eslint":
-      "^10.0.0",
+      "^10.0.3",
     "globals":
       "^17.3.0",
     "@eslint/js":
