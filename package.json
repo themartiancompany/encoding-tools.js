@@ -58,6 +58,8 @@
       "https://github.com/tallero"
   },
   "devDependencies": {
+    "crash-js-webpack":
+      "^0.0.3",
     "eslint":
       "^10.0.0",
     "globals":
