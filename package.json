@@ -87,14 +87,20 @@
     { "bin2txt.js":
         "bin2txt" },
   "scripts": {
+    "build-fs-worker":
+      "npx webpack --mode 'production' --config 'fs-worker.webpack.config.cjs' --stats-error-details",
+    "build-lib":
+      "npx webpack --mode 'production' --config 'libbin2txt.webpack.config.cjs' --stats-error-details && npx webpack --mode 'production' --config 'libtxt2bin.webpack.config.cjs' --stats-error-details",
+    "build-bin":
+      "npx webpack --mode 'production' --config 'bin2txt.webpack.config.cjs' --stats-error-details && npx webpack --mode 'production' --config 'txt2bin.webpack.config.cjs' --stats-error-details",
     "build":
-      "cd ../.. && make build-npm && encoding-tools/nodejs",
+      "npm run lint && npm run build-fs-worker && npm run build-lib && npm run build-bin",
     "lint":
       "npx eslint .",
-    "publish-npm":
+    "publish-pnm":
       "npm run build && npm publish --access public",
     "start":
-      "serve -c 'serve.json'",
+      "npx safely-serve --help # index.html --port 3000 --https --no-cache",
     "test":
       "echo \"Error: no test specified\" && exit 1"
   }
