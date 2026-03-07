@@ -147,7 +147,7 @@ build-npm:
 	npm \
 	  pack; \
 	mv \
-	  "$(_PROJECT)-$${_version}.tgz" \
+	  "$(_PROJECT_NPM)-$${_version}.tgz" \
 	  ".."
 
 install-npm:
@@ -165,7 +165,7 @@ install-npm:
 	npm \
 	  install \
 	    "$${_npm_opts[@]}" \
-	    "$(_PROJECT)-$${_version}.tgz"; \
+	    "$(_PROJECT_NPM)-$${_version}.tgz"; \
 	$(_INSTALL_DIR) \
 	  "$(DESTDIR)$(PREFIX)/lib"; \
 	ln \
@@ -194,8 +194,11 @@ install-man:
 
 	$(_INSTALL_DIR) \
 	  "$(MAN_DIR)/man1"
-	rst2man \
-	  "man/$(_PROJECT).1.rst" \
-	  "$(MAN_DIR)/man1/$(_PROJECT).1"
+	$(_INSTALL_FILE) \
+	  "build/man/bin2txt.js.1" \
+	  "$(MAN_DIR)/man1/bin2txt.js.1"
+	$(_INSTALL_FILE) \
+	  "build/man/txt2bin.js.1" \
+	  "$(MAN_DIR)/man1/txt2bin.js.1"
 
 .PHONY: check build-man build-npm install install-doc install-man install-npm install-scripts shellcheck
