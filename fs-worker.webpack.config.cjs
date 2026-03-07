@@ -1,72 +1,48 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
-/**    ----------------------------------------------------------------
- *     fs-worker.webpack.config.js
- *     ----------------------------------------------------------------
- *     Copyright ©
- *       Pellegrino Prevete
- *         2024, 2025, 2026
- * 
- *     All rights reserved
- *     ----------------------------------------------------------------
- * 
- *     This program is free software: you can redistribute it and/or
- *     modify it under the terms of the GNU General Public License as
- *     published by the Free Software Foundation, either version 3 of
- *     the License, or (at your option) any later version.
- * 
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- * 
- *     You should have received a copy of the GNU General Public License
- *     along with this program.
- *     If not, see <https://www.gnu.org/licenses/>.
- */
-
-let
-  _file_name,
-  _output,
-  _output_dir,
-  _path;
-_path =
-  require(
-    'path');
-_output_dir =
-  _path.resolve(
-    __dirname);
-_file_name =
-  "fs-worker.js";
+const
+  _path =
+    require(
+      'path');
+const
+  _output_dir =
+    _path.resolve(
+      __dirname);
+const
+  _input_file_name =
+    "fs-worker";
+const
+  _input_file_path =
+    `./node_modules/opfs/${_input_file_name}`;
+const
+  _output_file_name =
+    `${_input_file_name}.js`;
 _output = {
   path:
     _output_dir,
   filename:
-    _file_name
-}
-
+    _output_file_name
+};
 module.exports = {
   entry:
-    './node_modules/crash-js/crash-js/fs-worker',
+    _input_file_path,
   output:
     _output,
   optimization: {
     moduleIds: 'deterministic',
   },
   resolve: {
-    fallback: {
+    alias: {
       "fs":
-        false,
-      "happy-opfs":
         _path.resolve(
           __dirname,
-          'node_modules/happy-opfs/dist/main.mjs'),
+          'node_modules/fs/fs'),
+      "opfs":
+        _path.resolve(
+          __dirname,
+          'node_modules/fs/fs'),
       "path":
-        false,
-      "@std/path":
         _path.resolve(
           __dirname,
-          'node_modules/@std/path/mod.js'),
-    }
+          'node_modules/path/mod.js'),
+    },
   }
 };
