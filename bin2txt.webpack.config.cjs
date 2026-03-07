@@ -23,7 +23,6 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 const
   _path =
     require(
