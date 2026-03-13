@@ -2,7 +2,7 @@
   "name":
     "encoding-tools",
   "version":
-    "0.0.2",
+    "0.0.3",
   "description":
     "A multi-language collection of encoding tools.",
   "funding": {
@@ -19,16 +19,19 @@
     "AUTHORS.rst",
     "COPYING",
     "README.md",
-    "bin2txt",
+    "bin2txt.js",
     "encoding-tools",
     "libbin2txt",
+    "libbin2txt.js",
     "libtxt2bin",
+    "libtxt2bin.js",
     "fs-worker.js",
     "fs-worker.webpack.config.js",
     "index.html",
     "package.json",
     "serve.json",
     "txt2bin",
+    "txt2bin.js",
     "webpack.config.js"
   ],
   "keywords": [

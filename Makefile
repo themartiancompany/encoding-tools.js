@@ -86,11 +86,13 @@ install-scripts:
 	ln \
 	  -s \
 	  "$(PREFIX)/lib/$(_PROJECT)/bin2txt" \
-	  "$(BIN_DIR)/bin2txt"
+	  "$(BIN_DIR)/bin2txt" || \
+	true
 	ln \
 	  -s \
 	  "$(PREFIX)/lib/$(_PROJECT)/bin2txt" \
-	  "$(BIN_DIR)/bin2txt"
+	  "$(BIN_DIR)/bin2txt" || \
+	true
 
 build-man:
 
