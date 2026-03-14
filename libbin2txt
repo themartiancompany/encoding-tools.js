@@ -30,7 +30,7 @@
 const
   _libcrash =
   require(
-    'crash-js');
+    "crash-js");
 const
   _dirname =
     _libcrash._dirname;
@@ -68,11 +68,15 @@ const
   _msg_error =
     _libcrash._msg_error;
 const
-  _split =
-    _libcrash._split;
-const
   _stat =
     _libcrash._stat;
+const
+  _tmcsplit =
+  require(
+    "tmcsplit");
+const
+  _split =
+    _tmcsplit._split;
 
 async function
   _blocks_find(
@@ -125,8 +129,22 @@ async function
     `'${_in_size_bytes}' bytes.`;
   _msg_info(
     _msg);
+  console.log(
+    typeof(
+      _in_size_bytes));
   _blocks_total =
     _in_size_bytes / _buffer_size_bytes + 1;
+  console.log(
+    typeof(
+      _blocks_total));
+  _blocks_total =
+    Number(
+      _blocks_total);
+  console.log(
+    typeof(
+      _blocks_total));
+  console.log(
+    isNaN(_blocks_total));
   _split_opts = [
     _in,
     `${_out}.block.`,
