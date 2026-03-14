@@ -32,11 +32,17 @@ const
   require(
     'crash-js');
 const
+  _dirname =
+    _libcrash._dirname;
+const
   _error_display =
     _libcrash._error_display;
 const
   _ext_rm =
     _libcrash._ext_rm;
+const
+  _file_exists =
+    _libcrash._file_exists;
 const
   _file_read =
     _libcrash._file_read;
@@ -69,44 +75,74 @@ const
     _libcrash._stat;
 
 async function
+  _blocks_find(
+    _pattern) {
+  let
+    _dir,
+    _msg;
+  _msg =
+    "Looking for files " +
+    `respecting pattern '^${_pattern}*.`;
+  _msg_info(
+    _msg);
+  _dir =
+    _dirname(
+      _pattern);
+  console.log(_dir);
+  _dir_content =
+    _ls(
+      _dir);
+}
+
+async function
   _buffer_prepare(
     _in,
     _out,
     _buffer_size_bytes) {
   let
     _in_size_bytes,
+    _size_max,
     _split_opts,
     _msg;
-  _split_opts =
-    [];
-  console.log(
-    _stat);
-  console.log(
-    _in);
-  console.log(
-    _out);
-  // _in_size_bytes="$( \
-  //   du \
-  //     -bs \
-  //     "${_in}" | \
-  //     awk \
-  //       '{print $1}')"
-  // _msg=(
-  //   "File '${_in}' has size"
-  //   "'${_in_size_bytes}' bytes."
-  // )
-  // _msg_info \
-  //   "${_msg[*]}"
-  // _blocks_total="$(( \
-  //   _in_size_bytes / _buffer_size_bytes + 1))"
-  // split \
-  //   -n \
-  //     "l/${_blocks_total}" \
-  //   --numeric-suffixes="1" \
-  //   "${_in}" \
-  //   "${_out}.block."
-  // _blocks_find \
-  //   "${_out}.block"
+  _size_max =
+    0;
+  if ( ! _file_exists(
+           _in) ) {
+    _msg =
+      `File '${_in}' does ` +
+      'not exist.';
+    _msg_error(
+      _msg,
+      1);
+  }
+  // console.log(
+  //   _in);
+  _in_size_bytes =
+    _stat(
+      _in).size;
+  _msg =
+    `File '${_in}' has size ` +
+    `'${_in_size_bytes}' bytes.`;
+  _msg_info(
+    _msg);
+  _blocks_total =
+    _in_size_bytes / _buffer_size_bytes + 1;
+  _split_opts = [
+    _in,
+    `${_out}.block.`,
+    _blocks_total,
+    _size_max
+  ];
+  _split.apply(
+    null,
+    _split_opts);
+  _blocks_find(
+    `${_out}.block`);
+  // console.log(
+  //   _stat(
+  //     _in).size / 1000);
+  // console.log(
+  //   _out);
 }
 
 async function
@@ -141,14 +177,6 @@ async function
     _in,
     _out,
     _buffer_size_bytes);
-  // _split(
-  //   "",
-  //   2);
-  // _split(
-  //   _input_file,
-  //   _output_prefix,
-  //   _chunks_amount,
-  //   _size_max) {
   // console.log(
   //   _split
   // );
