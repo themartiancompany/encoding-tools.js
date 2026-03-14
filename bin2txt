@@ -112,7 +112,7 @@ function
 
 function 
   _overrides_set() {
-  if ( target_message == "" ) {
+  if ( encoding_format == "" ) {
     encoding_format =
       "base64";
   }
@@ -304,10 +304,15 @@ if ( _cmdline_check(
        "bin2txt.js") == true ) {
   _cmdline_parse();
 }
+_overrides_set();
 _config_show();
 app_opts = [
   in_file,
-  out_txt_prefix
+  out_txt_prefix,
+  encoding_format,  
+  string_length,
+  buffer_size,
+  amount_only 
 ];
 _bin2txt.apply(
   null,

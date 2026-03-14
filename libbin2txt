@@ -134,17 +134,9 @@ async function
       _in_size_bytes));
   _blocks_total =
     _in_size_bytes / _buffer_size_bytes + 1;
-  console.log(
-    typeof(
-      _blocks_total));
-  _blocks_total =
-    Number(
-      _blocks_total);
-  console.log(
-    typeof(
-      _blocks_total));
-  console.log(
-    isNaN(_blocks_total));
+  console.log(_in_size_bytes);
+  console.log(_buffer_size_bytes);
+  console.log(_blocks_total);
   _split_opts = [
     _in,
     `${_out}.block.`,
