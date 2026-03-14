@@ -96,6 +96,10 @@ async function
   _dir_content =
     _ls(
       _dir);
+  console.log(
+    typeof(_dir_content));
+  console.log(
+    _dir_content);
 }
 
 async function
@@ -145,7 +149,7 @@ async function
     _blocks_total,
     _size_max
   ];
-  _split.apply(
+  await _split.apply(
     null,
     _split_opts);
   _blocks_find(
