@@ -83,6 +83,7 @@ async function
     _pattern) {
   let
     _dir,
+    _dir_content,
     _msg;
   _msg =
     "Looking for files " +
@@ -96,6 +97,11 @@ async function
   _dir_content =
     _ls(
       _dir);
+  for ( _file of _dir_content ) {
+    if ( _file.startsWith(
+           _pattern)) {
+    }
+  }
   console.log(
     typeof(_dir_content));
   console.log(
@@ -153,7 +159,7 @@ async function
     null,
     _split_opts);
   _blocks_find(
-    `${_out}.block`);
+    `${_out}.sf-part`);
   // console.log(
   //   _stat(
   //     _in).size / 1000);
