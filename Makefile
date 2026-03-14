@@ -51,6 +51,7 @@ NPM_FILES=\
   "README.md" \
   "COPYING" \
   "AUTHORS.rst" \
+  "encoding-tools" \
   "eslint.config.mjs" \
   "fs-worker.webpack.config.cjs" \
   "libbin2txt" \
@@ -59,7 +60,10 @@ NPM_FILES=\
   "libtxt2bin.webpack.config.cjs" \
   "package.json" \
   "bin2txt" \
-  "txt2bin"
+  "txt2bin" \
+  "bin2txt.webpack.config.cjs" \
+  "txt2bin.webpack.config.cjs" \
+  "webpack.config.cjs"
 
 all: build-man build-npm
 
