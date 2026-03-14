@@ -133,7 +133,9 @@ async function
     typeof(
       _in_size_bytes));
   _blocks_total =
-    _in_size_bytes / _buffer_size_bytes + 1;
+    Math.ceil(
+      _in_size_bytes /
+      _buffer_size_bytes);
   console.log(_in_size_bytes);
   console.log(_buffer_size_bytes);
   console.log(_blocks_total);
