@@ -98,13 +98,11 @@ async function
     `'${_in_size_bytes}' bytes.`;
   _msg_info(
     _msg);
-  console.log(
-    typeof(
-      _in_size_bytes));
-  _blocks_total =
-    Math.ceil(
-      _in_size_bytes /
-      _buffer_size_bytes);
+  const
+    _blocks_total =
+      Math.ceil(
+        _in_size_bytes /
+        _buffer_size_bytes);
   _msg =
     `Splitting file '${_in}' in ` +
     `'${_blocks_total}' blocks of ` +
@@ -122,14 +120,6 @@ async function
       null,
       _split_opts);
   return _output_files;
-}
-
-function
-  _block_read(
-    _block) {
-  let
-    _content;
-  
 }
 
 function
@@ -159,7 +149,91 @@ function
   return _string;
 }
 
-function
+async function
+  _chunk_split(
+    _in,
+    _length,
+    _prefix,
+    _block_last) {
+  let
+    _chunk,
+    _chunks,
+    _content,
+    _cut,
+    _head,
+    _msg,
+    _out,
+    _total;
+  _total =
+    _in.length;
+  _chunks =
+    Math.ceil(
+      _chunk_current +
+      _total /
+        _length);
+  if ( _chunks < 2 ) {
+    _out =
+      _prefix;
+    _file_write(
+      _out,
+      _in);
+    return 0;
+  }
+  _msg=(
+    `Chunking '${_total}' ` +
+    `letters into '${_chunks}'.`;
+  )
+  _msg_info(
+    _msg);
+  for ( _chunk in seq "$(( "${_chunk_current}" + 1 ))" \
+                      "${_chunks}" ) {
+    _chunk_start =
+      ( ( _chunk -
+          _chunk_current ) *
+        _length ) -
+      _length;
+    _cut =
+      // extract substring in string js
+      // _in:${_chunk_start}:${_length}}"
+    _out =
+      `${_prefix}.${_chunk}`;
+    _msg =
+      `Writing chunk ${_chunk} in file '${_out}' ` +
+      `of length ${#_cut} out of ${_chunks}.`;
+    )
+    _msg_info(
+      _msg);
+    if ( _chunk < _chunks ) {
+      printf(
+        _out,
+        _cut);
+    else if ( _chunk == _chunks ) {
+      if { _block_last == "true" ) {
+        _file_write(
+          _out,
+          _cut);
+      else if ( _block_last == "false" ) {
+        _msg =
+          "Last chunk of non-last block,"
+          "adding a newline character at the end (nope)."
+        )
+        _msg_info(
+          _msg);
+        _file_write(
+          _out,
+          _cut);
+      }
+    }
+  }
+  _chunk_current =
+    _chunks;
+  _msg=
+    "Finished encoding block.";
+  _msg_info(
+    _msg);
+}
+
+async function
   _base64_encode(
     _block,
     _length,
