@@ -79,36 +79,6 @@ const
     _tmcsplit._split;
 
 async function
-  _blocks_find(
-    _pattern) {
-  let
-    _dir,
-    _dir_content,
-    _msg;
-  _msg =
-    "Looking for files " +
-    `respecting pattern '^${_pattern}*.`;
-  _msg_info(
-    _msg);
-  _dir =
-    _dirname(
-      _pattern);
-  console.log(_dir);
-  _dir_content =
-    _ls(
-      _dir);
-  for ( _file of _dir_content ) {
-    if ( _file.startsWith(
-           _pattern)) {
-    }
-  }
-  console.log(
-    typeof(_dir_content));
-  console.log(
-    _dir_content);
-}
-
-async function
   _buffer_prepare(
     _in,
     _out,
@@ -120,17 +90,6 @@ async function
     _msg;
   _size_max =
     0;
-  if ( ! _file_exists(
-           _in) ) {
-    _msg =
-      `File '${_in}' does ` +
-      'not exist.';
-    _msg_error(
-      _msg,
-      1);
-  }
-  // console.log(
-  //   _in);
   _in_size_bytes =
     _stat(
       _in).size;
@@ -146,25 +105,37 @@ async function
     Math.ceil(
       _in_size_bytes /
       _buffer_size_bytes);
-  console.log(_in_size_bytes);
-  console.log(_buffer_size_bytes);
-  console.log(_blocks_total);
+  _msg =
+    `Splitting file '${_in}' in ` +
+    `'${_blocks_total}' blocks of ` +
+    `'${_in_size_bytes}' bytes.`;
+  _msg_info(
+    _msg);
   _split_opts = [
     _in,
     `${_out}.block.`,
     _blocks_total,
     _size_max
   ];
-  await _split.apply(
-    null,
-    _split_opts);
-  _blocks_find(
-    `${_out}.sf-part`);
-  // console.log(
-  //   _stat(
-  //     _in).size / 1000);
-  // console.log(
-  //   _out);
+  _output_files =
+    await _split.apply(
+      null,
+      _split_opts);
+  return _output_files;
+}
+
+async function
+  _input_data_check() {
+  if ( ! _file_exists(
+           _in) ) {
+    const
+      _msg =
+        `File '${_in}' does ` +
+        'not exist.';
+    _msg_error(
+      _msg,
+      1);
+  }
 }
 
 async function
@@ -176,6 +147,7 @@ async function
     _buffer_size_bytes,
     _amount_only) {
   let
+    _block,
     _blocks_total,
     _chunks_total,
     _chunk_current,
@@ -185,20 +157,72 @@ async function
     _file,
     _msg,
     _worker;
-  _dir =
-    "/test_dir";
-  _file =
-    `${_dir}/test_file`;
-  _content =
-    `${_in} ${_out}`;
+  // const
+  //   _dir =
+  //     "/test_dir";
+  // const
+  //   _file =
+  //     `${_dir}/test_file`;
+  // const
+  //   _content =
+  //     `${_in} ${_out}`;
   if ( typeof window !== 'undefined' ) {
     await _fs_worker_start(
         "fs-worker.js");
   }
-  _buffer_prepare(
-    _in,
-    _out,
-    _buffer_size_bytes);
+  _input_data_check();
+  const
+    _blocks =
+      _buffer_prepare(
+        _in,
+        _out,
+        _buffer_size_bytes);
+  _chunks_total =
+    0;
+  _chunk_current =
+    0;
+  _block_current =
+    1;
+  for ( _block of _blocks) {
+    _msg =
+      `Reading block '${_block}' ` +
+      `('${_block_current}'` +
+      `of '${_blocks_total}').`;
+    _msg_info(
+      _msg);
+    if ( _block_current < _blocks_total ) {
+      _block_last =
+        false;
+    }
+    else if ( _block_current == _blocks_total ) {
+      _block_last =
+        "true";
+      if ( _format === "base64" ) {
+        _base64_encode(
+          _block,
+          _length,
+          _block_last);
+      _block_current =
+        _block_current + 1;
+    }
+  }
+  for ( _block of _blocks ) {
+    _rm(
+      _block);
+  }
+  if ( _amount_only === true ) {
+    console.log(
+      _chunks_total);
+  }
+  elif [[ "${_amount_only}" == "n" ]]; then
+    _msg=(
+      "Finished '${_format}' encoding"
+      "input file '${_in}'."
+    )
+    _msg_info \
+      "${_msg[*]}"
+  fi
+
   // console.log(
   //   _split
   // );
