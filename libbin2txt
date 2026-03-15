@@ -124,6 +124,79 @@ async function
   return _output_files;
 }
 
+function
+  _block_read(
+    _block) {
+  let
+    _content;
+  
+}
+
+function
+  _base64_block_encode(
+    _file) {
+  let
+    _buffer,
+    _content,
+    _string;
+  _content =
+    _cat(
+      _file);
+  if ( typeof window === 'undefined' &&
+       ( typeof global !== 'undefined' && global.global === global ) &&
+       typeof __webpack_require__ !== 'function' ) {
+    _buffer =
+      Buffer.from(
+        _content);
+    _string =
+      _buffer.toString(
+        "base64");
+  }
+  else {
+    _string =
+      btoa(string);
+  }
+  return _string;
+}
+
+function
+  _base64_encode(
+    _block,
+    _length,
+    _block_last) {
+  let
+    _txt,
+    _msg;
+  _txt =
+    _base64_block_encode(
+      _block);
+  _msg =
+    `Block '${_block}' encoded ` +
+    `length: ${_txt.length}.`;
+  _msg_info(
+    _msg);
+  if ( _amount_only === "false" ) {
+    _chunk_split(
+      _txt,
+      _length,
+      _out,
+      _block_last);
+  }
+  else if ( _amount_only === "true" ) {
+    _chunks_total =
+      Math.ceil(
+        _chunks_total +
+        _txt.length /
+          _length);
+  }
+  _msg =
+    "Finished encoding block " +
+    `'${_block}'.`.
+  )
+  _msg_info(
+    _msg);
+}
+
 async function
   _input_data_check() {
   if ( ! _file_exists(
@@ -153,19 +226,9 @@ async function
     _chunk_current,
     _block_current,
     _block_last,
-    _dir,
-    _file,
     _msg,
+    _rm_args,
     _worker;
-  // const
-  //   _dir =
-  //     "/test_dir";
-  // const
-  //   _file =
-  //     `${_dir}/test_file`;
-  // const
-  //   _content =
-  //     `${_in} ${_out}`;
   if ( typeof window !== 'undefined' ) {
     await _fs_worker_start(
         "fs-worker.js");
@@ -177,6 +240,8 @@ async function
         _in,
         _out,
         _buffer_size_bytes);
+  _blocks_total =
+    _blocks.length;
   _chunks_total =
     0;
   _chunk_current =
@@ -192,7 +257,7 @@ async function
       _msg);
     if ( _block_current < _blocks_total ) {
       _block_last =
-        false;
+        "false";
     }
     else if ( _block_current == _blocks_total ) {
       _block_last =
@@ -207,56 +272,23 @@ async function
     }
   }
   for ( _block of _blocks ) {
+    _rm_args = [
+      _block
+    ];
     _rm(
-      _block);
+      _rm_args);
   }
-  if ( _amount_only === true ) {
+  if ( _amount_only === "true" ) {
     console.log(
       _chunks_total);
   }
-  elif [[ "${_amount_only}" == "n" ]]; then
-    _msg=(
-      "Finished '${_format}' encoding"
-      "input file '${_in}'."
-    )
-    _msg_info \
-      "${_msg[*]}"
-  fi
-
-  // console.log(
-  //   _split
-  // );
-  // _msg =
-  //   `Creating directory '${_dir}':`;
-  // _msg_info(
-  //   _msg);
-  // _mkdir(
-  //   _dir);
-  // _msg =
-  //   `Writing content '${_content}' to file '${_file}':`;
-  // _msg_info(
-  //   _msg);
-  // _file_write(
-  //   _file,
-  //   _content);
-  // _msg =
-  //   `Content of directory '/':`;
-  // _msg_info(
-  //   _msg);
-  // _dir_content =
-  //   _ls(
-  //     "/").unwrap();
-  // console.log(
-  //   _dir_content);
-  // _msg =
-  //   `Content of directory '${_dir}':`;
-  // _msg_info(
-  //   _msg);
-  // _dir_content =
-  //   _ls(
-  //     _dir).unwrap();
-  // console.log(
-  //   _dir_content);
+  else if ( _amount_only === "false" ) {
+    _msg =
+      `Finished '${_format}' encoding ` +
+      `input file '${_in}'.`;
+    _msg_info(
+      _msg);
+  }
 }
 
 module.exports = {
