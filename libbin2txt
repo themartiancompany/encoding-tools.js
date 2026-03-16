@@ -248,6 +248,7 @@ async function
   _base64_encode(
     _block,
     _length,
+    _out,
     _block_last,
     _amount_only) {
   let
@@ -365,6 +366,7 @@ async function
       _base64_encode(
         _block,
         _length,
+        _out,
         _block_last,
         _amount_only);
     _block_current =
