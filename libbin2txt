@@ -219,9 +219,8 @@ async function
       }
       else if ( _block_last == "false" ) {
         _msg =
-          "Last chunk of non-last block,"
-          "adding a newline character at the end (nope)."
-        )
+          "Last chunk of non-last block, " +
+          "adding a newline character at the end (nope).";
         _msg_info(
           _msg);
         _file_write(
