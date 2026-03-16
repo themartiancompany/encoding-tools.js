@@ -81,7 +81,7 @@
   },
   "dependencies": {
     "crash-js":
-      "^0.1.83",
+      "^0.1.84",
     "tmcsplit":
       "^0.0.9",
     "yargs":
