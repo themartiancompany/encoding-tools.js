@@ -212,7 +212,7 @@ async function
         _cut);
     }
     else if ( _chunk == _chunks ) {
-      if { _block_last == "true" ) {
+      if ( _block_last == "true" ) {
         _file_write(
           _out,
           _cut);
