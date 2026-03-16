@@ -68,6 +68,9 @@ const
   _msg_error =
     _libcrash._msg_error;
 const
+  _seq =
+    _libcrash._seq;
+const
   _stat =
     _libcrash._stat;
 const
@@ -185,8 +188,9 @@ async function
   )
   _msg_info(
     _msg);
-  for ( _chunk in seq "$(( "${_chunk_current}" + 1 ))" \
-                      "${_chunks}" ) {
+  for ( _chunk of _seq(
+                    _chunk_current + 1,
+                    _chunks) ) {
     _chunk_start =
       ( ( _chunk -
           _chunk_current ) *
