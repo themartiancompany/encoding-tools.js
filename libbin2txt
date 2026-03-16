@@ -32,6 +32,9 @@ const
   require(
     "crash-js");
 const
+  _cat =
+    _libcrash._cat;
+const
   _dirname =
     _libcrash._dirname;
 const
