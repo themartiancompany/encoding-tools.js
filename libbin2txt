@@ -284,7 +284,8 @@ async function
 }
 
 async function
-  _input_data_check() {
+  _input_data_check(
+    _in) {
   if ( ! _file_exists(
            _in) ) {
     const
@@ -319,13 +320,16 @@ async function
     await _fs_worker_start(
         "fs-worker.js");
   }
-  _input_data_check();
+  _input_data_check(
+    _in);
   const
     _blocks =
-      _buffer_prepare(
+      await _buffer_prepare(
         _in,
         _out,
         _buffer_size_bytes);
+  console.log(
+    _blocks);
   _blocks_total =
     _blocks.length;
   _chunks_total =
@@ -364,6 +368,7 @@ async function
           _msg,
           1);
       }
+    }
   }
   for ( _block of _blocks ) {
     _rm_args = [
