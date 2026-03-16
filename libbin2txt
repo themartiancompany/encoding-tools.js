@@ -128,6 +128,10 @@ async function
     await _split.apply(
       null,
       _split_opts);
+  _msg =
+    "Done.";
+  _msg_info(
+    _msg);
   return _output_files;
 }
 
@@ -192,7 +196,8 @@ async function
   }
   _msg =
     `Chunking '${_total}' ` +
-    `letters into '${_chunks}'.`;
+    `letters into '${_chunks}' ` +
+    `chunks of length '${_length}'.`;
   _msg_info(
     _msg);
   for ( _chunk of _seq(
