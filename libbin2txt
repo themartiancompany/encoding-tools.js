@@ -325,10 +325,10 @@ async function
     0;
   _block_current =
     1;
-  for ( _block of _blocks) {
+  for ( _block of _blocks ) {
     _msg =
       `Reading block '${_block}' ` +
-      `('${_block_current}'` +
+      `('${_block_current}' ` +
       `of '${_blocks_total}').`;
     _msg_info(
       _msg);
@@ -346,6 +346,14 @@ async function
           _block_last);
       _block_current =
         _block_current + 1;
+    }
+    else {
+      _msg =
+        "Unknown encoding format " +
+        `${_format}.`;
+      _msg_error(
+        _msg,
+        1);
     }
   }
   for ( _block of _blocks ) {
