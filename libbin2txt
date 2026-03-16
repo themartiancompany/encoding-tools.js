@@ -162,6 +162,7 @@ function
 async function
   _chunk_split(
     _in,
+    _chunk_current,
     _length,
     _prefix,
     _block_last) {
@@ -242,11 +243,13 @@ async function
     "Finished encoding block.";
   _msg_info(
     _msg);
+  return _chunk_current;
 }
 
 async function
   _base64_encode(
     _block,
+    _chunk_current,
     _length,
     _out,
     _block_last,
@@ -263,11 +266,12 @@ async function
   _msg_info(
     _msg);
   if ( _amount_only === "false" ) {
-    _chunk_split(
-      _txt,
-      _length,
-      _out,
-      _block_last);
+    _chunk_current =
+      await _chunk_split(
+        _txt,
+        _length,
+        _out,
+        _block_last);
   }
   else if ( _amount_only === "true" ) {
     _chunks_total =
@@ -275,6 +279,8 @@ async function
         _chunks_total +
         _txt.length /
           _length);
+    _chunk_current =
+      _chunk_total;
   }
   else {
     _msg =
@@ -289,6 +295,7 @@ async function
     `'${_block}'.`;
   _msg_info(
     _msg);
+  return _chunk_current;
 }
 
 async function
@@ -336,8 +343,6 @@ async function
         _in,
         _out,
         _buffer_size_bytes);
-  console.log(
-    _blocks);
   _blocks_total =
     _blocks.length;
   _chunks_total =
@@ -361,14 +366,15 @@ async function
       _block_last =
         "true";
     }
-    console.log("hello");
     if ( _format === "base64" ) {
-      _base64_encode(
-        _block,
-        _length,
-        _out,
-        _block_last,
-        _amount_only);
+      _chunk_current =
+        _base64_encode(
+          _block,
+          _chunk_current,
+          _length,
+          _out,
+          _block_last,
+          _amount_only);
     _block_current =
       _block_current + 1;
     }
