@@ -269,6 +269,7 @@ async function
     _chunk_current =
       await _chunk_split(
         _txt,
+        _chunk_current,
         _length,
         _out,
         _block_last);
@@ -324,8 +325,8 @@ async function
   let
     _block,
     _blocks_total,
-    _chunks_total,
     _chunk_current,
+    _chunks_total,
     _block_current,
     _block_last,
     _msg,
@@ -345,8 +346,6 @@ async function
         _buffer_size_bytes);
   _blocks_total =
     _blocks.length;
-  _chunks_total =
-    0;
   _chunk_current =
     0;
   _block_current =
@@ -395,6 +394,8 @@ async function
       _rm_args);
   }
   if ( _amount_only === "true" ) {
+    _chunks_total =
+      _chunk_current;
     console.log(
       _chunks_total);
   }
