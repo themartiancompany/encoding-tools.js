@@ -203,7 +203,7 @@ async function
       `${_prefix}.${_chunk}`;
     _msg =
       `Writing chunk ${_chunk} in file '${_out}' ` +
-      `of length ${#_cut} out of ${_chunks}.`;
+      `of length ${_cut.length} out of ${_chunks}.`;
     _msg_info(
       _msg);
     if ( _chunk < _chunks ) {
