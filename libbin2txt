@@ -197,8 +197,9 @@ async function
         _length ) -
       _length;
     _cut =
-      // extract substring in string js
-      // _in:${_chunk_start}:${_length}}"
+      _in.substring(
+        _chunk_start,
+        _chunk_start + _length);
     _out =
       `${_prefix}.${_chunk}`;
     _msg =
