@@ -182,10 +182,9 @@ async function
       _in);
     return 0;
   }
-  _msg=(
+  _msg =
     `Chunking '${_total}' ` +
     `letters into '${_chunks}'.`;
-  )
   _msg_info(
     _msg);
   for ( _chunk of _seq(
