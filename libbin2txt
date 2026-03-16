@@ -374,6 +374,8 @@ async function
           _out,
           _block_last,
           _amount_only);
+      _msg_info(
+        `Current chunk: '${_chunk_current}'.`);
     _block_current =
       _block_current + 1;
     }
