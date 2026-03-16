@@ -68,6 +68,9 @@ const
   _msg_error =
     _libcrash._msg_error;
 const
+  _rm =
+    _libcrash._rm;
+const
   _seq =
     _libcrash._seq;
 const
