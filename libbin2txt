@@ -136,7 +136,8 @@ function
     _cat(
       _file);
   if ( typeof window === 'undefined' &&
-       ( typeof global !== 'undefined' && global.global === global ) &&
+       ( typeof global !== 'undefined' &&
+         global.global === global ) &&
        typeof __webpack_require__ !== 'function' ) {
     _buffer =
       Buffer.from(
@@ -267,6 +268,14 @@ async function
         _txt.length /
           _length);
   }
+  else {
+    _msg =
+      `Value of the 'amount_only' can ` +
+      `be true or false. Current: '${_amount_only}'.`;
+    _msg_error(
+      _msg,
+      1);
+  }
   _msg =
     "Finished encoding block " +
     `'${_block}'.`;
@@ -346,15 +355,15 @@ async function
           _block_last);
       _block_current =
         _block_current + 1;
-    }
-    else {
-      _msg =
-        "Unknown encoding format " +
-        `${_format}.`;
-      _msg_error(
-        _msg,
-        1);
-    }
+      }
+      else {
+        _msg =
+          "Unknown encoding format " +
+          `${_format}.`;
+        _msg_error(
+          _msg,
+          1);
+      }
   }
   for ( _block of _blocks ) {
     _rm_args = [
