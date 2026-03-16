@@ -216,6 +216,7 @@ async function
         _file_write(
           _out,
           _cut);
+      }
       else if ( _block_last == "false" ) {
         _msg =
           "Last chunk of non-last block,"
