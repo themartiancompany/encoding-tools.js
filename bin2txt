@@ -124,9 +124,9 @@ function
     buffer_size =
       "2000000"; // 2MB
   }
-  if ( amount_only == false ) {
+  if ( amount_only == "" ) {
     amount_only =
-      false;
+      "false";
   }
 }
 
@@ -248,26 +248,36 @@ function
       in_file +
       ".base64";
   }
-  if ( "s" in _argv ) {
+  if ( "l" in _argv ) {
     string_length =
       _argv[
-        "s"];
+        "l"];
   }
   if ( "string-length" in _argv ) {
     string_length =
       _argv[
         "string-length"];
   }
-  amount_only =
-    _argv[
-      "amount-only"] ||
-    _argv[
-      "s"];
-  verbose =
-    _argv[
-      "verbose"] ||
-    _argv[
-      "v"];
+  if ( "s" in _argv ) {
+    amount_only =
+      _argv[
+        "s"];
+  }
+  if ( "amount-only" in _argv ) {
+    amount_only =
+      _argv[
+        "amount-only"];
+  }
+  if ( "v" in _argv ) {
+    verbose =
+      _argv[
+        "v"];
+  }
+  if ( "verbose" in _argv ) {
+    verbose =
+      _argv[
+        "verbose"];
+  }
   if ( verbose ) {
     quiet =
       "n";

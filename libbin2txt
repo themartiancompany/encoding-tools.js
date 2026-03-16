@@ -248,7 +248,8 @@ async function
   _base64_encode(
     _block,
     _length,
-    _block_last) {
+    _block_last,
+    _amount_only) {
   let
     _txt,
     _msg;
@@ -364,7 +365,8 @@ async function
       _base64_encode(
         _block,
         _length,
-        _block_last);
+        _block_last,
+        _amount_only);
     _block_current =
       _block_current + 1;
     }
