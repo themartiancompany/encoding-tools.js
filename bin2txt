@@ -248,10 +248,10 @@ function
       in_file +
       ".base64";
   }
-  if ( "l" in _argv ) {
+  if ( "L" in _argv ) {
     string_length =
       _argv[
-        "l"];
+        "L"];
   }
   if ( "string-length" in _argv ) {
     string_length =
