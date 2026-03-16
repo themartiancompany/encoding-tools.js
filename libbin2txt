@@ -112,7 +112,7 @@ async function
   _msg =
     `Splitting file '${_in}' in ` +
     `'${_blocks_total}' blocks of ` +
-    `'${_in_size_bytes}' bytes.`;
+    `'${_buffer_size_bytes}' bytes.`;
   _msg_info(
     _msg);
   _split_opts = [
@@ -355,22 +355,23 @@ async function
     else if ( _block_current == _blocks_total ) {
       _block_last =
         "true";
-      if ( _format === "base64" ) {
-        _base64_encode(
-          _block,
-          _length,
-          _block_last);
-      _block_current =
-        _block_current + 1;
-      }
-      else {
-        _msg =
-          "Unknown encoding format " +
-          `${_format}.`;
-        _msg_error(
-          _msg,
-          1);
-      }
+    }
+    console.log("hello");
+    if ( _format === "base64" ) {
+      _base64_encode(
+        _block,
+        _length,
+        _block_last);
+    _block_current =
+      _block_current + 1;
+    }
+    else {
+      _msg =
+        "Unknown encoding format " +
+        `${_format}.`;
+      _msg_error(
+        _msg,
+        1);
     }
   }
   for ( _block of _blocks ) {
