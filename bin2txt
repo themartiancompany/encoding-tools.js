@@ -204,8 +204,16 @@ function
     _argv,
     _help_display,
     _msg;
+  const
+    _argv_args = {
+      "booleans": [
+        "v",
+        "verbose"
+      ]
+    };
   _argv =
-    _argv_get();
+    _argv_get(
+       _argv_args);
   _options =
     _argv[
       "_"];
@@ -270,13 +278,11 @@ function
   }
   if ( "v" in _argv ) {
     verbose =
-      _argv[
-        "v"];
+      true;
   }
   if ( "verbose" in _argv ) {
     verbose =
-      _argv[
-        "verbose"];
+      true;
   }
   if ( verbose ) {
     quiet =

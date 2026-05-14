@@ -91,9 +91,12 @@
     "commonjs",
   "main":
     "encoding-tools",
-  "bin":
-    { "bin2txt.js":
-        "bin2txt" },
+  "bin": {
+    "bin2txt":
+      "bin2txt",
+    "bin2txt.js":
+      "bin2txt"
+  },
   "scripts": {
     "build-fs-worker":
       "npx webpack --mode 'production' --config 'fs-worker.webpack.config.cjs' --stats-error-details",
