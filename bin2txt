@@ -208,7 +208,6 @@ function
 function 
   _cmdline_parse() {
   let
-    _argv,
     _help_display,
     _msg;
   const
@@ -220,9 +219,10 @@ function
         "verbose"
       ]
     };
-  _argv =
-    _argv_get(
-       _argv_args);
+  const
+    _argv =
+      _argv_get(
+         _argv_args);
   _options =
     _argv[
       "_"];
