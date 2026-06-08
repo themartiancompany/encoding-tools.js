@@ -30,7 +30,8 @@
 // Crash Javascript global variables
 
 /* global
-     quiet */
+     quiet:
+       writable */
 
 const
   _libcrash =
@@ -109,27 +110,33 @@ const
 function
   _global_variables() {
   /* global
-       app_name */
+       app_name:
+         writable */
   app_name =
     "txt2bin";
   /* global
-       make_date */
+       make_date:
+         writable */
   make_date =
     "";
   /* global
-       output_file */
+       output_file:
+         writable */
   output_file =
     "";
   /* global
-       encoding_format */
+       encoding_format:
+         writable */
   encoding_format =
     "";
   /* global
-       argument_type */
+       argument_type:
+         writable */
   argument_type =
     "";
   /* global
-       input_texts */
+       input_texts:
+         writable */
   input_texts =
     [];
   quiet =
