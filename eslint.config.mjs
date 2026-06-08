@@ -31,23 +31,30 @@ const
   _project =
     "encoding-tools";
 
+const
+  ignores = [
+    "build/**",
+    "dist",
+    "node_modules/**",
+    "eslint.config.js",
+    "man/**"
+  ];
 export default defineConfig([
  {
-   ignores: [
-     "build/**",
-     "node_modules/**",
-     "eslint.config.js",
-     "man/**"
-   ],
+   ignores:
+     _ignores,
    rules:
      { semi:
          "error",
        "prefer-const":
          "error" },
    files:
-     [ "**/*{js,mjs,cjs}",
-       `**/${_project}*`,
-       `**/lib${_project}`
+     [ "**/*.{js,mjs,cjs}",
+       "bin2txt",
+       `${_project}`,
+       `libbin2txt`,
+       `libtxt2bin`,
+       "txt2bin"
      ],
    plugins:
      { js },
@@ -58,12 +65,8 @@ export default defineConfig([
          {  ...globals.browser,
             ...globals.node } } },
  { 
-   ignores: [
-     "build/**",
-     "eslint.config.js",
-     "node_modules/**",
-     "man/**"
-   ],
+   ignores:
+     _ignores,
    rules:
      { semi:
          "error",

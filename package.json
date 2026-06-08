@@ -2,7 +2,7 @@
   "name":
     "encoding-tools",
   "version":
-    "0.0.4",
+    "0.0.5",
   "description":
     "A multi-language collection of encoding tools.",
   "funding": {
@@ -19,19 +19,15 @@
     "AUTHORS.rst",
     "COPYING",
     "README.md",
-    "bin2txt.js",
+    "dist",
     "encoding-tools",
     "libbin2txt",
-    "libbin2txt.js",
     "libtxt2bin",
-    "libtxt2bin.js",
-    "fs-worker.js",
     "fs-worker.webpack.config.js",
     "index.html",
     "package.json",
     "serve.json",
     "txt2bin",
-    "txt2bin.js",
     "webpack.config.js"
   ],
   "keywords": [
@@ -43,13 +39,13 @@
     "https://github.com/themartiancompany/encoding-tools",
   "bugs": {
     "url":
-      "https://github.com/themartiancompany/encoding-tools/issues"
+      "https://github.com/themartiancompany/encoding-tools.js/issues"
   },
   "repository": {
     "type":
       "git",
     "url":
-      "git+https://github.com/themartiancompany/encoding-tools.git"
+      "git+https://github.com/themartiancompany/encoding-tools.js.git"
   },
   "license":
     "AGPL-3.0-or-later",
@@ -81,7 +77,7 @@
   },
   "dependencies": {
     "crash-js":
-      "^0.1.88",
+      "^0.1.113",
     "tmcsplit":
       "^0.0.9",
     "yargs":
@@ -99,11 +95,21 @@
   },
   "scripts": {
     "build-fs-worker":
-      "npx webpack --mode 'production' --config 'fs-worker.webpack.config.cjs' --stats-error-details",
+      "npx webpack --mode 'production' --config 'fs-worker.webpack.config.cjs' --stats-error-details && for _target in 'bin2txt' 'encoding-tools' 'libbin2txt' 'libtxt2bin' 'txt2bin'; do cp 'fs-worker.js' 'dist/'${_target}; done",
+    "build-encoding-tools":
+      "npx webpack --mode 'production' --config 'webpack.config.cjs' --stats-error-details && mv 'libbin2txt.js' 'dist/encoding-tools'",
+    "build-libbin2txt":
+      "npx webpack --mode 'production' --config 'libbin2txt.webpack.config.cjs' --stats-error-details && mv 'libbin2txt.js' 'dist/libbin2txt'",
+    "build-libtxt2bin":
+      "npx webpack --mode 'production' --config 'libtxt2bin.webpack.config.cjs' --stats-error-details && mv 'libtxt2bin.js' 'dist/libtxt2bin'",
     "build-lib":
-      "npx webpack --mode 'production' --config 'libbin2txt.webpack.config.cjs' --stats-error-details && npx webpack --mode 'production' --config 'libtxt2bin.webpack.config.cjs' --stats-error-details",
+      "npm run build-encoding-tools && npm run libbin2txt && npm run libtxt2bin",
+    "build-bin2txt":
+      "npx webpack --mode 'production' --config 'bin2txt.webpack.config.cjs' --stats-error-details && mv 'bin2txt.js' 'dist/bin2txt'",
+    "build-txt2bin":
+      "npx webpack --mode 'production' --config 'txt2bin.webpack.config.cjs' --stats-error-details && mv 'txt2bin.js' 'dist/txt2bin'",
     "build-bin":
-      "npx webpack --mode 'production' --config 'bin2txt.webpack.config.cjs' --stats-error-details && npx webpack --mode 'production' --config 'txt2bin.webpack.config.cjs' --stats-error-details",
+      "npm run build-bin2txt && npm run build-txt2bin",
     "build":
       "npm run lint && npm run build-fs-worker && npm run build-lib && npm run build-bin",
     "lint":
@@ -111,7 +117,7 @@
     "publish-pnm":
       "npm run build && npm publish --access public",
     "start":
-      "npx safely-serve --help # index.html --port 3000 --https --no-cache",
+      "npx safely-serve 'dist/encoding-tools'",
     "test":
       "echo \"Error: no test specified\" && exit 1"
   }
