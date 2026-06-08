@@ -32,7 +32,7 @@ const
     "encoding-tools";
 
 const
-  ignores = [
+  _ignores = [
     "build/**",
     "dist",
     "node_modules/**",
