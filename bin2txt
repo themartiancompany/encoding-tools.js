@@ -27,10 +27,16 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
+
 const
   _libcrash =
-  require(
-    'crash-js');
+    require(
+      'crash-js');
+/* global
+     _argv_get */
+const
+_argv_get =
+  _libcrash._argv_get;
 /* global
      _cmdline_check */
 const
@@ -47,10 +53,10 @@ const
   _msg_error =
     _libcrash._msg_error;
 /* global
-     _argv_get */
+     _process_exit */
 const
-_argv_get =
-  _libcrash._argv_get;
+_process_exit =
+  _libcrash._process_exit;
 
 const
   _encoding_tools =
@@ -58,8 +64,9 @@ const
       "./encoding-tools");
 /* global
      _bin2txt */
-_bin2txt =
-  _encoding_tools._bin2txt;
+const
+  _bin2txt =
+    _encoding_tools._bin2txt;
 
 function
   _global_variables() {
@@ -133,18 +140,18 @@ function
 function
   _config_show() {
   let
-    _line,
-    _text;
-  _text = [
-    `${app_name} configuration:`,
-    `      Runtime environment:   ${runtime_environment}`,
-    `          Encoding format:   ${encoding_format}`,
-    `              Buffer size:   ${buffer_size}`,
-    `      Chunk string length:   ${string_length}`,
-    `       Chunks amount only:   ${amount_only}`,
-    `                  In file:   ${in_file}`,
-    `          Out text prefix:   ${out_txt_prefix}`,
-  ];
+    _line;
+  const
+    _text = [
+      `${app_name} configuration:`,
+      `      Runtime environment:   ${runtime_environment}`,
+      `          Encoding format:   ${encoding_format}`,
+      `              Buffer size:   ${buffer_size}`,
+      `      Chunk string length:   ${string_length}`,
+      `       Chunks amount only:   ${amount_only}`,
+      `                  In file:   ${in_file}`,
+      `          Out text prefix:   ${out_txt_prefix}`,
+    ];
   for ( _line of _text ) {
     _msg_info(
       _line);
@@ -188,13 +195,14 @@ function
     `                                     Default: '${amount_only}'.`,
     "",
     "     -h --help                       This message.",
-    "     -v --verbose                    Enable verbose output."
+    "     -v --verbose                    Enable verbose output.",
+    ""
   ];
   for ( _line of _text ) {
     console.log(
       _line);
   }
-  process.exit(
+  _process_exit(
     _exit_code);
 }
 
