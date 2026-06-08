@@ -38,7 +38,7 @@ const
       "./libtxt2bin");
 const
   _txt2bin =
-    _bin2txt_module._txt2bin;
+    _txt2bin_module._txt2bin;
 
 module.exports = {
   _bin2txt:

@@ -61,7 +61,7 @@ const
   _ext_rm =
     _libcrash._ext_rm;
 /* global
-     _ext_rm */
+     _file_read */
 const
   _file_read =
     _libcrash._file_read;
@@ -100,6 +100,11 @@ const
 const
   _msg_error =
     _libcrash._msg_error;
+/* global
+     _process_exit */
+const
+  _process_exit =
+    _libcrash._process_exit;
 const
   _encoding_tools =
     require(
@@ -168,26 +173,39 @@ function
   _usage(
     _exit_code) {
   let
-    _line,
-    _text;
-  _text = [
-    "Hello world application for browsers and computers",
-    "",
-    "Usage:",
-    "  ahsi",
-    "    <quiet>",
-    "    <message>",
-    "    <planet>",
-    "",
-    "Args:",
-    "  <quiet>                          Can be 'y' or 'n'",
-    "                                   Default: y",
-  ];
+    _line;
+  const
+    _text = [
+      "",
+      "Converts text to binary.",
+      "",
+      "Usage:",
+      `  ${app_name}`,
+      `    [options]`,
+      `    <out-file>`,
+      `    [in-text]`,
+      "",
+      "  options:",
+      "     -t, --argument-type    Possible values are 'file' and",
+      "       <type>               'list'.",
+      "                            When it is 'file' the arguments",
+      "                            are the encoded file paths,",
+      "                            when it is 'list' the argument is",
+      "                            a file containing the paths of the",
+      "                            encoded files.",
+      `                            Default: '${argument_type}`,
+      "     -f --encoding-format   Encoding format ('base64').",
+      `       <format>             Default: '${encoding_format}'`,
+      "",
+      "     -h                     This message.",
+      "     -v                     Enable verbose output",
+      ""
+    ];
   for ( _line of _text ) {
     _msg_info(
       _line);
   }
-  process.exit(
+  _process_exit(
     _exit_code);
 }
 
@@ -262,25 +280,25 @@ function
       in_file +
       ".base64";
   }
-  if ( "L" in _argv ) {
-    string_length =
+  if ( "t" in _argv ) {
+    argument_type =
       _argv[
-        "L"];
+        "t"];
   }
-  if ( "string-length" in _argv ) {
-    string_length =
+  if ( "argument-type" in _argv ) {
+    argument_type =
       _argv[
-        "string-length"];
+        "argument-type"];
   }
-  if ( "s" in _argv ) {
-    amount_only =
+  if ( "f" in _argv ) {
+    encoding_format =
       _argv[
-        "s"];
+        "f"];
   }
-  if ( "amount-only" in _argv ) {
-    amount_only =
+  if ( "encoding-format" in _argv ) {
+    encoding_format =
       _argv[
-        "amount-only"];
+        "encoding-format"];
   }
   if ( "v" in _argv ) {
     verbose =
