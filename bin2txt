@@ -57,7 +57,6 @@ const
 const
 _process_exit =
   _libcrash._process_exit;
-
 const
   _encoding_tools =
     require(

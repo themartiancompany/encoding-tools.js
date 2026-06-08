@@ -96,6 +96,15 @@ const
 const
   _msg_error =
     _libcrash._msg_error;
+const
+  _encoding_tools =
+    require(
+      "./encoding-tools");
+/* global
+     _txt2bin */
+const
+  _txt2bin =
+    _encoding_tools._txt2bin;
 
 function
   _global_variables() {
@@ -108,8 +117,8 @@ function
   make_date =
     "";
   /* global
-       out_file */
-  out_file =
+       output_file */
+  output_file =
     "";
   /* global
        encoding_format */
@@ -119,81 +128,31 @@ function
        argument_type */
   argument_type =
     "";
-  in_texts =
+  /* global
+       input_texts */
+  input_texts =
     [];
   quiet =
     "";
 }
 
-async function
-  _txt2bin(
-    _target_message,
-    _target_planet) {
-  let
-    _agent,
-    _dir_content,
-    _content,
-    _dir,
-    _file,
-    _msg,
-    _worker;
-  _dir =
-    "/test_dir";
-  _file =
-    `${_dir}/test_file`;
-  _content =
-    `${_target_message} ${_target_planet}`;
-  await _fs_worker_start(
-      "fs-worker.js");
-  _msg =
-    `Creating directory '${_dir}':`;
-  _msg_info(
-    _msg);
-  _mkdir(
-    _dir);
-  _msg =
-    `Writing content '${_content}' to file '${_file}':`;
-  _msg_info(
-    _msg);
-  _file_write(
-    _file,
-    _content);
-  _msg =
-    `Content of directory '/':`;
-  _msg_info(
-    _msg);
-  _dir_content =
-    _ls(
-      "/").unwrap();
-  console.log(
-    _dir_content);
-  _msg =
-    `Content of directory '${_dir}':`;
-  _msg_info(
-    _msg);
-  _dir_content =
-    _ls(
-      _dir).unwrap();
-  console.log(
-    _dir_content);
-}
-
 function
   _config_show() {
   let
-    _line,
-    _text;
-  _text = [
-    `      Runtime environment: ${runtime_environment}`,
-    `           Target message: ${target_message}`,
-    `            Target planet: ${target_planet}`,
-  ];
+    _line;
+  const
+    _text = [
+      `      Runtime environment: ${runtime_environment}`,
+      `            Argument type: ${argument_type}`,
+      `          Encoding format: ${encoding_format}`,
+      `              Output file: ${output_file}`,
+      `       Input text file(s): ${input_texts}`,
+    ];
   for ( _line of _text ) {
     _msg_info(
       _line);
   }
 }
-
 
 function
   _usage(
@@ -362,10 +321,10 @@ else {
 }
 _config_show();
 app_opts = [
-  out_file,
+  output_file,
   encoding_format,
   argument_type,
-  in_texts
+  input_texts
 ];
 _txt2bin.apply(
   null,

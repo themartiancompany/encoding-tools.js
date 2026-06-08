@@ -29,14 +29,20 @@ const
   _bin2txt_module =
     require(
       "./libbin2txt");
-// const
-//   _libtxt2bin =
-//     require(
-//       "./txt2bin");
+const
+  _bin2txt =
+    _bin2txt_module._bin2txt;
+const
+  _txt2bin_module =
+    require(
+      "./libtxt2bin");
+const
+  _txt2bin =
+    _bin2txt_module._txt2bin;
 
 module.exports = {
   _bin2txt:
-    _bin2txt_module._bin2txt
-  // _txt2bin:
-  //   _txt2bin
+    _bin2txt,
+  _txt2bin:
+    _txt2bin
 };
