@@ -173,19 +173,19 @@ function
     "  options:",
     "",
     "     -f --encoding-format            Encoding format ('base64').",
-    `       <encoding-format>             Default: '${encoding_format}`,
+    `       <encoding-format>             Default: '${encoding_format}'.`,
     "",
     "     -B --buffer-size                Size in bytes the input file will",
     "       <buffer-size>                 be split before being read",
     "                                     in memory and passed to",
     "                                     the encoder.",
-    `                                     Default: '${buffer_size}'`,
+    `                                     Default: '${buffer_size}'.`,
     "",
     "     -L --string-length              String chunk length.",
     `       <string-length>               Default: '${string_length}'`,
     "",
     "     -s --amount-only                Only print chunks amount.",
-    `                                     Default: '${amount_only}'`,
+    `                                     Default: '${amount_only}'.`,
     "",
     "     -h --help                       This message.",
     "     -v --verbose                    Enable verbose output."
@@ -207,6 +207,8 @@ function
   const
     _argv_args = {
       "booleans": [
+        "h",
+        "help",
         "v",
         "verbose"
       ]
@@ -219,6 +221,16 @@ function
       "_"];
   quiet = 
     "y";
+  _help_display =
+    false;
+  if ( "h" in _argv ) {
+    _help_display =
+      true;
+  }
+  if ( "help" in _argv ) {
+    _help_display =
+      true;
+  }
   runtime_environment =
     "node";
   if ( _options.indexOf(
@@ -231,6 +243,7 @@ function
   if ( _help_display ) {
     quiet =
       "n";
+    _overrides_set();
     _usage(
       0);
   }
@@ -317,7 +330,9 @@ function
 
 _global_variables();
 if ( _cmdline_check(
-       "bin2txt.js") == true ) {
+       "bin2txt.js") ||
+     _cmdline_check(
+       "bin2txt") ) {
   _cmdline_parse();
 }
 _overrides_set();

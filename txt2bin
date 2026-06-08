@@ -27,51 +27,106 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Crash Javascript global variables
+
+/* global
+     quiet */
+
 const
   _libcrash =
   require(
     'crash-js');
-_argv_get =
-  _libcrash._argv_get;
-_cmdline_check =
-  _libcrash._cmdline_check;
-_error_display =
-  _libcrash._error_display;
-_ext_rm =
-  _libcrash._ext_rm;
-_file_read =
-  _libcrash._file_read;
+/* global
+     _argv_get */
+const
+  _argv_get =
+    _libcrash._argv_get;
+/* global
+     _cmdline_check */
+const
+  _cmdline_check =
+    _libcrash._cmdline_check;
+/* global
+     _error_display */
+const
+  _error_display =
+    _libcrash._error_display;
+/* global
+     _ext_rm */
+const
+  _ext_rm =
+    _libcrash._ext_rm;
+/* global
+     _ext_rm */
+const
+  _file_read =
+    _libcrash._file_read;
+/* global
+     _file_write */
+const
 _file_write =
   _libcrash._file_write;
-_fs_worker_start =
-  _libcrash._fs_worker_start;
-_json_read =
-  _libcrash._json_read;
-_ls =
-  _libcrash._ls;
-_mkdir =
-  _libcrash._mkdir;
-_msg_info =
-  _libcrash._msg_info;
-_msg_error =
-  _libcrash._msg_error;
+/* global
+     _fs_worker_start */
+const
+  _fs_worker_start =
+    _libcrash._fs_worker_start;
+/* global
+     _json_read */
+const
+  _json_read =
+    _libcrash._json_read;
+/* global
+     _ls */
+const
+  _ls =
+    _libcrash._ls;
+/* global
+     _mkdir */
+const
+  _mkdir =
+    _libcrash._mkdir;
+/* global
+     _msg_info */
+const
+  _msg_info =
+    _libcrash._msg_info;
+/* global
+     _msg_error */
+const
+  _msg_error =
+    _libcrash._msg_error;
 
 function
   _global_variables() {
+  /* global
+       app_name */
   app_name =
-    "ahsi";
-  target_message =
+    "txt2bin";
+  /* global
+       make_date */
+  make_date =
     "";
-  target_planet =
+  /* global
+       out_file */
+  out_file =
     "";
-  runtime_environment =
+  /* global
+       encoding_format */
+  encoding_format =
     "";
+  /* global
+       argument_type */
+  argument_type =
+    "";
+  in_texts =
+    [];
   quiet =
     "";
 }
 
 async function
-  _ahsi(
+  _txt2bin(
     _target_message,
     _target_planet) {
   let
@@ -169,35 +224,107 @@ function
 
 function 
   _cmdline_parse() {
+  let
+    _argv,
+    _help_display,
+    _msg;
+  const
+    _argv_args = {
+      "booleans": [
+        "h",
+        "help",
+        "v",
+        "verbose"
+      ]
+    };
+  _argv =
+    _argv_get(
+       _argv_args);
+  _options =
+    _argv[
+      "_"];
   quiet = 
     "y";
+  _help_display =
+    false;
+  if ( "h" in _argv ) {
+    _help_display =
+      true;
+  }
+  if ( "help" in _argv ) {
+    _help_display =
+      true;
+  }
   runtime_environment =
     "node";
-  process.argv.forEach(
-    function (
-      _value,
-      _index,
-      _array) {
-      if ( _index == 2 ) {
-        quiet =
-          _value;
-      }
-      if ( _index == 3 ) {
-        target_message =
-          _value;
-      }
-      if ( _index == 4 ) {
-        target_planet =
-          _value;
-      }
-      if ( _value == "-h" ||
-           _value == "--help" ) {
-        quiet =
-          "n";
-        _usage(
-          0);
-      }
-  });
+  if ( _options.indexOf(
+         "--help") > -1 ||
+       _options.indexOf(
+         "-h") > -1) {
+    _help_display =
+      true;
+  }
+  if ( _help_display ) {
+    quiet =
+      "n";
+    _overrides_set();
+    _usage(
+      0);
+  }
+  if ( typeof(
+         _argv) == "undefined" ||
+       _argv[
+         "_"].length < 1 ) {
+    _msg =
+      "Input file argument required.";
+    _msg_error(
+      _msg,
+      0);
+    _usage(
+      1);
+  }
+  in_file =
+    _argv[
+      "_"][
+        0];
+  if ( _argv[
+         "_"].length < 2 ) {
+    out_txt_prefix =
+      in_file +
+      ".base64";
+  }
+  if ( "L" in _argv ) {
+    string_length =
+      _argv[
+        "L"];
+  }
+  if ( "string-length" in _argv ) {
+    string_length =
+      _argv[
+        "string-length"];
+  }
+  if ( "s" in _argv ) {
+    amount_only =
+      _argv[
+        "s"];
+  }
+  if ( "amount-only" in _argv ) {
+    amount_only =
+      _argv[
+        "amount-only"];
+  }
+  if ( "v" in _argv ) {
+    verbose =
+      true;
+  }
+  if ( "verbose" in _argv ) {
+    verbose =
+      true;
+  }
+  if ( verbose ) {
+    quiet =
+      "n";
+  }
 }
 
 function
@@ -227,7 +354,7 @@ _global_variables();
 
 _global_variables();
 if ( _cmdline_check(
-       "ahsi") == true ) {
+       "txt2bin") == true ) {
   _cmdline_parse();
 }
 else {
@@ -235,9 +362,11 @@ else {
 }
 _config_show();
 app_opts = [
-  target_message,
-  target_planet
+  out_file,
+  encoding_format,
+  argument_type,
+  in_texts
 ];
-_ahsi.apply(
+_txt2bin.apply(
   null,
   app_opts);
