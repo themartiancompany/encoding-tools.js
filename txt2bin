@@ -157,6 +157,7 @@ function
     _line;
   const
     _text = [
+      `                Call date: ${call_date}`,
       `      Runtime environment: ${runtime_environment}`,
       `            Argument type: ${argument_type}`,
       `          Encoding format: ${encoding_format}`,
@@ -210,6 +211,38 @@ function
 }
 
 function 
+  _overrides_set() {
+  if ( make_date == "" ) {
+    make_date =
+      _get_date_human();
+  }
+  if ( encoding_format == "" ||
+       typeof(
+         encoding_format) == "undefined" ) {
+    encoding_format =
+      "base64";
+  }
+  if ( string_length == "" ||
+       typeof(
+         string_length) == "undefined" ) {
+    string_length =
+      "10000";
+  }
+  if ( buffer_size == "" ||
+       typeof(
+         buffer_size) == "undefined" ) {
+    buffer_size =
+      "2000000"; // 2MB
+  }
+  if ( amount_only == "" ||
+         typeof(
+           amount_only) == "undefined" ) {
+    amount_only =
+      "false";
+  }
+}
+
+function 
   _cmdline_parse() {
   let
     _help_display,
@@ -227,9 +260,10 @@ function
     _argv =
       _argv_get(
          _argv_args);
-  _options =
-    _argv[
-      "_"];
+  const
+    _options =
+      _argv[
+        "_"];
   quiet = 
     "y";
   _help_display =

@@ -80,6 +80,11 @@ function
   app_opts =
     [];
   /* global
+       make_date:
+         writable */
+  make_date =
+    "";
+  /* global
        encoding_format:
          writable */
   encoding_format =
@@ -118,19 +123,31 @@ function
 
 function 
   _overrides_set() {
-  if ( encoding_format == "" ) {
+  if ( make_date == "" ) {
+    make_date =
+      _get_date_human();
+  }
+  if ( encoding_format == "" ||
+       typeof(
+         encoding_format) == "undefined" ) {
     encoding_format =
       "base64";
   }
-  if ( string_length == "" ) {
+  if ( string_length == "" ||
+       typeof(
+         string_length) == "undefined" ) {
     string_length =
       "10000";
   }
-  if ( buffer_size == "" ) {
+  if ( buffer_size == "" ||
+       typeof(
+         buffer_size) == "undefined" ) {
     buffer_size =
       "2000000"; // 2MB
   }
-  if ( amount_only == "" ) {
+  if ( amount_only == "" ||
+         typeof(
+           amount_only) == "undefined" ) {
     amount_only =
       "false";
   }
@@ -143,6 +160,7 @@ function
   const
     _text = [
       `${app_name} configuration:`,
+      `                Call date:   ${call_date}`,
       `      Runtime environment:   ${runtime_environment}`,
       `          Encoding format:   ${encoding_format}`,
       `              Buffer size:   ${buffer_size}`,
@@ -223,9 +241,10 @@ function
     _argv =
       _argv_get(
          _argv_args);
-  _options =
-    _argv[
-      "_"];
+  const
+    _options =
+      _argv[
+        "_"];
   quiet = 
     "y";
   _help_display =
