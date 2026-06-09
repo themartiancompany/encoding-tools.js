@@ -371,6 +371,38 @@ function
   }
 }
 
+function
+  _url_parse() {
+  let
+    _argv;
+  runtime_environment =
+    "browser";
+  _argv =
+    _argv_url_get();
+  encoding_format =
+    _argv_url_get(
+      "encoding_format")[
+        0];
+  argument_type =
+    _argv_url_get(
+      "argument_type")[
+        0];
+  output_file =
+    _argv_url_get(
+      "output_file")[
+        0];
+  input_files =
+    _argv_url_get(
+      "input_files");
+  quiet =
+    _argv_url_get(
+      "quiet");
+  if ( quiet.length === 0 ) {
+    quiet =
+      "n";
+  }
+}
+
 _global_variables();
 
 _global_variables();
