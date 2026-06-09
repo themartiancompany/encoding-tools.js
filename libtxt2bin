@@ -109,7 +109,31 @@ async function
 }
 
 function
-  _base64_decode() {
+  _base64_decode(
+    _output_file,
+    _input_files) {
+  let
+    _data,
+    _msg,
+    _txt;
+  if ( typeof(
+         _input_files) == "undefined" ||
+       _input_files == [] ||
+       _input_files == "" ) {
+    _msg =
+      "No input files given in input.";
+    _msg_error(
+      _msg,
+      1);
+  }
+  _txt =
+    _input_files[
+      0];
+  if ( 0 < _input_files.length ) {
+    _txt =
+      "";
+  }
+  true
 }
 
 function
