@@ -272,7 +272,6 @@ function
     "y";
   _help_display =
     false;
-  console.log(_argv);
   if ( _argv[
          "h"] ) {
     _help_display =

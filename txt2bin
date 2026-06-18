@@ -180,7 +180,7 @@ function
     _line;
   const
     _text = [
-      `                Call date: ${make_date}`,
+      `                Make date: ${make_date}`,
       `      Runtime environment: ${runtime_environment}`,
       `            Argument type: ${argument_type}`,
       `          Encoding format: ${encoding_format}`,
@@ -399,6 +399,7 @@ if ( _cmdline_check(
 else {
   _url_parse();
 }
+_overrides_set();
 _config_show();
 app_opts = [
   output_file,
