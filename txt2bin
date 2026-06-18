@@ -123,6 +123,11 @@ const
     require(
       "./encoding-tools");
 /* global
+     _input_texts_check */
+const
+  _input_texts_check =
+    _encoding_tools._input_texts_check;
+/* global
      _txt2bin */
 const
   _txt2bin =
@@ -187,6 +192,7 @@ function
       `              Output file: ${output_file}`,
       `       Input text file(s): ${input_texts}`,
     ];
+  _msg_info("perche");
   for ( _line of _text ) {
     _msg_info(
       _line);
@@ -251,6 +257,8 @@ function
     argument_type =
       "file";
   }
+  _input_texts_check(
+    input_texts);
 }
 
 function 
@@ -345,11 +353,13 @@ function
       _argv[
         "encoding-format"];
   }
-  if ( "v" in _argv ) {
+  if ( _argv[
+         "v"] ) {
     verbose =
       true;
   }
-  if ( "verbose" in _argv ) {
+  if ( _argv[
+         "verbose"] ) {
     verbose =
       true;
   }
@@ -357,8 +367,6 @@ function
     quiet =
       "n";
   }
-  _input_files_check(
-    input_files);
 }
 
 function

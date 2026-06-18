@@ -232,23 +232,23 @@ async function
 }
 
 function
-  _input_files_check(
-    _input_files) {
+  _input_texts_check(
+    _input_texts) {
   let
-    _file
-    _msg,
+    _file,
     _input_file_exists;
-  for ( _file of _input_files ) {
+  for ( _file of _input_texts ) {
     _input_file_exists =
       _file_exists(
         _file);
     if ( ! _input_file_exists ) {
-      _msg =
-        `Input file '${_file}' does not ` +
-        `exist.`;
-      _msg_error(
-        _msg,
-        1);
+      const
+        _msg =
+          `Input file '${_file}' does not ` +
+          `exist.`;
+        _msg_error(
+          _msg,
+          1);
     }
   }
 }
@@ -259,19 +259,19 @@ async function
     _encoding_format,
     _argument_type,
     _input_files,
-    _input_files_check) {
+    _input_files_sanity_check) {
   const
-    _input_files_check_type =
+    _input_files_sanity_check_type =
       typeof(
-        _input_files_check);
-  if ( _input_files_check_type == "undefined" ||
-         _input_files_check == "" ||
-         _input_files_check == "true" ) {
-    _input_files_check =
+        _input_files_sanity_check);
+  if ( _input_files_sanity_check_type == "undefined" ||
+         _input_files_sanity_check == "" ||
+         _input_files_sanity_check == "true" ) {
+    _input_files_sanity_check =
       true;
   }
-  if ( _input_files_check == "false" ) {
-    _input_files_check =
+  if ( _input_files_sanity_check == "false" ) {
+    _input_files_sanity_check =
       false;
   }
   if ( _argument_type == "list" ) {
@@ -284,8 +284,8 @@ async function
         _list).split(
           "\n");
   }
-  if ( _input_files_check ) {
-    _input_files_check(
+  if ( _input_files_sanity_check ) {
+    _input_texts_check(
       _input_files);
   }
   if ( _encoding_format == "base64" ) {
@@ -297,6 +297,8 @@ async function
 }
 
 module.exports = {
+  _input_texts_check:
+    _input_texts_check,
   _txt2bin:
     _txt2bin
 };

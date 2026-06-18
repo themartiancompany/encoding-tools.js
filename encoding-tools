@@ -37,12 +37,17 @@ const
     require(
       "./libtxt2bin");
 const
+  _input_texts_check =
+    _txt2bin_module._input_texts_check;
+const
   _txt2bin =
     _txt2bin_module._txt2bin;
 
 module.exports = {
   _bin2txt:
     _bin2txt,
+  _input_texts_check:
+    _input_texts_check,
   _txt2bin:
     _txt2bin
 };
