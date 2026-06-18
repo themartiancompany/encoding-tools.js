@@ -179,7 +179,7 @@ async function
     _msg);
 }
 
-function
+async function
   _base64_decode(
     _output_file,
     _input_files,
@@ -202,9 +202,14 @@ function
     _input_files[
       0];
   if ( 0 < _input_files.length ) {
+    const
+      _tmp_dir =
+        await _mktemp();
+    console.log(
+      _tmp_dir);
     _txt =
       _path_join( [
-        _mktemp(),
+        _tmp_dir,
         "merge.base64" ]);
     _assemble(
       _txt,
@@ -221,7 +226,7 @@ function
     _base64_stream_module.Base64Encode);
 }
 
-function
+async function
   _txt2bin(
     _output_file,
     _encoding_format,
@@ -238,7 +243,7 @@ function
           "\n");
   }
   if ( _encoding_format == "base64" ) {
-    _base64_decode(
+    await _base64_decode(
       _output_file,
       _input_files,
       _argument_type);

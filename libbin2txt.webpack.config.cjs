@@ -107,6 +107,8 @@ module.exports = {
     fallback: {
       "utils":
         false,
+      "stream":
+        false,
       "web-worker":
         false,
       "yargs":
