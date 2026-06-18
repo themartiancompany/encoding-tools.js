@@ -106,6 +106,8 @@ module.exports = {
           'node_modules/yargs-parser/browser.mjs'),
     },
     fallback: {
+      "./libtxt2bin":
+        false,
       "stream":
         false,
       "utils":
