@@ -68,7 +68,6 @@ async function
     _output_path,
     _argument_type) {
   let
-    _file,
     _data,
     _dir,
     _file,

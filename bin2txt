@@ -27,6 +27,10 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* Crash Javascript global variables */
+
+/* global
+     runtime_environment */
 
 const
   _libcrash =
@@ -115,6 +119,11 @@ function
   amount_only =
     "";
   /* global
+       verbose:
+         writable */
+  verbose =
+    "";
+  /* global
        quiet:
          writable */
   quiet =
@@ -160,7 +169,7 @@ function
   const
     _text = [
       `${app_name} configuration:`,
-      `                Call date:   ${call_date}`,
+      `                Call date:   ${make_date}`,
       `      Runtime environment:   ${runtime_environment}`,
       `          Encoding format:   ${encoding_format}`,
       `              Buffer size:   ${buffer_size}`,
@@ -179,42 +188,42 @@ function
   _usage(
     _exit_code) {
   let
-    _line,
-    _text;
-  _text = [
-    "Converts binary to ascii text.",
-    "",
-    "Usage:",
-    "",
-    "  bin2txt",
-    "    <in-file>",
-    "    <out-txt-prefix>",
-    "",
-    "  arguments:",
-    "    <in-file>                        An input file.",
-    "    <out-file-prefix>                Prefix for the output file(s).",
-    "",
-    "  options:",
-    "",
-    "     -f --encoding-format            Encoding format ('base64').",
-    `       <encoding-format>             Default: '${encoding_format}'.`,
-    "",
-    "     -B --buffer-size                Size in bytes the input file will",
-    "       <buffer-size>                 be split before being read",
-    "                                     in memory and passed to",
-    "                                     the encoder.",
-    `                                     Default: '${buffer_size}'.`,
-    "",
-    "     -L --string-length              String chunk length.",
-    `       <string-length>               Default: '${string_length}'`,
-    "",
-    "     -s --amount-only                Only print chunks amount.",
-    `                                     Default: '${amount_only}'.`,
-    "",
-    "     -h --help                       This message.",
-    "     -v --verbose                    Enable verbose output.",
-    ""
-  ];
+    _line;
+  const
+    _text = [
+      "Converts binary to ascii text.",
+      "",
+      "Usage:",
+      "",
+      "  bin2txt",
+      "    <in-file>",
+      "    <out-txt-prefix>",
+      "",
+      "  arguments:",
+      "    <in-file>                        An input file.",
+      "    <out-file-prefix>                Prefix for the output file(s).",
+      "",
+      "  options:",
+      "",
+      "     -f --encoding-format            Encoding format ('base64').",
+      `       <encoding-format>             Default: '${encoding_format}'.`,
+      "",
+      "     -B --buffer-size                Size in bytes the input file will",
+      "       <buffer-size>                 be split before being read",
+      "                                     in memory and passed to",
+      "                                     the encoder.",
+      `                                     Default: '${buffer_size}'.`,
+      "",
+      "     -L --string-length              String chunk length.",
+      `       <string-length>               Default: '${string_length}'`,
+      "",
+      "     -s --amount-only                Only print chunks amount.",
+      `                                     Default: '${amount_only}'.`,
+      "",
+      "     -h --help                       This message.",
+      "     -v --verbose                    Enable verbose output.",
+      ""
+    ];
   for ( _line of _text ) {
     console.log(
       _line);
@@ -341,14 +350,30 @@ function
     _argv_url_get(
       "in_file")[
         0];
-  target_planet =
+  out_txt_prefix =
     _argv_url_get(
       "out_txt_prefix")[
+        0];
+  string_length =
+    _argv_url_get(
+      "string_length")[
+        0];
+  amount_only =
+    _argv_url_get(
+      "amount_only")[
+        0];
+  verbose =
+    _argv_url_get(
+      "verbose")[
         0];
   quiet =
     _argv_url_get(
       "quiet");
   if ( quiet.length === 0 ) {
+    quiet =
+      "n";
+  }
+  if ( verbose ) {
     quiet =
       "n";
   }

@@ -356,29 +356,6 @@ function
     "browser";
   _argv =
     _argv_url_get();
-  target_message =
-    _argv_url_get(
-      "target_message")[0];
-  target_planet =
-    _argv_url_get(
-      "target_planet")[0];
-  quiet =
-    _argv_url_get(
-      "quiet");
-  if ( quiet.length === 0 ) {
-    quiet =
-      "n";
-  }
-}
-
-function
-  _url_parse() {
-  let
-    _argv;
-  runtime_environment =
-    "browser";
-  _argv =
-    _argv_url_get();
   encoding_format =
     _argv_url_get(
       "encoding_format")[

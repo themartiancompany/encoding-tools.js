@@ -173,19 +173,19 @@ function
   _base64_block_encode(
     _file) {
   let
-    _buffer,
-    _content,
     _string;
-  _content =
-    _cat(
-      _file);
+  const
+    _content =
+      _cat(
+        _file);
   if ( typeof window === 'undefined' &&
        ( typeof global !== 'undefined' &&
          global.global === global ) &&
        typeof __webpack_require__ !== 'function' ) {
-    _buffer =
-      Buffer.from(
-        _content);
+    const
+      _buffer =
+        Buffer.from(
+          _content);
     _string =
       _buffer.toString(
         "base64");
@@ -207,7 +207,6 @@ async function
     _block_last) {
   let
     _chunk,
-    _chunks,
     _content,
     _cut,
     _head,
@@ -216,11 +215,12 @@ async function
   const
     _total =
       _in.length;
-  _chunks =
-    Math.ceil(
-      _chunk_current +
-      _total /
-        _length);
+  const
+    _chunks =
+      Math.ceil(
+        _chunk_current +
+        _total /
+          _length);
   if ( _chunks < 2 ) {
     _out =
       _prefix;
@@ -365,7 +365,6 @@ async function
     _amount_only) {
   let
     _block,
-    _blocks_total,
     _chunk_current,
     _chunks_total,
     _block_current,
@@ -385,8 +384,9 @@ async function
         _in,
         _out,
         _buffer_size_bytes);
-  _blocks_total =
-    _blocks.length;
+  const
+    _blocks_total =
+      _blocks.length;
   _chunk_current =
     0;
   _block_current =
