@@ -2,7 +2,7 @@
   "name":
     "encoding-tools",
   "version":
-    "0.0.5",
+    "0.0.6",
   "description":
     "A multi-language collection of encoding tools.",
   "funding": {
@@ -19,6 +19,7 @@
     "AUTHORS.rst",
     "COPYING",
     "README.md",
+    "bin2txt",
     "dist",
     "encoding-tools",
     "libbin2txt",
@@ -91,7 +92,11 @@
     "bin2txt":
       "bin2txt",
     "bin2txt.js":
-      "bin2txt"
+      "bin2txt",
+    "txt2bin":
+      "txt2bin",
+    "txt2bin.js":
+      "txt2bin"
   },
   "scripts": {
     "build-fs-worker":
