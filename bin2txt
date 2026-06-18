@@ -272,11 +272,14 @@ function
     "y";
   _help_display =
     false;
-  if ( "h" in _argv ) {
+  console.log(_argv);
+  if ( _argv[
+         "h"] ) {
     _help_display =
       true;
   }
-  if ( "help" in _argv ) {
+  if ( _argv[
+         "help"] ) {
     _help_display =
       true;
   }
@@ -317,6 +320,12 @@ function
     out_txt_prefix =
       in_file +
       ".base64";
+  }
+  else {
+    out_txt_prefix =
+      _argv[
+        "_"][
+          1];
   }
   if ( "L" in _argv ) {
     string_length =

@@ -226,7 +226,7 @@ function
       ""
     ];
   for ( _line of _text ) {
-    _msg_info(
+    console.log(
       _line);
   }
   _process_exit(

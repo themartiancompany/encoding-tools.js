@@ -135,7 +135,8 @@ async function
     _out,
     _buffer_size_bytes) {
   let
-    _msg;
+    _msg,
+    _output_files;
   const
     _size_max =
       0;
@@ -153,28 +154,34 @@ async function
       Math.ceil(
         _in_size_bytes /
         _buffer_size_bytes);
-  _msg =
-    `Splitting file '${_in}' in ` +
-    `'${_blocks_total}' blocks of ` +
-    `'${_buffer_size_bytes}' bytes.`;
-  _msg_info(
-    _msg);
-  const
-    _split_opts = [
-      _in,
-      `${_out}.block.`,
-      _blocks_total,
-      _size_max
-    ];
-  const
+  if ( 1 < _blocks_total ) {
+    _msg =
+      `Splitting file '${_in}' in ` +
+      `'${_blocks_total}' blocks of ` +
+      `'${_buffer_size_bytes}' bytes.`;
+    _msg_info(
+      _msg);
+    const
+      _split_opts = [
+        _in,
+        `${_out}.block.`,
+        _blocks_total,
+        _size_max
+      ];
     _output_files =
       await _split.apply(
         null,
         _split_opts);
-  _msg =
-    "Done.";
-  _msg_info(
-    _msg);
+    _msg =
+      "Done.";
+    _msg_info(
+      _msg);
+  }
+  else {
+    _output_files = [
+      _in
+    ]; 
+  }
   return _output_files;
 }
 
@@ -230,6 +237,7 @@ async function
         _chunk_current +
         _total /
           _length);
+  console.log("prefix", _prefix);
   if ( _chunks < 2 ) {
     _out =
       _prefix;
@@ -423,7 +431,7 @@ async function
     }
     if ( _format === "base64" ) {
       _chunk_current =
-        _base64_encode(
+        await _base64_encode(
           _block,
           _chunk_current,
           _length,
