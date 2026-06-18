@@ -185,7 +185,7 @@ async function
   return _output_files;
 }
 
-function
+async function
   _base64_block_encode(
     _file) {
   let
@@ -315,7 +315,7 @@ async function
     _msg;
   const
     _txt =
-      _base64_block_encode(
+      await _base64_block_encode(
         _block);
   _msg =
     `Block '${_block}' encoded ` +
@@ -451,7 +451,7 @@ async function
         1);
     }
   }
-  const
+  let
     _rm_args =
       [];
   for ( _block of _blocks ) {
