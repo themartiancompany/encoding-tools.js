@@ -69,6 +69,8 @@
       "^10.0.1",
     "safely-serve":
       "^0.0.9",
+    "stream":
+      "npm:stream-browserify@^3.0.0",
     "webpack":
       "^5.102.1",
     "webpack-cli":
@@ -108,7 +110,7 @@
     "build-libtxt2bin":
       "npx webpack --mode 'production' --config 'libtxt2bin.webpack.config.cjs' --stats-error-details && mv 'libtxt2bin.js' 'dist/libtxt2bin'",
     "build-lib":
-      "npm run build-encoding-tools && npm run libbin2txt && npm run libtxt2bin",
+      "npm run build-encoding-tools && npm run build-libbin2txt && npm run build-libtxt2bin",
     "build-bin2txt":
       "npx webpack --mode 'production' --config 'bin2txt.webpack.config.cjs' --stats-error-details && mv 'bin2txt.js' 'dist/bin2txt'",
     "build-txt2bin":

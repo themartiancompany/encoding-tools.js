@@ -34,7 +34,7 @@ const
 const
   _ignores = [
     "build/**",
-    "dist",
+    "dist/**",
     "fs-worker.js",
     "node_modules/**",
     "eslint.config.js",
