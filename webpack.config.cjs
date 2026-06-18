@@ -88,6 +88,10 @@ module.exports = {
         _path.resolve(
           __dirname,
           'node_modules/path/mod.js'),
+      "stream":
+        _path.resolve(
+          __dirname,
+          'node_modules/stream-browserify/index.js'),
       "web-worker":
         _path.resolve(
           __dirname,
