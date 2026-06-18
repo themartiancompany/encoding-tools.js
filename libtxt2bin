@@ -32,9 +32,6 @@ const
   require(
     'crash-js');
 const
-  _error_display =
-    _libcrash._error_display;
-const
   _ext_rm =
     _libcrash._ext_rm;
 const
