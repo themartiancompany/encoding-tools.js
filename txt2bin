@@ -27,6 +27,9 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* eslint-disable
+     no-unused-vars */
+
 // Crash Javascript global variables
 
 /* global
@@ -80,6 +83,11 @@ _file_write =
 const
   _fs_worker_start =
     _libcrash._fs_worker_start;
+/* global
+     _get_date_human */
+const
+  _get_date_human =
+    _libcrash._get_date_human;
 /* global
      _json_read */
 const
@@ -157,9 +165,6 @@ function
          writable */
   input_texts =
     [];
-  /* global
-       quiet:
-         writable */
   quiet =
     "";
   /* global
@@ -175,7 +180,7 @@ function
     _line;
   const
     _text = [
-      `                Call date: ${call_date}`,
+      `                Call date: ${make_date}`,
       `      Runtime environment: ${runtime_environment}`,
       `            Argument type: ${argument_type}`,
       `          Encoding format: ${encoding_format}`,
@@ -240,23 +245,11 @@ function
     encoding_format =
       "base64";
   }
-  if ( string_length == "" ||
+  if ( argument_type == "" ||
        typeof(
-         string_length) == "undefined" ) {
-    string_length =
-      "10000";
-  }
-  if ( buffer_size == "" ||
-       typeof(
-         buffer_size) == "undefined" ) {
-    buffer_size =
-      "2000000"; // 2MB
-  }
-  if ( amount_only == "" ||
-         typeof(
-           amount_only) == "undefined" ) {
-    amount_only =
-      "false";
+         argument_type) == "undefined" ) {
+    argument_type =
+      "file";
   }
 }
 
@@ -322,7 +315,7 @@ function
     _usage(
       1);
   }
-  out_file =
+  output_file =
     _argv[
       "_"][
         0];

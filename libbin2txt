@@ -27,6 +27,9 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* eslint-disable
+     no-unused-vars */
+
 const
   _libcrash =
   require(
@@ -97,6 +100,11 @@ const
   _msg_error =
     _libcrash._msg_error;
 /* global
+     _printf */
+const
+  _printf =
+    _libcrash._printf;
+/* global
      _rm */
 const
   _rm =
@@ -158,10 +166,11 @@ async function
       _blocks_total,
       _size_max
     ];
-  _output_files =
-    await _split.apply(
-      null,
-      _split_opts);
+  const
+    _output_files =
+      await _split.apply(
+        null,
+        _split_opts);
   _msg =
     "Done.";
   _msg_info(
@@ -193,7 +202,7 @@ function
   else {
     _string =
       btoa(
-        string);
+        _string);
   }
   return _string;
 }
@@ -207,9 +216,9 @@ async function
     _block_last) {
   let
     _chunk,
+    _chunk_start,
     _content,
     _cut,
-    _head,
     _msg,
     _out;
   const
@@ -255,7 +264,7 @@ async function
     _msg_info(
       _msg);
     if ( _chunk < _chunks ) {
-      printf(
+      _printf(
         _out,
         _cut);
     }
@@ -322,7 +331,7 @@ async function
           _txt.length /
             _length);
     _chunk_current =
-      _chunk_total;
+      _chunks_total;
   }
   else {
     _msg =
@@ -373,8 +382,14 @@ async function
     _rm_args,
     _worker;
   if ( typeof window !== 'undefined' ) {
-    await _fs_worker_start(
-        "fs-worker.js");
+    const
+      _worker =
+        await _fs_worker_start(
+          "fs-worker.js");
+    _msg =
+      `OPFS worker '${_worker}' started.`;
+    _msg_info(
+      _msg);
   }
   _input_data_check(
     _in);
@@ -439,8 +454,13 @@ async function
   if ( _amount_only === "true" ) {
     _chunks_total =
       _chunk_current;
-    console.log(
-      _chunks_total);
+    _msg =
+      `File '${_in}' is base64 encoded and ` +
+      `split in '${_chunks_total}' ` +
+      `files of length '${_length}'.`;
+    _msg_info(
+      _msg);
+    return _chunks_total;
   }
   else if ( _amount_only === "false" ) {
     _msg =

@@ -27,42 +27,117 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* eslint-disable
+     no-unused-vars */
+
+const
+  _base64_stream_module =
+    require(
+      "base64-stream");
+const
+  _fs_module =
+    require(
+      "fs");
+const
+  _write_stream_create =
+    _fs_module.createWriteStream;
+const
+  _read_stream_create =
+    _fs_module.createReadStream;
+const
+  _stat =
+    _fs_module.stat;
+const
+  _promise =
+    require(
+      "bluebird");
+/* global
+     _promise_reject */
+const
+  _promise_reject =
+    _promise.reject;
+/* global
+     _promise_resolve */
+const
+  _promise_resolve =
+    _promise.resolve;
+const
+  _promisify =
+    _promise.promisify;
+/* global
+     _map_series */
+const
+  _map_series =
+    _promise.mapSeries;
 const
   _libcrash =
-  require(
-    'crash-js');
+    require(
+      'crash-js');
+/* global
+     _cat */
+const
+  _cat =
+    _libcrash._cat;
+/* global
+     _ext_rm */
 const
   _ext_rm =
     _libcrash._ext_rm;
+/* global
+     _file_append */
+const
+  _file_append =
+    _libcrash._file_append;
+/* global
+     _file_read */
 const
   _file_read =
     _libcrash._file_read;
-const
-  _file_write =
-    _libcrash._file_write;
+/* global
+     _fs_worker_start */
 const
   _fs_worker_start =
     _libcrash._fs_worker_start;
+/* global
+     _json_read */
 const
   _json_read =
     _libcrash._json_read;
+/* global
+     _ls */
 const
   _ls =
     _libcrash._ls;
+/* global
+     _mkdir */
 const
   _mkdir =
     _libcrash._mkdir;
+/* global
+     _mktemp */
+const
+  _mktemp =
+    _libcrash._mktemp;
+/* global
+     _msg_info */
 const
   _msg_info =
     _libcrash._msg_info;
+/* global
+     _msg_error */
 const
   _msg_error =
     _libcrash._msg_error;
+/* global
+     _path_join */
+const
+  _path_join =
+    _libcrash._path_join;
 
 async function
   _assemble(
     _input_files,
-    _output_path,
+    _output_file,
     _argument_type) {
   let
     _data,
@@ -77,7 +152,7 @@ async function
           0];
     _msg =
       `Merging files from list at ` +
-      `'${_list}' into '${_output_file}'.`
+      `'${_list}' into '${_output_file}'.`;
   }
   else if ( _argument_type == "file" ) {
     _msg =
@@ -96,7 +171,7 @@ async function
         _file);
     _file_append(
       _data,
-      _out);
+      _output_file);
   }
   _msg =
     `Merging finished.`;
@@ -107,7 +182,8 @@ async function
 function
   _base64_decode(
     _output_file,
-    _input_files) {
+    _input_files,
+    _argument_type) {
   let
     _data,
     _msg,
@@ -127,9 +203,22 @@ function
       0];
   if ( 0 < _input_files.length ) {
     _txt =
-      "";
+      _path_join( [
+        _mktemp(),
+        "merge.base64" ]);
+    _assemble(
+      _txt,
+      _input_files,
+      _argument_type);
   }
-  true
+  _msg =
+    `Decoding '${_txt}' into '${_output_file}'`;
+  _msg_info(
+    _msg);
+  console.log(
+    _base64_stream_module);
+  console.log(
+    _base64_stream_module.Base64Encode);
 }
 
 function
@@ -138,8 +227,6 @@ function
     _encoding_format,
     _argument_type,
     _input_files) {
-  let
-    _list;
   if ( _argument_type == "list" ) {
     const
       _list =
@@ -153,11 +240,12 @@ function
   if ( _encoding_format == "base64" ) {
     _base64_decode(
       _output_file,
-      _input_files);
+      _input_files,
+      _argument_type);
   }
 }
 
 module.exports = {
   _txt2bin:
     _txt2bin
-}
+};

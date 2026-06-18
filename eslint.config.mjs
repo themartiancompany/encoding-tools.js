@@ -75,8 +75,12 @@ export default defineConfig([
          "error" },
    files:
      [ "**/*.js",
-       `**/${_project}*`,
+       `**/bin2txt`,
+       `**/${_project}`,
        `**/lib${_project}`,
+       `**/libbin2txt`,
+       `**/libtxt2bin`,
+       `**/txt2bin`
      ],
    languageOptions:
      { sourceType:

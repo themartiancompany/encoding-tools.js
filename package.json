@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "crash-js-webpack":
-      "^0.0.11",
+      "^0.0.12",
     "eslint":
       "^10.3.0",
     "globals":
@@ -75,8 +75,10 @@
       "^6.0.1"
   },
   "dependencies": {
+    "base64-stream":
+      "^1.0.0",
     "crash-js":
-      "^0.1.115",
+      "^0.1.116",
     "tmcsplit":
       "^0.0.10",
     "yargs":
