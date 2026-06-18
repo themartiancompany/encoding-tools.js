@@ -89,6 +89,11 @@ const
   _file_append =
     _libcrash._file_append;
 /* global
+     _file_exists */
+const
+  _file_exists =
+    _libcrash._file_exists;
+/* global
      _file_read */
 const
   _file_read =
@@ -226,12 +231,49 @@ async function
     _base64_stream_module.Base64Encode);
 }
 
+function
+  _input_files_check(
+    _input_files) {
+  let
+    _file
+    _msg,
+    _input_file_exists;
+  for ( _file of _input_files ) {
+    _input_file_exists =
+      _file_exists(
+        _file);
+    if ( ! _input_file_exists ) {
+      _msg =
+        `Input file '${_file}' does not ` +
+        `exist.`;
+      _msg_error(
+        _msg,
+        1);
+    }
+  }
+}
+
 async function
   _txt2bin(
     _output_file,
     _encoding_format,
     _argument_type,
-    _input_files) {
+    _input_files,
+    _input_files_check) {
+  const
+    _input_files_check_type =
+      typeof(
+        _input_files_check);
+  if ( _input_files_check_type == "undefined" ||
+         _input_files_check == "" ||
+         _input_files_check == "true" ) {
+    _input_files_check =
+      true;
+  }
+  if ( _input_files_check == "false" ) {
+    _input_files_check =
+      false;
+  }
   if ( _argument_type == "list" ) {
     const
       _list =
@@ -241,6 +283,10 @@ async function
       _cat(
         _list).split(
           "\n");
+  }
+  if ( _input_files_check ) {
+    _input_files_check(
+      _input_files);
   }
   if ( _encoding_format == "base64" ) {
     await _base64_decode(
