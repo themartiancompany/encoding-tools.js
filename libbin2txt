@@ -382,12 +382,11 @@ async function
     _amount_only) {
   let
     _block,
-    _chunk_current,
-    _chunks_total,
     _block_current,
     _block_last,
+    _chunk_current,
+    _chunks_total,
     _msg,
-    _rm_args,
     _worker;
   if ( typeof window !== 'undefined' ) {
     const
@@ -452,13 +451,18 @@ async function
         1);
     }
   }
+  const
+    _rm_args =
+      [];
   for ( _block of _blocks ) {
-    _rm_args = [
-      _block
-    ];
-    _rm(
-      _rm_args);
+    if ( _block != _in ) {
+      _rm_args.push(
+        _block);
+    }
   }
+  _rm.apply(
+    null,
+    _rm_args);
   if ( _amount_only === "true" ) {
     _chunks_total =
       _chunk_current;
