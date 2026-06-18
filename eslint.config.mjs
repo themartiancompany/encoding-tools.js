@@ -36,6 +36,7 @@ const
     "build/**",
     "dist/**",
     "fs-worker.js",
+    `${_project}.js`,
     "node_modules/**",
     "eslint.config.js",
     "man/**"

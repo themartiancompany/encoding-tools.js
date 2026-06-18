@@ -106,6 +106,8 @@ module.exports = {
           'node_modules/yargs-parser/browser.mjs'),
     },
     fallback: {
+      "stream"
+        false,
       "utils":
         false,
       "web-worker":

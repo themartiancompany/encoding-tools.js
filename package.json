@@ -2,7 +2,7 @@
   "name":
     "encoding-tools",
   "version":
-    "0.0.6",
+    "0.0.8",
   "description":
     "A multi-language collection of encoding tools.",
   "funding": {
@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "crash-js-webpack":
-      "^0.0.13",
+      "^0.0.17",
     "eslint":
       "^10.3.0",
     "globals":
@@ -80,7 +80,7 @@
     "base64-stream":
       "^1.0.0",
     "crash-js":
-      "^0.1.117",
+      "^0.1.121",
     "tmcsplit":
       "^0.0.10",
     "yargs":
@@ -104,7 +104,7 @@
     "build-fs-worker":
       "npx webpack --mode 'production' --config 'fs-worker.webpack.config.cjs' --stats-error-details && for _target in 'bin2txt' 'encoding-tools' 'libbin2txt' 'libtxt2bin' 'txt2bin'; do cp 'fs-worker.js' 'dist/'${_target}; done",
     "build-encoding-tools":
-      "npx webpack --mode 'production' --config 'webpack.config.cjs' --stats-error-details && mv 'libbin2txt.js' 'dist/encoding-tools'",
+      "npx webpack --mode 'production' --config 'webpack.config.cjs' --stats-error-details && mv 'encoding-tools.js' 'dist/encoding-tools'",
     "build-libbin2txt":
       "npx webpack --mode 'production' --config 'libbin2txt.webpack.config.cjs' --stats-error-details && mv 'libbin2txt.js' 'dist/libbin2txt'",
     "build-libtxt2bin":
