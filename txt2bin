@@ -279,11 +279,13 @@ function
     "y";
   _help_display =
     false;
-  if ( "h" in _argv ) {
+  if ( _argv[
+         "h"]) {
     _help_display =
       true;
   }
-  if ( "help" in _argv ) {
+  if ( _argv[
+         "help"] ) {
     _help_display =
       true;
   }

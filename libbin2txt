@@ -191,25 +191,32 @@ async function
   let
     _string;
   const
+    _cat_opts = {
+      "encoding":
+        null,
+      "flag":
+        "r"};
+  const
     _content =
       _cat(
-        _file);
+        _file,
+        _cat_opts);
   if ( typeof window === 'undefined' &&
        ( typeof global !== 'undefined' &&
          global.global === global ) &&
        typeof __webpack_require__ !== 'function' ) {
-    const
-      _buffer =
-        await Buffer.from(
-          _content);
+    // const
+    //   _buffer =
+    //     await Buffer.from(
+    //       _content);
     _string =
-      _buffer.toString(
+      _content.toString(
         "base64");
   }
   else {
     _string =
       await btoa(
-        _string);
+        _content);
   }
   return _string;
 }
@@ -387,7 +394,6 @@ async function
     _chunk_current,
     _chunks_total,
     _msg,
-    _rm_args,
     _worker;
   if ( typeof window !== 'undefined' ) {
     const
@@ -452,8 +458,9 @@ async function
         1);
     }
   }
-  _rm_args =
-    [];
+  const
+    _rm_args =
+      [];
   for ( _block of _blocks ) {
     if ( _block != _in ) {
       _rm_args.push(
