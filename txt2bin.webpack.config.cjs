@@ -48,14 +48,6 @@ const
       _output_file_name
 };
 const
-  _utils_ignore =
-  { resourceRegExp:
-      /^utils$/ };
-const
-  _web_worker_ignore =
-  { resourceRegExp:
-      /^web-worker$/ };
-const
   _yargs_ignore =
   { resourceRegExp:
       /^yargs$/ };
@@ -70,14 +62,6 @@ const
 const
   _ignore_plugin =
     _webpack.IgnorePlugin; 
-const
-  _utils_ignore_plugin =
-    new _ignore_plugin(
-          _utils_ignore);
-const
-  _web_worker_ignore_plugin =
-    new _ignore_plugin(
-          _web_worker_ignore);
 const
   _yargs_ignore_plugin =
     new _ignore_plugin(

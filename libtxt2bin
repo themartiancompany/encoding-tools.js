@@ -31,81 +31,137 @@ const
   _libcrash =
   require(
     'crash-js');
-_error_display =
-  _libcrash._error_display;
-_ext_rm =
-  _libcrash._ext_rm;
-_file_read =
-  _libcrash._file_read;
-_file_write =
-  _libcrash._file_write;
-_fs_worker_start =
-  _libcrash._fs_worker_start;
-_json_read =
-  _libcrash._json_read;
-_ls =
-  _libcrash._ls;
-_mkdir =
-  _libcrash._mkdir;
-_msg_info =
-  _libcrash._msg_info;
-_msg_error =
-  _libcrash._msg_error;
+const
+  _error_display =
+    _libcrash._error_display;
+const
+  _ext_rm =
+    _libcrash._ext_rm;
+const
+  _file_read =
+    _libcrash._file_read;
+const
+  _file_write =
+    _libcrash._file_write;
+const
+  _fs_worker_start =
+    _libcrash._fs_worker_start;
+const
+  _json_read =
+    _libcrash._json_read;
+const
+  _ls =
+    _libcrash._ls;
+const
+  _mkdir =
+    _libcrash._mkdir;
+const
+  _msg_info =
+    _libcrash._msg_info;
+const
+  _msg_error =
+    _libcrash._msg_error;
 
 async function
-  _ahsi(
-    _target_message,
-    _target_planet) {
+  _assemble(
+    _input_files,
+    _output_path,
+    _argument_type) {
   let
-    _agent,
-    _dir_content,
-    _content,
+    _file,
+    _data,
     _dir,
     _file,
     _msg,
     _worker;
-  _dir =
-    "/test_dir";
-  _file =
-    `${_dir}/test_file`;
-  _content =
-    `${_target_message} ${_target_planet}`;
-  await _fs_worker_start(
-      "fs-worker.js");
-  _msg =
-    `Creating directory '${_dir}':`;
+  if ( _argument_type == "list" ) {
+    const
+      _list =
+        _input_files[
+          0];
+    _msg =
+      `Merging files from list at ` +
+      `'${_list}' into '${_output_file}'.`
+  }
+  else if ( _argument_type == "file" ) {
+    _msg =
+      `Merging '${_input_files}' into ` +
+      `'${_output_file}'.`;
+  }
   _msg_info(
     _msg);
-  _mkdir(
-    _dir);
+  const
+    _fs_worker_started =
+      await _fs_worker_start(
+          "fs-worker.js");
+  for ( _file of _input_files ) {
+    _data =
+      _file_read(
+        _file);
+    _file_append(
+      _data,
+      _out);
+  }
   _msg =
-    `Writing content '${_content}' to file '${_file}':`;
+    `Merging finished.`;
   _msg_info(
     _msg);
-  _file_write(
-    _file,
-    _content);
-  _msg =
-    `Content of directory '/':`;
-  _msg_info(
-    _msg);
-  _dir_content =
-    _ls(
-      "/").unwrap();
-  console.log(
-    _dir_content);
-  _msg =
-    `Content of directory '${_dir}':`;
-  _msg_info(
-    _msg);
-  _dir_content =
-    _ls(
-      _dir).unwrap();
-  console.log(
-    _dir_content);
+}
+
+function
+  _base64_decode(
+    _output_file,
+    _input_files) {
+  let
+    _data,
+    _msg,
+    _txt;
+  if ( typeof(
+         _input_files) == "undefined" ||
+       _input_files == [] ||
+       _input_files == "" ) {
+    _msg =
+      "No input files given in input.";
+    _msg_error(
+      _msg,
+      1);
+  }
+  _txt =
+    _input_files[
+      0];
+  if ( 0 < _input_files.length ) {
+    _txt =
+      "";
+  }
+  true
+}
+
+function
+  _txt2bin(
+    _output_file,
+    _encoding_format,
+    _argument_type,
+    _input_files) {
+  let
+    _list;
+  if ( _argument_type == "list" ) {
+    const
+      _list =
+        _input_files[
+          0];
+    _input_files =
+      _cat(
+        _list).split(
+          "\n");
+  }
+  if ( _encoding_format == "base64" ) {
+    _base64_decode(
+      _output_file,
+      _input_files);
+  }
 }
 
 module.exports = {
   _txt2bin:
     _txt2bin
-};
+}

@@ -31,82 +31,95 @@ const
   _libcrash =
   require(
     "crash-js");
+/* global
+     _cat */
+const
+  _cat =
+    _libcrash._cat;
+/* global
+     _dirname */
 const
   _dirname =
     _libcrash._dirname;
+/* global
+     _error_display */
 const
   _error_display =
     _libcrash._error_display;
+/* global
+     _ext_rm */
 const
   _ext_rm =
     _libcrash._ext_rm;
+/* global
+     _file_exists */
 const
   _file_exists =
     _libcrash._file_exists;
+/* global
+     _file_read */
 const
   _file_read =
     _libcrash._file_read;
+/* global
+     _file_write */
 const
   _file_write =
     _libcrash._file_write;
+/* global
+     _fs_worker_start */
 const
   _fs_worker_start =
     _libcrash._fs_worker_start;
+/* global
+     _json_read */
 const
   _json_read =
     _libcrash._json_read;
+/* global
+     _ls */
 const
   _ls =
     _libcrash._ls;
+/* global
+     _mkdir */
 const
   _mkdir =
     _libcrash._mkdir;
+/* global
+     _msg_info */
 const
   _msg_info =
     _libcrash._msg_info;
+/* global
+     _msg_error */
 const
   _msg_error =
     _libcrash._msg_error;
+/* global
+     _rm */
+const
+  _rm =
+    _libcrash._rm;
+/* global
+     _seq */
+const
+  _seq =
+    _libcrash._seq;
+/* global
+     _stat */
 const
   _stat =
     _libcrash._stat;
 const
   _tmcsplit =
-  require(
-    "tmcsplit");
+    require(
+      "tmcsplit");
+/* global
+     _split */
 const
   _split =
     _tmcsplit._split;
-
-async function
-  _blocks_find(
-    _pattern) {
-  let
-    _dir,
-    _dir_content,
-    _msg;
-  _msg =
-    "Looking for files " +
-    `respecting pattern '^${_pattern}*.`;
-  _msg_info(
-    _msg);
-  _dir =
-    _dirname(
-      _pattern);
-  console.log(_dir);
-  _dir_content =
-    _ls(
-      _dir);
-  for ( _file of _dir_content ) {
-    if ( _file.startsWith(
-           _pattern)) {
-    }
-  }
-  console.log(
-    typeof(_dir_content));
-  console.log(
-    _dir_content);
-}
 
 async function
   _buffer_prepare(
@@ -114,57 +127,232 @@ async function
     _out,
     _buffer_size_bytes) {
   let
-    _in_size_bytes,
-    _size_max,
-    _split_opts,
     _msg;
-  _size_max =
-    0;
-  if ( ! _file_exists(
-           _in) ) {
-    _msg =
-      `File '${_in}' does ` +
-      'not exist.';
-    _msg_error(
-      _msg,
-      1);
-  }
-  // console.log(
-  //   _in);
-  _in_size_bytes =
-    _stat(
-      _in).size;
+  const
+    _size_max =
+      0;
+  const
+    _in_size_bytes =
+      _stat(
+        _in).size;
   _msg =
     `File '${_in}' has size ` +
     `'${_in_size_bytes}' bytes.`;
   _msg_info(
     _msg);
-  console.log(
-    typeof(
-      _in_size_bytes));
-  _blocks_total =
-    Math.ceil(
-      _in_size_bytes /
-      _buffer_size_bytes);
-  console.log(_in_size_bytes);
-  console.log(_buffer_size_bytes);
-  console.log(_blocks_total);
-  _split_opts = [
+  const
+    _blocks_total =
+      Math.ceil(
+        _in_size_bytes /
+        _buffer_size_bytes);
+  _msg =
+    `Splitting file '${_in}' in ` +
+    `'${_blocks_total}' blocks of ` +
+    `'${_buffer_size_bytes}' bytes.`;
+  _msg_info(
+    _msg);
+  const
+    _split_opts = [
+      _in,
+      `${_out}.block.`,
+      _blocks_total,
+      _size_max
+    ];
+  _output_files =
+    await _split.apply(
+      null,
+      _split_opts);
+  _msg =
+    "Done.";
+  _msg_info(
+    _msg);
+  return _output_files;
+}
+
+function
+  _base64_block_encode(
+    _file) {
+  let
+    _buffer,
+    _content,
+    _string;
+  _content =
+    _cat(
+      _file);
+  if ( typeof window === 'undefined' &&
+       ( typeof global !== 'undefined' &&
+         global.global === global ) &&
+       typeof __webpack_require__ !== 'function' ) {
+    _buffer =
+      Buffer.from(
+        _content);
+    _string =
+      _buffer.toString(
+        "base64");
+  }
+  else {
+    _string =
+      btoa(
+        string);
+  }
+  return _string;
+}
+
+async function
+  _chunk_split(
     _in,
-    `${_out}.block.`,
-    _blocks_total,
-    _size_max
-  ];
-  await _split.apply(
-    null,
-    _split_opts);
-  _blocks_find(
-    `${_out}.sf-part`);
-  // console.log(
-  //   _stat(
-  //     _in).size / 1000);
-  // console.log(
-  //   _out);
+    _chunk_current,
+    _length,
+    _prefix,
+    _block_last) {
+  let
+    _chunk,
+    _chunks,
+    _content,
+    _cut,
+    _head,
+    _msg,
+    _out;
+  const
+    _total =
+      _in.length;
+  _chunks =
+    Math.ceil(
+      _chunk_current +
+      _total /
+        _length);
+  if ( _chunks < 2 ) {
+    _out =
+      _prefix;
+    _file_write(
+      _out,
+      _in);
+    return 0;
+  }
+  _msg =
+    `Chunking '${_total}' ` +
+    `letters into '${_chunks}' ` +
+    `chunks of length '${_length}'.`;
+  _msg_info(
+    _msg);
+  for ( _chunk of _seq(
+                    _chunk_current + 1,
+                    _chunks) ) {
+    _chunk_start =
+      ( ( _chunk -
+          _chunk_current ) *
+        _length ) -
+      _length;
+    _cut =
+      _in.substring(
+        _chunk_start,
+        _chunk_start + _length);
+    _out =
+      `${_prefix}.${_chunk}`;
+    _msg =
+      `Writing chunk ${_chunk} in file '${_out}' ` +
+      `of length ${_cut.length} out of ${_chunks}.`;
+    _msg_info(
+      _msg);
+    if ( _chunk < _chunks ) {
+      printf(
+        _out,
+        _cut);
+    }
+    else if ( _chunk == _chunks ) {
+      if ( _block_last == "true" ) {
+        _file_write(
+          _out,
+          _cut);
+      }
+      else if ( _block_last == "false" ) {
+        _msg =
+          "Last chunk of non-last block, " +
+          "adding a newline character at the end (nope).";
+        _msg_info(
+          _msg);
+        _file_write(
+          _out,
+          _cut);
+      }
+    }
+  }
+  _chunk_current =
+    _chunks;
+  _msg=
+    "Finished encoding block.";
+  _msg_info(
+    _msg);
+  return _chunk_current;
+}
+
+async function
+  _base64_encode(
+    _block,
+    _chunk_current,
+    _length,
+    _out,
+    _block_last,
+    _amount_only) {
+  let
+    _msg;
+  const
+    _txt =
+      _base64_block_encode(
+        _block);
+  _msg =
+    `Block '${_block}' encoded ` +
+    `length: ${_txt.length}.`;
+  _msg_info(
+    _msg);
+  if ( _amount_only === "false" ) {
+    _chunk_current =
+      await _chunk_split(
+        _txt,
+        _chunk_current,
+        _length,
+        _out,
+        _block_last);
+  }
+  else if ( _amount_only === "true" ) {
+    const
+      _chunks_total =
+        Math.ceil(
+          _chunks_total +
+          _txt.length /
+            _length);
+    _chunk_current =
+      _chunk_total;
+  }
+  else {
+    _msg =
+      `Value of the 'amount_only' can ` +
+      `be true or false. Current: '${_amount_only}'.`;
+    _msg_error(
+      _msg,
+      1);
+  }
+  _msg =
+    "Finished encoding block " +
+    `'${_block}'.`;
+  _msg_info(
+    _msg);
+  return _chunk_current;
+}
+
+async function
+  _input_data_check(
+    _in) {
+  if ( ! _file_exists(
+           _in) ) {
+    const
+      _msg =
+        `File '${_in}' does ` +
+        'not exist.';
+    _msg_error(
+      _msg,
+      1);
+  }
 }
 
 async function
@@ -176,63 +364,91 @@ async function
     _buffer_size_bytes,
     _amount_only) {
   let
+    _block,
     _blocks_total,
-    _chunks_total,
     _chunk_current,
+    _chunks_total,
     _block_current,
     _block_last,
-    _dir,
-    _file,
     _msg,
+    _rm_args,
     _worker;
-  _dir =
-    "/test_dir";
-  _file =
-    `${_dir}/test_file`;
-  _content =
-    `${_in} ${_out}`;
   if ( typeof window !== 'undefined' ) {
     await _fs_worker_start(
         "fs-worker.js");
   }
-  _buffer_prepare(
-    _in,
-    _out,
-    _buffer_size_bytes);
-  // console.log(
-  //   _split
-  // );
-  // _msg =
-  //   `Creating directory '${_dir}':`;
-  // _msg_info(
-  //   _msg);
-  // _mkdir(
-  //   _dir);
-  // _msg =
-  //   `Writing content '${_content}' to file '${_file}':`;
-  // _msg_info(
-  //   _msg);
-  // _file_write(
-  //   _file,
-  //   _content);
-  // _msg =
-  //   `Content of directory '/':`;
-  // _msg_info(
-  //   _msg);
-  // _dir_content =
-  //   _ls(
-  //     "/").unwrap();
-  // console.log(
-  //   _dir_content);
-  // _msg =
-  //   `Content of directory '${_dir}':`;
-  // _msg_info(
-  //   _msg);
-  // _dir_content =
-  //   _ls(
-  //     _dir).unwrap();
-  // console.log(
-  //   _dir_content);
+  _input_data_check(
+    _in);
+  const
+    _blocks =
+      await _buffer_prepare(
+        _in,
+        _out,
+        _buffer_size_bytes);
+  _blocks_total =
+    _blocks.length;
+  _chunk_current =
+    0;
+  _block_current =
+    1;
+  for ( _block of _blocks ) {
+    _msg =
+      `Reading block '${_block}' ` +
+      `('${_block_current}' ` +
+      `of '${_blocks_total}').`;
+    _msg_info(
+      _msg);
+    if ( _block_current < _blocks_total ) {
+      _block_last =
+        "false";
+    }
+    else if ( _block_current == _blocks_total ) {
+      _block_last =
+        "true";
+    }
+    if ( _format === "base64" ) {
+      _chunk_current =
+        _base64_encode(
+          _block,
+          _chunk_current,
+          _length,
+          _out,
+          _block_last,
+          _amount_only);
+      _msg_info(
+        `Current chunk: '${_chunk_current}'.`);
+    _block_current =
+      _block_current + 1;
+    }
+    else {
+      _msg =
+        "Unknown encoding format " +
+        `${_format}.`;
+      _msg_error(
+        _msg,
+        1);
+    }
+  }
+  for ( _block of _blocks ) {
+    _rm_args = [
+      _block
+    ];
+    _rm(
+      _rm_args);
+  }
+  if ( _amount_only === "true" ) {
+    _chunks_total =
+      _chunk_current;
+    console.log(
+      _chunks_total);
+  }
+  else if ( _amount_only === "false" ) {
+    _msg =
+      `Finished '${_format}' encoding ` +
+      `input file '${_in}'.`;
+    _msg_info(
+      _msg);
+  }
 }
 
 module.exports = {

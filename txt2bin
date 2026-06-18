@@ -27,177 +27,325 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Crash Javascript global variables
+
+/* global
+     quiet:
+       writable */
+/* global
+     runtime_environment:
+       writable */
+
 const
   _libcrash =
   require(
     'crash-js');
-_argv_get =
-  _libcrash._argv_get;
-_cmdline_check =
-  _libcrash._cmdline_check;
-_error_display =
-  _libcrash._error_display;
-_ext_rm =
-  _libcrash._ext_rm;
-_file_read =
-  _libcrash._file_read;
+/* global
+     _argv_get */
+const
+  _argv_get =
+    _libcrash._argv_get;
+/* global
+     _cmdline_check */
+const
+  _cmdline_check =
+    _libcrash._cmdline_check;
+/* global
+     _error_display */
+const
+  _error_display =
+    _libcrash._error_display;
+/* global
+     _ext_rm */
+const
+  _ext_rm =
+    _libcrash._ext_rm;
+/* global
+     _file_read */
+const
+  _file_read =
+    _libcrash._file_read;
+/* global
+     _file_write */
+const
 _file_write =
   _libcrash._file_write;
-_fs_worker_start =
-  _libcrash._fs_worker_start;
-_json_read =
-  _libcrash._json_read;
-_ls =
-  _libcrash._ls;
-_mkdir =
-  _libcrash._mkdir;
-_msg_info =
-  _libcrash._msg_info;
-_msg_error =
-  _libcrash._msg_error;
+/* global
+     _fs_worker_start */
+const
+  _fs_worker_start =
+    _libcrash._fs_worker_start;
+/* global
+     _json_read */
+const
+  _json_read =
+    _libcrash._json_read;
+/* global
+     _ls */
+const
+  _ls =
+    _libcrash._ls;
+/* global
+     _mkdir */
+const
+  _mkdir =
+    _libcrash._mkdir;
+/* global
+     _msg_info */
+const
+  _msg_info =
+    _libcrash._msg_info;
+/* global
+     _msg_error */
+const
+  _msg_error =
+    _libcrash._msg_error;
+/* global
+     _process_exit */
+const
+  _process_exit =
+    _libcrash._process_exit;
+const
+  _encoding_tools =
+    require(
+      "./encoding-tools");
+/* global
+     _txt2bin */
+const
+  _txt2bin =
+    _encoding_tools._txt2bin;
 
 function
   _global_variables() {
+  /* global
+       app_name:
+         writable */
   app_name =
-    "ahsi";
-  target_message =
+    "txt2bin";
+  /* global
+       make_date:
+         writable */
+  make_date =
     "";
-  target_planet =
+  /* global
+       output_file:
+         writable */
+  output_file =
     "";
-  runtime_environment =
+  /* global
+       encoding_format:
+         writable */
+  encoding_format =
     "";
+  /* global
+       argument_type:
+         writable */
+  argument_type =
+    "";
+  /* global
+       input_texts:
+         writable */
+  input_texts =
+    [];
   quiet =
     "";
-}
-
-async function
-  _ahsi(
-    _target_message,
-    _target_planet) {
-  let
-    _agent,
-    _dir_content,
-    _content,
-    _dir,
-    _file,
-    _msg,
-    _worker;
-  _dir =
-    "/test_dir";
-  _file =
-    `${_dir}/test_file`;
-  _content =
-    `${_target_message} ${_target_planet}`;
-  await _fs_worker_start(
-      "fs-worker.js");
-  _msg =
-    `Creating directory '${_dir}':`;
-  _msg_info(
-    _msg);
-  _mkdir(
-    _dir);
-  _msg =
-    `Writing content '${_content}' to file '${_file}':`;
-  _msg_info(
-    _msg);
-  _file_write(
-    _file,
-    _content);
-  _msg =
-    `Content of directory '/':`;
-  _msg_info(
-    _msg);
-  _dir_content =
-    _ls(
-      "/").unwrap();
-  console.log(
-    _dir_content);
-  _msg =
-    `Content of directory '${_dir}':`;
-  _msg_info(
-    _msg);
-  _dir_content =
-    _ls(
-      _dir).unwrap();
-  console.log(
-    _dir_content);
 }
 
 function
   _config_show() {
   let
-    _line,
-    _text;
-  _text = [
-    `      Runtime environment: ${runtime_environment}`,
-    `           Target message: ${target_message}`,
-    `            Target planet: ${target_planet}`,
-  ];
+    _line;
+  const
+    _text = [
+      `                Call date: ${call_date}`,
+      `      Runtime environment: ${runtime_environment}`,
+      `            Argument type: ${argument_type}`,
+      `          Encoding format: ${encoding_format}`,
+      `              Output file: ${output_file}`,
+      `       Input text file(s): ${input_texts}`,
+    ];
   for ( _line of _text ) {
     _msg_info(
       _line);
   }
 }
-
 
 function
   _usage(
     _exit_code) {
   let
-    _line,
-    _text;
-  _text = [
-    "Hello world application for browsers and computers",
-    "",
-    "Usage:",
-    "  ahsi",
-    "    <quiet>",
-    "    <message>",
-    "    <planet>",
-    "",
-    "Args:",
-    "  <quiet>                          Can be 'y' or 'n'",
-    "                                   Default: y",
-  ];
+    _line;
+  const
+    _text = [
+      "",
+      "Converts text to binary.",
+      "",
+      "Usage:",
+      `  ${app_name}`,
+      `    [options]`,
+      `    <out-file>`,
+      `    [in-text]`,
+      "",
+      "  options:",
+      "     -t, --argument-type    Possible values are 'file' and",
+      "       <type>               'list'.",
+      "                            When it is 'file' the arguments",
+      "                            are the encoded file paths,",
+      "                            when it is 'list' the argument is",
+      "                            a file containing the paths of the",
+      "                            encoded files.",
+      `                            Default: '${argument_type}`,
+      "     -f --encoding-format   Encoding format ('base64').",
+      `       <format>             Default: '${encoding_format}'`,
+      "",
+      "     -h                     This message.",
+      "     -v                     Enable verbose output",
+      ""
+    ];
   for ( _line of _text ) {
     _msg_info(
       _line);
   }
-  process.exit(
+  _process_exit(
     _exit_code);
 }
 
 function 
+  _overrides_set() {
+  if ( make_date == "" ) {
+    make_date =
+      _get_date_human();
+  }
+  if ( encoding_format == "" ||
+       typeof(
+         encoding_format) == "undefined" ) {
+    encoding_format =
+      "base64";
+  }
+  if ( string_length == "" ||
+       typeof(
+         string_length) == "undefined" ) {
+    string_length =
+      "10000";
+  }
+  if ( buffer_size == "" ||
+       typeof(
+         buffer_size) == "undefined" ) {
+    buffer_size =
+      "2000000"; // 2MB
+  }
+  if ( amount_only == "" ||
+         typeof(
+           amount_only) == "undefined" ) {
+    amount_only =
+      "false";
+  }
+}
+
+function 
   _cmdline_parse() {
+  let
+    _help_display,
+    _msg;
+  const
+    _argv_args = {
+      "booleans": [
+        "h",
+        "help",
+        "v",
+        "verbose"
+      ]
+    };
+  const
+    _argv =
+      _argv_get(
+         _argv_args);
+  const
+    _options =
+      _argv[
+        "_"];
   quiet = 
     "y";
+  _help_display =
+    false;
+  if ( "h" in _argv ) {
+    _help_display =
+      true;
+  }
+  if ( "help" in _argv ) {
+    _help_display =
+      true;
+  }
   runtime_environment =
     "node";
-  process.argv.forEach(
-    function (
-      _value,
-      _index,
-      _array) {
-      if ( _index == 2 ) {
-        quiet =
-          _value;
-      }
-      if ( _index == 3 ) {
-        target_message =
-          _value;
-      }
-      if ( _index == 4 ) {
-        target_planet =
-          _value;
-      }
-      if ( _value == "-h" ||
-           _value == "--help" ) {
-        quiet =
-          "n";
-        _usage(
-          0);
-      }
-  });
+  if ( _options.indexOf(
+         "--help") > -1 ||
+       _options.indexOf(
+         "-h") > -1) {
+    _help_display =
+      true;
+  }
+  if ( _help_display ) {
+    quiet =
+      "n";
+    _overrides_set();
+    _usage(
+      0);
+  }
+  if ( typeof(
+         _argv) == "undefined" ||
+       _argv[
+         "_"].length < 1 ) {
+    _msg =
+      "Input file argument required.";
+    _msg_error(
+      _msg,
+      0);
+    _usage(
+      1);
+  }
+  in_file =
+    _argv[
+      "_"][
+        0];
+  if ( _argv[
+         "_"].length < 2 ) {
+    out_txt_prefix =
+      in_file +
+      ".base64";
+  }
+  if ( "t" in _argv ) {
+    argument_type =
+      _argv[
+        "t"];
+  }
+  if ( "argument-type" in _argv ) {
+    argument_type =
+      _argv[
+        "argument-type"];
+  }
+  if ( "f" in _argv ) {
+    encoding_format =
+      _argv[
+        "f"];
+  }
+  if ( "encoding-format" in _argv ) {
+    encoding_format =
+      _argv[
+        "encoding-format"];
+  }
+  if ( "v" in _argv ) {
+    verbose =
+      true;
+  }
+  if ( "verbose" in _argv ) {
+    verbose =
+      true;
+  }
+  if ( verbose ) {
+    quiet =
+      "n";
+  }
 }
 
 function
@@ -223,11 +371,45 @@ function
   }
 }
 
+function
+  _url_parse() {
+  let
+    _argv;
+  runtime_environment =
+    "browser";
+  _argv =
+    _argv_url_get();
+  encoding_format =
+    _argv_url_get(
+      "encoding_format")[
+        0];
+  argument_type =
+    _argv_url_get(
+      "argument_type")[
+        0];
+  output_file =
+    _argv_url_get(
+      "output_file")[
+        0];
+  input_files =
+    _argv_url_get(
+      "input_files");
+  quiet =
+    _argv_url_get(
+      "quiet");
+  if ( quiet.length === 0 ) {
+    quiet =
+      "n";
+  }
+}
+
 _global_variables();
 
 _global_variables();
 if ( _cmdline_check(
-       "ahsi") == true ) {
+       "txt2bin") ||
+     _cmdline_check(
+       "txt2bin.js") ) {
   _cmdline_parse();
 }
 else {
@@ -235,9 +417,11 @@ else {
 }
 _config_show();
 app_opts = [
-  target_message,
-  target_planet
+  output_file,
+  encoding_format,
+  argument_type,
+  input_texts
 ];
-_ahsi.apply(
+_txt2bin.apply(
   null,
   app_opts);

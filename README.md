@@ -23,6 +23,10 @@
 
 # Encoding Tools (`encoding-tools.js`)
 
+[![NPM version](
+  https://img.shields.io/npm/last-update/encoding-tools)](
+    https://npmjs.org/package/encoding-tools)
+
 Simple, easy to read and use collection of Javascript
 encoding tools.
 
