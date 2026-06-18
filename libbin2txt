@@ -200,7 +200,7 @@ async function
        typeof __webpack_require__ !== 'function' ) {
     const
       _buffer =
-        Buffer.from(
+        await Buffer.from(
           _content);
     _string =
       _buffer.toString(
@@ -208,7 +208,7 @@ async function
   }
   else {
     _string =
-      btoa(
+      await btoa(
         _string);
   }
   return _string;
@@ -272,7 +272,7 @@ async function
     _msg_info(
       _msg);
     if ( _chunk < _chunks ) {
-      _printf(
+      _file_write(
         _out,
         _cut);
     }
@@ -290,7 +290,7 @@ async function
           _msg);
         _file_write(
           _out,
-          _cut);
+          `${_cut}\n`);
       }
     }
   }
@@ -387,6 +387,7 @@ async function
     _chunk_current,
     _chunks_total,
     _msg,
+    _rm_args,
     _worker;
   if ( typeof window !== 'undefined' ) {
     const
@@ -451,18 +452,19 @@ async function
         1);
     }
   }
-  let
-    _rm_args =
-      [];
+  _rm_args =
+    [];
   for ( _block of _blocks ) {
     if ( _block != _in ) {
       _rm_args.push(
         _block);
     }
   }
-  _rm.apply(
-    null,
-    _rm_args);
+  if ( 0 < _rm_args.length ) {
+    _rm.apply(
+      null,
+      _rm_args);
+  }
   if ( _amount_only === "true" ) {
     _chunks_total =
       _chunk_current;
