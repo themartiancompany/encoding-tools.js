@@ -35,9 +35,12 @@ const
     require(
       "base64-stream");
 const
+  _base64_decode_stream =
+    _base64_stream_module.Base64Decode;
+const
   _fs_module =
     require(
-      "fs");
+      "tmcfs");
 const
   _write_stream_create =
     _fs_module.createWriteStream;
@@ -141,8 +144,8 @@ const
 
 async function
   _assemble(
-    _input_files,
     _output_file,
+    _input_files,
     _argument_type) {
   let
     _data,
@@ -175,13 +178,14 @@ async function
       _file_read(
         _file);
     _file_append(
-      _data,
-      _output_file);
+      _output_file,
+      _data);
   }
   _msg =
     `Merging finished.`;
   _msg_info(
     _msg);
+  return true;
 }
 
 async function
@@ -210,25 +214,44 @@ async function
     const
       _tmp_dir =
         await _mktemp();
-    console.log(
-      _tmp_dir);
     _txt =
       _path_join( [
         _tmp_dir,
         "merge.base64" ]);
-    _assemble(
-      _txt,
-      _input_files,
-      _argument_type);
+    const
+      _assembled =
+        await _assemble(
+          _txt,
+          _input_files,
+          _argument_type);
   }
   _msg =
     `Decoding '${_txt}' into '${_output_file}'`;
   _msg_info(
     _msg);
-  console.log(
-    _base64_stream_module);
-  console.log(
-    _base64_stream_module.Base64Encode);
+  const
+    _read_opts =
+      {"encoding":
+         null,
+       "flag":
+         'r'};
+  const
+    _txt_stream =
+      _read_stream_create(
+        _txt);
+  const
+    _output_file_stream =
+      _write_stream_create(
+        _output_file);
+  const
+    _base64_decoder =
+      new _base64_decode_stream();
+  const
+    _write_stream =
+      _txt_stream.pipe(
+        _base64_decoder).pipe(
+          _output_file_stream);
+  return _write_stream;
 }
 
 function
@@ -289,10 +312,13 @@ async function
       _input_files);
   }
   if ( _encoding_format == "base64" ) {
-    await _base64_decode(
-      _output_file,
-      _input_files,
-      _argument_type);
+    const
+      _write_stream =
+        await _base64_decode(
+          _output_file,
+          _input_files,
+          _argument_type);
+    return _write_stream;
   }
 }
 

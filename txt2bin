@@ -192,7 +192,6 @@ function
       `              Output file: ${output_file}`,
       `       Input text file(s): ${input_texts}`,
     ];
-  _msg_info("perche");
   for ( _line of _text ) {
     _msg_info(
       _line);

@@ -60,11 +60,6 @@ const
   _file_exists =
     _libcrash._file_exists;
 /* global
-     _file_read */
-const
-  _file_read =
-    _libcrash._file_read;
-/* global
      _file_write */
 const
   _file_write =
