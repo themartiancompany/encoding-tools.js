@@ -134,7 +134,11 @@ async function
     _output_files;
   const
     _size_max =
-      0;
+      _buffer_size_bytes;
+      /* 0;
+      /* Note:
+      /*   requiring an uniform split wields
+      /*   splits different from GNU split */
   const
     _in_size_bytes =
       _stat(
@@ -287,12 +291,13 @@ async function
       else if ( _block_last == "false" ) {
         _msg =
           "Last chunk of non-last block, " +
-          "adding a newline character at the end (nope).";
+          "non adding a newline character at the end.";
         _msg_info(
           _msg);
         _file_write(
           _out,
-          `${_cut}\n`);
+          _cut);
+          // `${_cut}\n`);
       }
     }
   }
@@ -453,19 +458,11 @@ async function
         1);
     }
   }
-  const
-    _rm_args =
-      [];
   for ( _block of _blocks ) {
     if ( _block != _in ) {
-      _rm_args.push(
+      _rm(
         _block);
     }
-  }
-  if ( 0 < _rm_args.length ) {
-    _rm.apply(
-      null,
-      _rm_args);
   }
   if ( _amount_only === "true" ) {
     _chunks_total =

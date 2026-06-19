@@ -176,7 +176,9 @@ async function
   for ( _file of _input_files ) {
     _data =
       _file_read(
-        _file);
+        _file,
+        { "encoding":
+            null } );
     _file_append(
       _output_file,
       _data);
