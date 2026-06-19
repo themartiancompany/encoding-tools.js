@@ -15,12 +15,13 @@ const
 const
   _output_file_name =
     `${_input_file_name}.js`;
-_output = {
-  path:
-    _output_dir,
-  filename:
-    _output_file_name
-};
+const
+  _output = {
+    path:
+      _output_dir,
+    filename:
+      _output_file_name
+  };
 const
   _node_fs_ignore =
   { resourceRegExp:
