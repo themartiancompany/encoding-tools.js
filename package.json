@@ -2,7 +2,7 @@
   "name":
     "encoding-tools",
   "version":
-    "0.0.14",
+    "0.0.15",
   "description":
     "A multi-language collection of encoding tools.",
   "funding": {
@@ -83,6 +83,8 @@
       "^1.0.0",
     "crash-js":
       "^0.1.134",
+    "tmcfs":
+      "npm:@themartiancompany/fs@^0.0.12",
     "tmcsplit":
       "^0.0.11",
     "yargs":
