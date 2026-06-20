@@ -31,51 +31,9 @@
      no-unused-vars */
 
 const
-  _base64_stream_module =
-    require(
-      "base64-stream");
-const
-  _base64_decode_stream =
-    _base64_stream_module.Base64Decode;
-const
   _buffer =
     require(
       "buffer");
-const
-  _fs_module =
-    require(
-      "tmcfs");
-const
-  _write_stream_create =
-    _fs_module.createWriteStream;
-const
-  _read_stream_create =
-    _fs_module.createReadStream;
-const
-  _stat =
-    _fs_module.stat;
-const
-  _promise =
-    require(
-      "bluebird");
-/* global
-     _promise_reject */
-const
-  _promise_reject =
-    _promise.reject;
-/* global
-     _promise_resolve */
-const
-  _promise_resolve =
-    _promise.resolve;
-const
-  _promisify =
-    _promise.promisify;
-/* global
-     _map_series */
-const
-  _map_series =
-    _promise.mapSeries;
 const
   _libcrash =
     require(
@@ -162,9 +120,9 @@ async function
     _data,
     _dir,
     _file,
+    _file_current,
     _merge_list,
     _msg,
-    _output_current,
     _worker;
   if ( _argument_type == "list" ) {
     const
@@ -190,11 +148,6 @@ async function
     1;
   _block_current =
     1;
-  // _output_current =
-  //   `${_output_file}.base64.${_block_current}`;
-  // _merge_list = [
-  //     _output_current
-  //   ];
   const
     _file_read_opts = {
       "encoding":
@@ -229,21 +182,8 @@ async function
           Buffer.from(
             _block,
             'base64');
-      _msg =
-        `Writing to '${_output_current}'`;
-      _msg_info(
-        _msg);
-      // _file_write(
-      //   _output_current,
-      //   _content);
       _block_current =
         _block_current + 1;
-      // if ( _file_current != _input_files.length ) {
-      //   _merge_list.push(
-      //     _output_current);
-      // }
-      // _output_current =
-      //   `${_output_file}.base64.${_block_current}`;
       _file_append(
         _output_file,
         _content,
@@ -251,19 +191,10 @@ async function
         _msg =
       _block =
         "";
-      `Finish merging file ` +
-      `'${_output_current}'.`;
-      _msg_info(
-        _msg);
     }
     _file_current =
       _file_current + 1;
   }
-  // _msg =
-  //   `Merging finished, `+
-  //   `merge list '${_merge_list}'.`;
-  // _msg_info(
-  //   _msg);
   return true;
 }
 
@@ -307,35 +238,6 @@ async function
         _output_file,
         _input_files,
         _argument_type);
-  }
-  _msg =
-    `Decoding '${_merge_list}' into '${_output_file}'`;
-  _msg_info(
-    _msg);
-  if ( _encoding_type == "stream" ) {
-    const
-      _read_opts =
-        {"encoding":
-           "utf-8",
-         "flag":
-           'r'};
-    const
-      _txt_stream =
-        _read_stream_create(
-          _txt);
-    const
-      _output_file_stream =
-        _write_stream_create(
-          _output_file);
-    const
-      _base64_decoder =
-        new _base64_decode_stream();
-    const
-      _write_stream =
-        _txt_stream.pipe(
-          _base64_decoder).pipe(
-            _output_file_stream);
-    return _write_stream;
   }
 }
 
@@ -418,13 +320,13 @@ async function
   }
   if ( _encoding_format == "base64" ) {
     const
-      _write_stream =
+      _decoded =
         await _base64_decode(
           _output_file,
           _input_files,
           _argument_type,
           _encoding_type);
-    return _write_stream;
+    return _decoded;
   }
 }
 

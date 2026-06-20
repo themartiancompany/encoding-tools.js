@@ -2,7 +2,7 @@
   "name":
     "encoding-tools",
   "version":
-    "0.0.13",
+    "0.0.14",
   "description":
     "A multi-language collection of encoding tools.",
   "funding": {
@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "crash-js-webpack":
-      "^0.0.26",
+      "^0.0.28",
     "eslint":
       "^10.3.0",
     "globals":
@@ -77,10 +77,10 @@
       "^6.0.1"
   },
   "dependencies": {
-    "base64-stream":
+    "buffer":
       "^1.0.0",
     "crash-js":
-      "^0.1.133",
+      "^0.1.134",
     "tmcfs":
       "npm:@themartiancompany/fs@^0.0.12",
     "tmcsplit":
