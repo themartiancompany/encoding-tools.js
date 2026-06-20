@@ -38,6 +38,10 @@ const
   _base64_decode_stream =
     _base64_stream_module.Base64Decode;
 const
+  _buffer =
+    require(
+      "buffer");
+const
   _fs_module =
     require(
       "tmcfs");
@@ -102,6 +106,11 @@ const
   _file_read =
     _libcrash._file_read;
 /* global
+     _file_write */
+const
+  _file_write =
+    _libcrash._file_write;
+/* global
      _fs_worker_start */
 const
   _fs_worker_start =
@@ -148,10 +157,14 @@ async function
     _input_files,
     _argument_type) {
   let
+    _block_current,
+    _block_end,
     _data,
     _dir,
     _file,
+    _merge_list,
     _msg,
+    _output_current,
     _worker;
   if ( _argument_type == "list" ) {
     const
@@ -173,20 +186,84 @@ async function
     _fs_worker_started =
       await _fs_worker_start(
           "fs-worker.js");
+  _file_current =
+    1;
+  _block_current =
+    1;
+  // _output_current =
+  //   `${_output_file}.base64.${_block_current}`;
+  // _merge_list = [
+  //     _output_current
+  //   ];
+  const
+    _file_read_opts = {
+      "encoding":
+        "utf-8"
+    };
+  const
+    _file_append_opts = {
+      "encoding":
+        null
+    };
+  _block =
+    "";
   for ( _file of _input_files ) {
     _data =
       _file_read(
         _file,
-        { "encoding":
-            null } );
-    _file_append(
-      _output_file,
-      _data);
+        _file_read_opts);
+    _block_end =
+      false;
+    if (_data.endsWith(
+          '\n') ||
+        _file_current == _input_files.length ) {
+       _block_end =
+         true;
+    }
+    _block =
+      _block +
+      _data;
+    if ( _block_end ) {
+      const
+        _content =
+          Buffer.from(
+            _block,
+            'base64');
+      _msg =
+        `Writing to '${_output_current}'`;
+      _msg_info(
+        _msg);
+      // _file_write(
+      //   _output_current,
+      //   _content);
+      _block_current =
+        _block_current + 1;
+      // if ( _file_current != _input_files.length ) {
+      //   _merge_list.push(
+      //     _output_current);
+      // }
+      // _output_current =
+      //   `${_output_file}.base64.${_block_current}`;
+      _file_append(
+        _output_file,
+        _content,
+        _file_append_opts);
+        _msg =
+      _block =
+        "";
+      `Finish merging file ` +
+      `'${_output_current}'.`;
+      _msg_info(
+        _msg);
+    }
+    _file_current =
+      _file_current + 1;
   }
-  _msg =
-    `Merging finished.`;
-  _msg_info(
-    _msg);
+  // _msg =
+  //   `Merging finished, `+
+  //   `merge list '${_merge_list}'.`;
+  // _msg_info(
+  //   _msg);
   return true;
 }
 
@@ -194,10 +271,13 @@ async function
   _base64_decode(
     _output_file,
     _input_files,
-    _argument_type) {
+    _argument_type,
+    _encoding_type) {
   let
     _data,
+    _merge_list,
     _msg,
+    _output_path_encoded_prefix,
     _txt;
   if ( typeof(
          _input_files) == "undefined" ||
@@ -209,51 +289,54 @@ async function
       _msg,
       1);
   }
-  _txt =
+
+  _merge_list = [
     _input_files[
-      0];
+      0]
+  ];
   if ( 0 < _input_files.length ) {
     const
       _tmp_dir =
         await _mktemp();
-    _txt =
+    _output_path_encoded_prefix =
       _path_join( [
         _tmp_dir,
         "merge.base64" ]);
-    const
-      _assembled =
-        await _assemble(
-          _txt,
-          _input_files,
-          _argument_type);
+    _merge_list =
+      await _assemble(
+        _output_file,
+        _input_files,
+        _argument_type);
   }
   _msg =
-    `Decoding '${_txt}' into '${_output_file}'`;
+    `Decoding '${_merge_list}' into '${_output_file}'`;
   _msg_info(
     _msg);
-  const
-    _read_opts =
-      {"encoding":
-         null,
-       "flag":
-         'r'};
-  const
-    _txt_stream =
-      _read_stream_create(
-        _txt);
-  const
-    _output_file_stream =
-      _write_stream_create(
-        _output_file);
-  const
-    _base64_decoder =
-      new _base64_decode_stream();
-  const
-    _write_stream =
-      _txt_stream.pipe(
-        _base64_decoder).pipe(
-          _output_file_stream);
-  return _write_stream;
+  if ( _encoding_type == "stream" ) {
+    const
+      _read_opts =
+        {"encoding":
+           "utf-8",
+         "flag":
+           'r'};
+    const
+      _txt_stream =
+        _read_stream_create(
+          _txt);
+    const
+      _output_file_stream =
+        _write_stream_create(
+          _output_file);
+    const
+      _base64_decoder =
+        new _base64_decode_stream();
+    const
+      _write_stream =
+        _txt_stream.pipe(
+          _base64_decoder).pipe(
+            _output_file_stream);
+    return _write_stream;
+  }
 }
 
 function
@@ -278,11 +361,31 @@ function
   }
 }
 
+function
+  _output_file_check(
+    _output_file) {
+  const
+    _output_file_exists =
+      _file_exists(
+        _file);
+  if ( _output_file_exists ) {
+    const
+      _msg =
+        `Input file '${_file}' does ` +
+        `already exist, deleting.`;
+    _msg_info(
+      _msg);
+    _rm(
+      _output_file);
+  }
+}
+
 async function
   _txt2bin(
     _output_file,
     _encoding_format,
     _argument_type,
+    _encoding_type,
     _input_files,
     _input_files_sanity_check) {
   const
@@ -319,7 +422,8 @@ async function
         await _base64_decode(
           _output_file,
           _input_files,
-          _argument_type);
+          _argument_type,
+          _encoding_type);
     return _write_stream;
   }
 }

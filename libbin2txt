@@ -31,6 +31,13 @@
      no-unused-vars */
 
 const
+  _base64_stream_module =
+    require(
+      "base64-stream");
+const
+  _base64_encode_stream =
+    _base64_stream_module.Base64Encode;
+const
   _libcrash =
   require(
     "crash-js");
@@ -186,36 +193,75 @@ async function
 
 async function
   _base64_block_encode(
-    _file) {
+    _file,
+    _encoding_type) {
   let
     _string;
-  const
-    _cat_opts = {
-      "encoding":
-        null,
-      "flag":
-        "r"};
-  const
-    _content =
-      _cat(
-        _file,
-        _cat_opts);
-  if ( typeof window === 'undefined' &&
-       ( typeof global !== 'undefined' &&
-         global.global === global ) &&
-       typeof __webpack_require__ !== 'function' ) {
-    // const
-    //   _buffer =
-    //     await Buffer.from(
-    //       _content);
-    _string =
-      _content.toString(
-        "base64");
+  if ( typeof(
+         _encoding_type) == "undefined" ||
+       _encoding_type == "" ) {
+    _encoding_type =
+      "memory";
   }
-  else {
-    _string =
-      await btoa(
-        _content);
+  if ( _encoding_type == "stream" ) {
+    const
+      _read_opts =
+        {"encoding":
+           null,
+         "flag":
+           'r'};
+    const
+      _txt_stream =
+        _read_stream_create(
+          _file);
+    const
+      _output_file_stream =
+        _write_stream_create(
+          `${_file}.block`);
+    const
+      _base64_encoder =
+        new _base64_encode_stream();
+    const
+      _write_stream =
+        _txt_stream.pipe(
+          _base64_encoder).pipe(
+            _output_file_stream);
+    _promise =
+      new Promise(
+        resolve => _write_stream.on(
+                     "finish",
+                      resolve));
+    await _promise;
+  }
+  else if ( _encoding_type == "memory" ) {
+    const
+      _cat_opts = {
+        "encoding":
+          null,
+        "flag":
+          "r"};
+    const
+      _content =
+        _cat(
+          _file,
+          _cat_opts);
+    if ( typeof window === 'undefined' &&
+         ( typeof global !== 'undefined' &&
+           global.global === global ) &&
+         typeof __webpack_require__ !== 'function' ) {
+      // const
+      //   _buffer =
+      //     await Buffer.from(
+      //       _content);
+      _string =
+        _content.toString(
+          "base64");
+    }
+    else {
+      _string =
+        await btoa(
+          _content);
+    }
   }
   return _string;
 }
@@ -296,8 +342,8 @@ async function
           _msg);
         _file_write(
           _out,
-          _cut);
-          // `${_cut}\n`);
+          `${_cut}\n`);
+          // _cut);
       }
     }
   }
@@ -317,26 +363,30 @@ async function
     _length,
     _out,
     _block_last,
-    _amount_only) {
+    _amount_only,
+    _encoding_type) {
   let
     _msg;
   const
     _txt =
       await _base64_block_encode(
-        _block);
+        _block,
+        _encoding_type);
   _msg =
     `Block '${_block}' encoded ` +
     `length: ${_txt.length}.`;
   _msg_info(
     _msg);
   if ( _amount_only === "false" ) {
-    _chunk_current =
-      await _chunk_split(
-        _txt,
-        _chunk_current,
-        _length,
-        _out,
-        _block_last);
+    if ( _encoding_type === "memory" ) {
+      _chunk_current =
+        await _chunk_split(
+          _txt,
+          _chunk_current,
+          _length,
+          _out,
+          _block_last);
+    }
   }
   else if ( _amount_only === "true" ) {
     const
@@ -386,11 +436,13 @@ async function
     _format,
     _length,
     _buffer_size_bytes,
-    _amount_only) {
+    _amount_only,
+    _encoding_type) {
   let
     _block,
     _block_current,
     _block_last,
+    _blocks,
     _chunk_current,
     _chunks_total,
     _msg,
@@ -407,12 +459,19 @@ async function
   }
   _input_data_check(
     _in);
-  const
+  console.log(_encoding_type);
+  if ( _encoding_type == "stream" ) {
+    _blocks = [
+      `${_in}`
+    ];
+  }
+  else if ( _encoding_type == "memory" ) {
     _blocks =
       await _buffer_prepare(
         _in,
         _out,
         _buffer_size_bytes);
+  }
   const
     _blocks_total =
       _blocks.length;
@@ -443,7 +502,8 @@ async function
           _length,
           _out,
           _block_last,
-          _amount_only);
+          _amount_only,
+          _encoding_type);
       _msg_info(
         `Current chunk: '${_chunk_current}'.`);
     _block_current =

@@ -170,6 +170,11 @@ function
          writable */
   input_texts =
     [];
+  /* global
+       encoding_type:
+         writable */
+  encoding_type =
+    "";
   quiet =
     "";
   /* global
@@ -189,6 +194,7 @@ function
       `      Runtime environment: ${runtime_environment}`,
       `            Argument type: ${argument_type}`,
       `          Encoding format: ${encoding_format}`,
+      `            Encoding type: ${encoding_type}`,
       `              Output file: ${output_file}`,
       `       Input text file(s): ${input_texts}`,
     ];
@@ -215,6 +221,7 @@ function
       `    [in-text]`,
       "",
       "  options:",
+      "",
       "     -t, --argument-type    Possible values are 'file' and",
       "       <type>               'list'.",
       "                            When it is 'file' the arguments",
@@ -223,8 +230,12 @@ function
       "                            a file containing the paths of the",
       "                            encoded files.",
       `                            Default: '${argument_type}`,
+      "",
       "     -f --encoding-format   Encoding format ('base64').",
       `       <format>             Default: '${encoding_format}'`,
+      "",
+      "     -t --encoding-type     Encoding type ('stream' or 'memory').",
+      `       <type>               Default: '${encoding_type}'`,
       "",
       "     -h                     This message.",
       "     -v                     Enable verbose output",
@@ -255,6 +266,12 @@ function
          argument_type) == "undefined" ) {
     argument_type =
       "file";
+  }
+  if ( encoding_type == "" ||
+       typeof(
+         encoding_type) == "undefined" ) {
+    encoding_type =
+      "memory";
   }
   _input_texts_check(
     input_texts);
@@ -352,6 +369,16 @@ function
       _argv[
         "encoding-format"];
   }
+  if ( "t" in _argv ) {
+    encoding_type =
+      _argv[
+        "t"];
+  }
+  if ( "encoding-type" in _argv ) {
+    encoding_type =
+      _argv[
+        "encoding-type"];
+  }
   if ( _argv[
          "v"] ) {
     verbose =
@@ -384,6 +411,10 @@ function
     _argv_url_get(
       "output_file")[
         0];
+  encoding_type =
+    _argv_url_get(
+      "encoding_type")[
+        0];
   input_texts =
     _argv_url_get(
       "input_texts");
@@ -414,6 +445,7 @@ app_opts = [
   output_file,
   encoding_format,
   argument_type,
+  encoding_type,
   input_texts
 ];
 _txt2bin.apply(

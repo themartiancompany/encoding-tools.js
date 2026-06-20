@@ -133,6 +133,11 @@ function
   amount_only =
     "";
   /* global
+       encoding_type:
+         writable */
+  encoding_type =
+    "";
+  /* global
        verbose:
          writable */
   verbose =
@@ -174,6 +179,12 @@ function
     amount_only =
       "false";
   }
+  if ( encoding_type == "" ||
+       typeof(
+         encoding_type) == "undefined" ) {
+    encoding_type =
+      "memory";
+  }
 }
 
 function
@@ -189,6 +200,7 @@ function
       `              Buffer size:   ${buffer_size}`,
       `      Chunk string length:   ${string_length}`,
       `       Chunks amount only:   ${amount_only}`,
+      `            Encoding type:   ${encoding_type}`,
       `                  In file:   ${in_file}`,
       `          Out text prefix:   ${out_txt_prefix}`,
     ];
@@ -233,6 +245,8 @@ function
       "",
       "     -s --amount-only                Only print chunks amount.",
       `                                     Default: '${amount_only}'.`,
+      "     -t --encoding-type              It can be 'stream' and 'memory'.",
+      `                                     Default: '${encoding_type}'.`,
       "",
       "     -h --help                       This message.",
       "     -v --verbose                    Enable verbose output.",
@@ -346,6 +360,16 @@ function
       _argv[
         "amount-only"];
   }
+  if ( "t" in _argv ) {
+    encoding_type =
+      _argv[
+        "t"];
+  }
+  if ( "encoding-type" in _argv ) {
+    encoding_type =
+      _argv[
+        "encoding_type"];
+  }
   if ( "v" in _argv ) {
     verbose =
       true;
@@ -380,6 +404,10 @@ function
     _argv_url_get(
       "amount_only")[
         0];
+  encoding_type =
+    _argv_url_get(
+      "encoding_type")[
+        0];
   verbose =
     _argv_url_get(
       "verbose")[
@@ -412,7 +440,8 @@ app_opts = [
   encoding_format,  
   string_length,
   buffer_size,
-  amount_only 
+  amount_only,
+  encoding_type
 ];
 _bin2txt.apply(
   null,
