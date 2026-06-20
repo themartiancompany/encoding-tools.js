@@ -115,6 +115,7 @@ async function
     _input_files,
     _argument_type) {
   let
+    _block,
     _block_current,
     _block_end,
     _data,
@@ -269,7 +270,7 @@ function
   const
     _output_file_exists =
       _file_exists(
-        _file);
+        _output_file);
   if ( _output_file_exists ) {
     const
       _msg =
@@ -318,6 +319,8 @@ async function
     _input_texts_check(
       _input_files);
   }
+  _ouput_file_check(
+    _output_file);
   if ( _encoding_format == "base64" ) {
     const
       _decoded =

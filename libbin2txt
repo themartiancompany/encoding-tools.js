@@ -38,6 +38,16 @@ const
   _base64_encode_stream =
     _base64_stream_module.Base64Encode;
 const
+  _fs_module =
+    require(
+      "tmcfs");
+const
+  _write_stream_create =
+    _fs_module.createWriteStream;
+const
+  _read_stream_create =
+    _fs_module.createReadStream;
+const
   _libcrash =
   require(
     "crash-js");
