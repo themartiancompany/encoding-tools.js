@@ -108,6 +108,11 @@ const
 const
   _path_join =
     _libcrash._path_join;
+/* global
+     _rm */
+const
+  _rm =
+    _libcrash._rm;
 
 async function
   _assemble(
@@ -189,7 +194,6 @@ async function
         _output_file,
         _content,
         _file_append_opts);
-        _msg =
       _block =
         "";
     }
@@ -274,7 +278,7 @@ function
   if ( _output_file_exists ) {
     const
       _msg =
-        `Input file '${_file}' does ` +
+        `Input file '${_output_file}' does ` +
         `already exist, deleting.`;
     _msg_info(
       _msg);
@@ -319,7 +323,7 @@ async function
     _input_texts_check(
       _input_files);
   }
-  _ouput_file_check(
+  _output_file_check(
     _output_file);
   if ( _encoding_format == "base64" ) {
     const

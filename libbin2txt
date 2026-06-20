@@ -236,11 +236,12 @@ async function
         _txt_stream.pipe(
           _base64_encoder).pipe(
             _output_file_stream);
-    _promise =
-      new Promise(
-        resolve => _write_stream.on(
-                     "finish",
-                      resolve));
+    const
+      _promise =
+        new Promise(
+          resolve => _write_stream.on(
+                       "finish",
+                        resolve));
     await _promise;
   }
   else if ( _encoding_type == "memory" ) {
