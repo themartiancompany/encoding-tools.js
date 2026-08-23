@@ -63,7 +63,7 @@
     "crash-js-webpack":
       "^0.0.59",
     "flatted":
-      "3.4.1",
+      "3.4.4",
     "eslint":
       "^10.9.0",
     "globals":
@@ -71,7 +71,7 @@
     "@eslint/js":
       "^10.0.1",
     "safely-serve":
-      "^0.0.15",
+      "^0.0.16",
     "stream-browserify":
       "^3.0.0",
     "webpack":

@@ -85,20 +85,20 @@ install: install-scripts install-doc install-examples install-man
 install-scripts:
 
 	if [[ "$(_NPM)" == "false" ]]; then \
-	  $(_MAKE_EXE) \
-	    "$(LIB_DIR)/nodejs/$(_PROJECT)"; \
-	  if [[ ! -s "$(BIN_DIR)/$(_PROJECT)" && \
-	        ! -e "$(BIN_DIR)/$(_PROJECT)"  ]]; then \
-	    $(_MAKE_LINK) \
-	      "$(PREFIX)/lib/$(_PROJECT)/nodejs/$(_PROJECT)" \
-	      "$(BIN_DIR)/$(_PROJECT)"; \
-	  fi; \
-	  $(_MAKE_LINK) \
-	    "$(PREFIX)/lib/$(_PROJECT)/nodejs/$(_PROJECT)" \
-	    "$(BIN_DIR)/$(_PROJECT).js" || \
-	    true; \
 	  $(_INSTALL_DIR) \
 	    "$(LIB_DIR)/nodejs"; \
+	  for _program in "bin2txt" "txt2bin"; do \
+	    $(_MAKE_EXE) \
+	      "$(LIB_DIR)/nodejs/$(_PROJECT)"; \
+	    for _suffix in "" ".js"; do \
+	      if [[ ! -s "$(BIN_DIR)/$${_program}$${_suffix}" && \
+	            ! -e "$(BIN_DIR)/bin2txt"  ]]; then \
+	        $(_MAKE_LINK) \
+	          "$(PREFIX)/lib/$(_PROJECT)/nodejs/$${_program}" \
+	          "$(BIN_DIR)/$${_program}$${_suffix}"; \
+	      fi; \
+	    done; \
+	  done; \
 	  rm \
 	    -rf \
 	    "$(LIB_DIR)/node_modules" || \
@@ -112,16 +112,16 @@ install-scripts:
 	    -rf \
 	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" \
 	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT_NPM)"; \
-	  if [[ ! -s "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT).js" ]]; then \
-	    $(_MAKE_LINK) \
-	      "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
-	      "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT).js"; \
-	  fi; \
 	  if [[ ! -s "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" ]]; then \
 	    $(_MAKE_LINK) \
 	      "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
 	      "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" || \
 	      true; \
+	  fi; \
+	  if [[ ! -s "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT).js" ]]; then \
+	    $(_MAKE_LINK) \
+	      "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
+	      "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT).js"; \
 	  fi; \
 	  cp \
 	    -r \
