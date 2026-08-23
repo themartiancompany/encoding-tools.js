@@ -52,95 +52,40 @@ NPM_FILES=\
   "README.md" \
   "COPYING" \
   "AUTHORS.rst" \
+  "bin2txt" \
+  "bin2txt.webpack.config.cjs" \
   "dist" \
   "encoding-tools" \
   "eslint.config.mjs" \
   "fs-worker.webpack.config.cjs" \
   "libbin2txt" \
-  "libtxt2bin" \
   "libbin2txt.webpack.config.cjs" \
+  "libtxt2bin" \
   "libtxt2bin.webpack.config.cjs" \
   "package.json" \
-  "bin2txt" \
   "txt2bin" \
-  "bin2txt.webpack.config.cjs" \
   "txt2bin.webpack.config.cjs" \
   "webpack.config.cjs"
 
-all: build-man build-npm
+all: build
 
-check: eslint
-
-eslint:
-
-	npm \
-	  install \
-	  --save-dev; \
-	npx \
-	  eslint \
-	    "."
-
-install: install-scripts install-doc install-examples install-man
-
-install-scripts:
+build:
 
 	if [[ "$(_NPM)" == "false" ]]; then \
-	  $(_INSTALL_DIR) \
-	    "$(LIB_DIR)/nodejs"; \
-	  for _program in "bin2txt" "txt2bin"; do \
-	    $(_MAKE_EXE) \
-	      "$(LIB_DIR)/nodejs/$(_PROJECT)"; \
-	    for _suffix in "" ".js"; do \
-	      if [[ ! -s "$(BIN_DIR)/$${_program}$${_suffix}" && \
-	            ! -e "$(BIN_DIR)/bin2txt"  ]]; then \
-	        $(_MAKE_LINK) \
-	          "$(PREFIX)/lib/$(_PROJECT)/nodejs/$${_program}" \
-	          "$(BIN_DIR)/$${_program}$${_suffix}"; \
-	      fi; \
-	    done; \
-	  done; \
-	  rm \
-	    -rf \
-	    "$(LIB_DIR)/node_modules" || \
-	    true; \
-	  if [[ ! -s "$(LIB_DIR)/node_modules" ]]; then \
-	    $(_MAKE_LINK) \
-	      "$(PREFIX)/lib/node_modules" \
-	      "$(LIB_DIR)/nodejs/node_modules"; \
-	  fi; \
-	  rm \
-	    -rf \
-	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" \
-	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT_NPM)"; \
-	  if [[ ! -s "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" ]]; then \
-	    $(_MAKE_LINK) \
-	      "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
-	      "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" || \
-	      true; \
-	  fi; \
-	  if [[ ! -s "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT).js" ]]; then \
-	    $(_MAKE_LINK) \
-	      "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
-	      "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT).js"; \
-	  fi; \
-	  cp \
-	    -r \
-	    $$(printf \
-	         "$${PWD}/%s " \
-	         $$(cat \
-	              "$${PWD}/package.json" | \
-	              jq \
-	                --raw-output \
-	                '.files[]')) \
-	    "$(LIB_DIR)/nodejs"; \
+	  make \
+	    build-webpack; \
 	elif [[ "$(_NPM)" == "true" ]]; then \
 	  make \
-	    install-npm; \
-	  $(_MAKE_LINK) \
-	    "$(PREFIX)/lib/node_modules/$(_PROJECT_NPM)" \
-	    "$(LIB_DIR)/nodejs" || \
-	  true; \
+	    build-npm; \
+	else \
+	  echo \
+	   "Invalid value for '$(_NPM)'." \
+	   1>&2; \
+	   exit \
+	     1; \
 	fi
+	make \
+	  build-man
 
 build-man:
 
@@ -221,6 +166,150 @@ build-npm:
 	  "$(_PROJECT_NPM)-$${_version}.tgz" \
 	  ".."
 
+build-webpack:
+
+	cp \
+	  -r \
+	  "$(_PROJECT)" \
+	  "dist" \
+	  "lib$(_PROJECT)" \
+	  "webpack.config.cjs" \
+	  "build"
+	_webpack=( \
+	  "$$(command \
+	        -v \
+	        "webpack")"; \
+	if [[ "${_webpack}" == "" ]]; then \
+	  _webpack=(
+	    npx
+	      webpack); \
+	fi; \
+	cd \
+	  "build"; \
+	if [[ ! -e "fs-worker.js" ]]; then \
+          "${_webpack[@]}" \
+	    --mode \
+	      'production' \
+	    --config \
+	    'fs-worker.webpack.config.cjs' \
+	    --stats-error-details; \
+	fi; \
+	cp \
+	  'fs-worker.js' \
+	  'dist/$(_PROJECT)/fs-worker.js'; \
+	cp \
+	  'fs-worker.js' \
+	  'dist/bin2txt/fs-worker.js'; \
+	cp \
+	  'fs-worker.js' \
+	  'dist/libbin2txt/fs-worker.js'; \
+	cp \
+	  'fs-worker.js' \
+	  'dist/libtxt2bin/fs-worker.js'; \
+	cp \
+	  'fs-worker.js' \
+	  'dist/txt2bin/fs-worker.js'; \
+	if [[ ! -e "$${_program}.js" ]]; then \
+          "${_webpack[@]}" \
+	    --mode \
+	      'production' \
+	    --config \
+	      'webpack.config.cjs' \
+	    --stats-error-details; \
+	fi; \
+	cp \
+	  "$(_PROJECT).js" \
+	  "dist/$(_PROJECT)/$(_PROJECT).js"
+	for _program in "bin2txt" \
+			"libbin2txt" \
+			"libtxt2bin" \
+			"txt2bin"; do \
+	  if [[ ! -e "$${_program}.js" ]]; then \
+            "${_webpack[@]}" \
+	      --mode \
+	        'production' \
+	      --config \
+	        "$${_program}.webpack.config.cjs" \
+	      --stats-error-details; \
+	  fi; \
+	  cp \
+	    "$${_program}.js" \
+	    "dist/$${_program}/$${_program}.js"; \
+	done; \
+
+check: eslint
+
+eslint:
+
+	npm \
+	  install \
+	  --save-dev; \
+	npx \
+	  eslint \
+	    "."
+
+install: install-scripts install-doc install-examples install-man
+
+install-scripts:
+
+	if [[ "$(_NPM)" == "false" ]]; then \
+	  $(_INSTALL_DIR) \
+	    "$(LIB_DIR)/nodejs"; \
+	  for _program in "bin2txt" "txt2bin"; do \
+	    $(_MAKE_EXE) \
+	      "$(LIB_DIR)/nodejs/$(_PROJECT)"; \
+	    for _suffix in "" ".js"; do \
+	      if [[ ! -s "$(BIN_DIR)/$${_program}$${_suffix}" && \
+	            ! -e "$(BIN_DIR)/bin2txt"  ]]; then \
+	        $(_MAKE_LINK) \
+	          "$(PREFIX)/lib/$(_PROJECT)/nodejs/$${_program}" \
+	          "$(BIN_DIR)/$${_program}$${_suffix}"; \
+	      fi; \
+	    done; \
+	  done; \
+	  rm \
+	    -rf \
+	    "$(LIB_DIR)/node_modules" || \
+	    true; \
+	  if [[ ! -s "$(LIB_DIR)/node_modules" ]]; then \
+	    $(_MAKE_LINK) \
+	      "$(PREFIX)/lib/node_modules" \
+	      "$(LIB_DIR)/nodejs/node_modules"; \
+	  fi; \
+	  rm \
+	    -rf \
+	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" \
+	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT_NPM)"; \
+	  if [[ ! -s "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" ]]; then \
+	    $(_MAKE_LINK) \
+	      "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
+	      "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" || \
+	      true; \
+	  fi; \
+	  if [[ ! -s "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT).js" ]]; then \
+	    $(_MAKE_LINK) \
+	      "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
+	      "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT).js"; \
+	  fi; \
+	  cp \
+	    -r \
+	    $$(printf \
+	         "$${PWD}/%s " \
+	         $$(cat \
+	              "$${PWD}/package.json" | \
+	              jq \
+	                --raw-output \
+	                '.files[]')) \
+	    "$(LIB_DIR)/nodejs"; \
+	elif [[ "$(_NPM)" == "true" ]]; then \
+	  make \
+	    install-npm; \
+	  $(_MAKE_LINK) \
+	    "$(PREFIX)/lib/node_modules/$(_PROJECT_NPM)" \
+	    "$(LIB_DIR)/nodejs" || \
+	  true; \
+	fi
+
 install-npm:
 
 	_npm_opts=( \
@@ -272,9 +361,20 @@ install-man:
 	  "build/man/txt2bin.js.1" \
 	  "$(MAN_DIR)/man1/txt2bin.js.1"
 
-uninstall-scripts:
+uninstall-man:
+
 	rm \
 	  -rf \
+	  "$(MAN_DIR)/man1/bin2txt.js.1" \
+	  "$(MAN_DIR)/man1/txt2bin.js.1"
+
+uninstall-scripts:
+
+	rm \
+	  -rf \
+	  "$(BIN_DIR)/bin2txt.js" \
+	  "$(BIN_DIR)/txt2bin.js" \
+	  "$(LIB_DIR)/nodejs" \
 	  "$(NODE_DIR)"
 
-.PHONY: check build-man build-npm install install-doc install-man install-npm install-scripts shellcheck
+.PHONY: check build build-man build-npm build-webpack install install-doc install-man install-npm install-scripts shellcheck uninstall-man uninstall-scripts
