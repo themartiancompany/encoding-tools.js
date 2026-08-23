@@ -261,6 +261,16 @@ install-scripts:
 	if [[ "$(_NPM)" == "false" ]]; then \
 	  $(_INSTALL_DIR) \
 	    "$(LIB_DIR)/nodejs"; \
+	  cp \
+	    -r \
+	    $$(printf \
+	         "$${PWD}/%s " \
+	         $$(cat \
+	              "$${PWD}/package.json" | \
+	              jq \
+	                --raw-output \
+	                '.files[]')) \
+	    "$(LIB_DIR)/nodejs"; \
 	  for _program in "bin2txt" "txt2bin"; do \
 	    $(_MAKE_EXE) \
 	      "$(LIB_DIR)/nodejs/$${_program}"; \
@@ -297,16 +307,6 @@ install-scripts:
 	      "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
 	      "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT).js"; \
 	  fi; \
-	  cp \
-	    -r \
-	    $$(printf \
-	         "$${PWD}/%s " \
-	         $$(cat \
-	              "$${PWD}/package.json" | \
-	              jq \
-	                --raw-output \
-	                '.files[]')) \
-	    "$(LIB_DIR)/nodejs"; \
 	elif [[ "$(_NPM)" == "true" ]]; then \
 	  make \
 	    install-npm; \
