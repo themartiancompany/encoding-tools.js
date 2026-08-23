@@ -38,8 +38,8 @@
 
 const
   _libcrash =
-    require(
-      'crash-js');
+    await import(
+      "libcrash-js");
 /* global
      _argv_get */
 const
@@ -77,7 +77,7 @@ _process_exit =
   _libcrash._process_exit;
 const
   _encoding_tools =
-    require(
+    await import(
       "./encoding-tools");
 /* global
      _bin2txt */

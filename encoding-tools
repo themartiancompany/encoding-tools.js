@@ -27,14 +27,14 @@
 
 const
   _bin2txt_module =
-    require(
+    await import(
       "./libbin2txt");
 const
   _bin2txt =
     _bin2txt_module._bin2txt;
 const
   _txt2bin_module =
-    require(
+    await import(
       "./libtxt2bin");
 const
   _input_texts_check =
@@ -43,11 +43,21 @@ const
   _txt2bin =
     _txt2bin_module._txt2bin;
 
-module.exports = {
-  _bin2txt:
-    _bin2txt,
-  _input_texts_check:
-    _input_texts_check,
-  _txt2bin:
-    _txt2bin
+// ES6 module exports
+
+export {
+  _bin2txt,
+  _input_texts_check,
+  _txt2bin
 };
+
+// Common Javascript exports
+
+// module.exports = {
+//   _bin2txt:
+//     _bin2txt,
+//   _input_texts_check:
+//     _input_texts_check,
+//   _txt2bin:
+//     _txt2bin
+// };

@@ -83,8 +83,8 @@
   "dependencies": {
     "base64-stream":
       "^1.0.0",
-    "crash-js":
-      "^100001.1000000000000001.1000000000000001",
+    "libcrash-js":
+      "npm:crash-js@^100001.1000000000000001.1000000000000001",
     "tmcfs":
       "npm:@themartiancompany/fs@^0.0.21",
     "tmcsplit":

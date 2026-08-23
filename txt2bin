@@ -41,8 +41,8 @@
 
 const
   _libcrash =
-  require(
-    'crash-js');
+    await import(
+      "libcrash-js");
 /* global
      _argv_get */
 const
@@ -59,10 +59,20 @@ const
   _cmdline_check =
     _libcrash._cmdline_check;
 /* global
+     _echo */
+const
+  _echo =
+    _libcrash._echo;
+/* global
      _error_display */
 const
   _error_display =
     _libcrash._error_display;
+/* global
+     _exit */
+const
+  _exit =
+    _libcrash._exit;
 /* global
      _ext_rm */
 const
@@ -113,14 +123,9 @@ const
 const
   _msg_error =
     _libcrash._msg_error;
-/* global
-     _process_exit */
-const
-  _process_exit =
-    _libcrash._process_exit;
 const
   _encoding_tools =
-    require(
+    await import(
       "./encoding-tools");
 /* global
      _input_texts_check */
@@ -242,10 +247,10 @@ function
       ""
     ];
   for ( _line of _text ) {
-    console.log(
+    _echo(
       _line);
   }
-  _process_exit(
+  _exit(
     _exit_code);
 }
 
@@ -430,11 +435,11 @@ function
 _global_variables();
 
 _global_variables();
-if ( _cmdline_check(
+if ( await _cmdline_check(
        "txt2bin") ||
-     _cmdline_check(
+     await _cmdline_check(
        "txt2bin.js") ) {
-  _cmdline_parse();
+  await _cmdline_parse();
 }
 else {
   _url_parse();

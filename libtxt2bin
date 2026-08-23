@@ -31,10 +31,6 @@
      no-unused-vars */
 
 const
-  _buffer =
-    require(
-      "buffer");
-const
   _libcrash =
     require(
       'crash-js');
@@ -113,6 +109,15 @@ const
 const
   _rm =
     _libcrash._rm;
+/* global
+     _require */
+const
+  _require =
+    _libcrash._require;
+const
+  _buffer =
+    await _require(
+      "buffer");
 
 async function
   _assemble(
@@ -337,9 +342,18 @@ async function
   }
 }
 
-module.exports = {
-  _input_texts_check:
-    _input_texts_check,
-  _txt2bin:
-    _txt2bin
+// ES6 Modules exports
+
+export {
+  _input_texts_check,
+  _txt2bin
 };
+
+// Common Javascript exports
+
+// module.exports = {
+//   _input_texts_check:
+//     _input_texts_check,
+//   _txt2bin:
+//     _txt2bin
+// };

@@ -31,26 +31,9 @@
      no-unused-vars */
 
 const
-  _base64_stream_module =
-    require(
-      "base64-stream");
-const
-  _base64_encode_stream =
-    _base64_stream_module.Base64Encode;
-const
-  _fs_module =
-    require(
-      "tmcfs");
-const
-  _write_stream_create =
-    _fs_module.createWriteStream;
-const
-  _read_stream_create =
-    _fs_module.createReadStream;
-const
   _libcrash =
-  require(
-    "crash-js");
+    await import(
+      "crash-js");
 /* global
      _cat */
 const
@@ -117,6 +100,11 @@ const
   _printf =
     _libcrash._printf;
 /* global
+     _require */
+const
+  _require =
+    _libcrash._require;
+/* global
      _rm */
 const
   _rm =
@@ -132,8 +120,25 @@ const
   _stat =
     _libcrash._stat;
 const
+  _base64_stream_module =
+    await _require(
+      "base64-stream");
+const
+  _base64_encode_stream =
+    _base64_stream_module.Base64Encode;
+const
+  _fs_module =
+    await _require(
+      "tmcfs");
+const
+  _write_stream_create =
+    _fs_module.createWriteStream;
+const
+  _read_stream_create =
+    _fs_module.createReadStream;
+const
   _tmcsplit =
-    require(
+    await _require(
       "tmcsplit");
 /* global
      _split */
@@ -555,7 +560,15 @@ async function
   }
 }
 
-module.exports = {
-  _bin2txt:
-    _bin2txt,
+// ES6 Module export
+
+export {
+  _bin2txt
 };
+
+// Common Javascript exports
+
+// module.exports = {
+//   _bin2txt:
+//     _bin2txt,
+// };
