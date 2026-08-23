@@ -60,32 +60,32 @@
   },
   "devDependencies": {
     "crash-js-webpack":
-      "^0.0.13",
+      "^0.0.59",
     "flatted":
       "3.4.1",
     "eslint":
-      "^10.0.3",
+      "^10.9.0",
     "globals":
       "^17.3.0",
     "@eslint/js":
       "^10.0.1",
     "safely-serve":
-      "^0.0.9",
+      "^0.0.15",
     "webpack":
-      "^5.102.1",
+      "^5.109.2",
     "webpack-cli":
-      "^6.0.1"
+      "^7.2.2"
   },
   "dependencies": {
     "crash-js":
-      "^0.1.117",
+      "^100001.1000000000000001.1000000000000001",
     "tmcsplit":
-      "^0.0.10",
+      "^0.0.14",
     "yargs":
       "18.0.0"
   },
   "type":
-    "commonjs",
+    "module",
   "main":
     "encoding-tools",
   "bin": {
