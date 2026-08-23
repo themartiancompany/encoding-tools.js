@@ -33,6 +33,12 @@ MAN_DIR?=$(DESTDIR)$(PREFIX)/share/man
 NODE_DIR=$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)
 BUILD_NPM_DIR=build
 
+_MAKE_LINK=\
+  ln \
+    -s
+_MAKE_EXE=\
+  chmod \
+    755
 _INSTALL_FILE=\
   install \
     -vDm644
@@ -257,7 +263,7 @@ install-scripts:
 	    "$(LIB_DIR)/nodejs"; \
 	  for _program in "bin2txt" "txt2bin"; do \
 	    $(_MAKE_EXE) \
-	      "$(LIB_DIR)/nodejs/$(_PROJECT)"; \
+	      "$(LIB_DIR)/nodejs/$${_program}"; \
 	    for _suffix in "" ".js"; do \
 	      if [[ ! -s "$(BIN_DIR)/$${_program}$${_suffix}" && \
 	            ! -e "$(BIN_DIR)/bin2txt"  ]]; then \
