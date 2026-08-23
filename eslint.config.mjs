@@ -34,8 +34,9 @@ const
 const
   _ignores = [
     "build/**",
-    "dist",
+    "dist/**",
     "fs-worker.js",
+    `${_project}.js`,
     "node_modules/**",
     "eslint.config.js",
     "man/**"
@@ -75,8 +76,12 @@ export default defineConfig([
          "error" },
    files:
      [ "**/*.js",
-       `**/${_project}*`,
+       `**/bin2txt`,
+       `**/${_project}`,
        `**/lib${_project}`,
+       `**/libbin2txt`,
+       `**/libtxt2bin`,
+       `**/txt2bin`
      ],
    languageOptions:
      { sourceType:

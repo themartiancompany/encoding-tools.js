@@ -27,6 +27,9 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* eslint-disable
+     no-unused-vars */
+
 // Crash Javascript global variables
 
 /* global
@@ -45,6 +48,11 @@ const
 const
   _argv_get =
     _libcrash._argv_get;
+/* global
+     _argv_url_get */
+const
+  _argv_url_get =
+    _libcrash._argv_url_get;
 /* global
      _cmdline_check */
 const
@@ -75,6 +83,11 @@ _file_write =
 const
   _fs_worker_start =
     _libcrash._fs_worker_start;
+/* global
+     _get_date_human */
+const
+  _get_date_human =
+    _libcrash._get_date_human;
 /* global
      _json_read */
 const
@@ -110,6 +123,11 @@ const
     require(
       "./encoding-tools");
 /* global
+     _input_texts_check */
+const
+  _input_texts_check =
+    _encoding_tools._input_texts_check;
+/* global
      _txt2bin */
 const
   _txt2bin =
@@ -122,6 +140,11 @@ function
          writable */
   app_name =
     "txt2bin";
+  /* global
+       app_opts:
+         writable */
+  app_opts =
+    [];
   /* global
        make_date:
          writable */
@@ -147,7 +170,17 @@ function
          writable */
   input_texts =
     [];
+  /* global
+       encoding_type:
+         writable */
+  encoding_type =
+    "";
   quiet =
+    "";
+  /* global
+       verbose:
+         writable */
+  verbose =
     "";
 }
 
@@ -157,10 +190,11 @@ function
     _line;
   const
     _text = [
-      `                Call date: ${call_date}`,
+      `                Make date: ${make_date}`,
       `      Runtime environment: ${runtime_environment}`,
       `            Argument type: ${argument_type}`,
       `          Encoding format: ${encoding_format}`,
+      `            Encoding type: ${encoding_type}`,
       `              Output file: ${output_file}`,
       `       Input text file(s): ${input_texts}`,
     ];
@@ -187,6 +221,7 @@ function
       `    [in-text]`,
       "",
       "  options:",
+      "",
       "     -t, --argument-type    Possible values are 'file' and",
       "       <type>               'list'.",
       "                            When it is 'file' the arguments",
@@ -195,15 +230,19 @@ function
       "                            a file containing the paths of the",
       "                            encoded files.",
       `                            Default: '${argument_type}`,
+      "",
       "     -f --encoding-format   Encoding format ('base64').",
       `       <format>             Default: '${encoding_format}'`,
+      "",
+      "     -t --encoding-type     Encoding type ('stream' or 'memory').",
+      `       <type>               Default: '${encoding_type}'`,
       "",
       "     -h                     This message.",
       "     -v                     Enable verbose output",
       ""
     ];
   for ( _line of _text ) {
-    _msg_info(
+    console.log(
       _line);
   }
   _process_exit(
@@ -222,24 +261,20 @@ function
     encoding_format =
       "base64";
   }
-  if ( string_length == "" ||
+  if ( argument_type == "" ||
        typeof(
-         string_length) == "undefined" ) {
-    string_length =
-      "10000";
+         argument_type) == "undefined" ) {
+    argument_type =
+      "file";
   }
-  if ( buffer_size == "" ||
+  if ( encoding_type == "" ||
        typeof(
-         buffer_size) == "undefined" ) {
-    buffer_size =
-      "2000000"; // 2MB
+         encoding_type) == "undefined" ) {
+    encoding_type =
+      "memory";
   }
-  if ( amount_only == "" ||
-         typeof(
-           amount_only) == "undefined" ) {
-    amount_only =
-      "false";
-  }
+  _input_texts_check(
+    input_texts);
 }
 
 function 
@@ -268,11 +303,13 @@ function
     "y";
   _help_display =
     false;
-  if ( "h" in _argv ) {
+  if ( _argv[
+         "h"]) {
     _help_display =
       true;
   }
-  if ( "help" in _argv ) {
+  if ( _argv[
+         "help"] ) {
     _help_display =
       true;
   }
@@ -304,16 +341,14 @@ function
     _usage(
       1);
   }
-  in_file =
+  output_file =
     _argv[
       "_"][
         0];
-  if ( _argv[
-         "_"].length < 2 ) {
-    out_txt_prefix =
-      in_file +
-      ".base64";
-  }
+  input_texts =
+    _argv[
+      "_"].slice(
+        1);
   if ( "t" in _argv ) {
     argument_type =
       _argv[
@@ -334,11 +369,23 @@ function
       _argv[
         "encoding-format"];
   }
-  if ( "v" in _argv ) {
+  if ( "t" in _argv ) {
+    encoding_type =
+      _argv[
+        "t"];
+  }
+  if ( "encoding-type" in _argv ) {
+    encoding_type =
+      _argv[
+        "encoding-type"];
+  }
+  if ( _argv[
+         "v"] ) {
     verbose =
       true;
   }
-  if ( "verbose" in _argv ) {
+  if ( _argv[
+         "verbose"] ) {
     verbose =
       true;
   }
@@ -350,35 +397,8 @@ function
 
 function
   _url_parse() {
-  let
-    _argv;
   runtime_environment =
     "browser";
-  _argv =
-    _argv_url_get();
-  target_message =
-    _argv_url_get(
-      "target_message")[0];
-  target_planet =
-    _argv_url_get(
-      "target_planet")[0];
-  quiet =
-    _argv_url_get(
-      "quiet");
-  if ( quiet.length === 0 ) {
-    quiet =
-      "n";
-  }
-}
-
-function
-  _url_parse() {
-  let
-    _argv;
-  runtime_environment =
-    "browser";
-  _argv =
-    _argv_url_get();
   encoding_format =
     _argv_url_get(
       "encoding_format")[
@@ -391,9 +411,13 @@ function
     _argv_url_get(
       "output_file")[
         0];
-  input_files =
+  encoding_type =
     _argv_url_get(
-      "input_files");
+      "encoding_type")[
+        0];
+  input_texts =
+    _argv_url_get(
+      "input_texts");
   quiet =
     _argv_url_get(
       "quiet");
@@ -415,11 +439,13 @@ if ( _cmdline_check(
 else {
   _url_parse();
 }
+_overrides_set();
 _config_show();
 app_opts = [
   output_file,
   encoding_format,
   argument_type,
+  encoding_type,
   input_texts
 ];
 _txt2bin.apply(

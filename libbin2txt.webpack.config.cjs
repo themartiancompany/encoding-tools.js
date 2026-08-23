@@ -47,6 +47,10 @@ const
       _output_file_name
 };
 const
+  _node_fs_ignore =
+  { resourceRegExp:
+      /^node:fs$/ };
+const
   _yargs_ignore =
   { resourceRegExp:
       /^yargs$/ };
@@ -61,6 +65,10 @@ const
 const
   _ignore_plugin =
     _webpack.IgnorePlugin; 
+const
+  _node_fs_ignore_plugin =
+    new _ignore_plugin(
+          _node_fs_ignore);
 const
   _yargs_ignore_plugin =
     new _ignore_plugin(
@@ -105,7 +113,11 @@ module.exports = {
           'node_modules/yargs-parser/browser.mjs'),
     },
     fallback: {
+      "./libtxt2bin":
+        false,
       "utils":
+        false,
+      "stream":
         false,
       "web-worker":
         false,
@@ -119,6 +131,7 @@ module.exports = {
     { yargs:
         'yargs' },
   plugins: [
+    _node_fs_ignore_plugin,
     _yargs_ignore_plugin,
     _yargs_helpers_ignore_plugin
   ]

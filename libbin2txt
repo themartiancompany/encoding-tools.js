@@ -27,6 +27,26 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* eslint-disable
+     no-unused-vars */
+
+const
+  _base64_stream_module =
+    require(
+      "base64-stream");
+const
+  _base64_encode_stream =
+    _base64_stream_module.Base64Encode;
+const
+  _fs_module =
+    require(
+      "tmcfs");
+const
+  _write_stream_create =
+    _fs_module.createWriteStream;
+const
+  _read_stream_create =
+    _fs_module.createReadStream;
 const
   _libcrash =
   require(
@@ -56,11 +76,6 @@ const
 const
   _file_exists =
     _libcrash._file_exists;
-/* global
-     _file_read */
-const
-  _file_read =
-    _libcrash._file_read;
 /* global
      _file_write */
 const
@@ -97,6 +112,11 @@ const
   _msg_error =
     _libcrash._msg_error;
 /* global
+     _printf */
+const
+  _printf =
+    _libcrash._printf;
+/* global
      _rm */
 const
   _rm =
@@ -127,10 +147,15 @@ async function
     _out,
     _buffer_size_bytes) {
   let
-    _msg;
+    _msg,
+    _output_files;
   const
     _size_max =
-      0;
+      _buffer_size_bytes;
+      /* 0;
+      /* Note:
+      /*   requiring an uniform split wields
+      /*   splits different from GNU split */
   const
     _in_size_bytes =
       _stat(
@@ -145,55 +170,109 @@ async function
       Math.ceil(
         _in_size_bytes /
         _buffer_size_bytes);
-  _msg =
-    `Splitting file '${_in}' in ` +
-    `'${_blocks_total}' blocks of ` +
-    `'${_buffer_size_bytes}' bytes.`;
-  _msg_info(
-    _msg);
-  const
-    _split_opts = [
-      _in,
-      `${_out}.block.`,
-      _blocks_total,
-      _size_max
-    ];
-  _output_files =
-    await _split.apply(
-      null,
-      _split_opts);
-  _msg =
-    "Done.";
-  _msg_info(
-    _msg);
+  if ( 1 < _blocks_total ) {
+    _msg =
+      `Splitting file '${_in}' in ` +
+      `'${_blocks_total}' blocks of ` +
+      `'${_buffer_size_bytes}' bytes.`;
+    _msg_info(
+      _msg);
+    const
+      _split_opts = [
+        _in,
+        `${_out}.block.`,
+        _blocks_total,
+        _size_max
+      ];
+    _output_files =
+      await _split.apply(
+        null,
+        _split_opts);
+    _msg =
+      "Done.";
+    _msg_info(
+      _msg);
+  }
+  else {
+    _output_files = [
+      _in
+    ]; 
+  }
   return _output_files;
 }
 
-function
+async function
   _base64_block_encode(
-    _file) {
+    _file,
+    _encoding_type) {
   let
-    _buffer,
-    _content,
     _string;
-  _content =
-    _cat(
-      _file);
-  if ( typeof window === 'undefined' &&
-       ( typeof global !== 'undefined' &&
-         global.global === global ) &&
-       typeof __webpack_require__ !== 'function' ) {
-    _buffer =
-      Buffer.from(
-        _content);
-    _string =
-      _buffer.toString(
-        "base64");
+  if ( typeof(
+         _encoding_type) == "undefined" ||
+       _encoding_type == "" ) {
+    _encoding_type =
+      "memory";
   }
-  else {
-    _string =
-      btoa(
-        string);
+  if ( _encoding_type == "stream" ) {
+    const
+      _read_opts =
+        {"encoding":
+           null,
+         "flag":
+           'r'};
+    const
+      _txt_stream =
+        _read_stream_create(
+          _file);
+    const
+      _output_file_stream =
+        _write_stream_create(
+          `${_file}.block`);
+    const
+      _base64_encoder =
+        new _base64_encode_stream();
+    const
+      _write_stream =
+        _txt_stream.pipe(
+          _base64_encoder).pipe(
+            _output_file_stream);
+    const
+      _promise =
+        new Promise(
+          resolve => _write_stream.on(
+                       "finish",
+                        resolve));
+    await _promise;
+  }
+  else if ( _encoding_type == "memory" ) {
+    const
+      _cat_opts = {
+        "encoding":
+          null,
+        "flag":
+          "r"};
+    const
+      _content =
+        _cat(
+          _file,
+          _cat_opts);
+    if ( typeof window === 'undefined' &&
+         ( typeof global !== 'undefined' &&
+           global.global === global ) &&
+         typeof __webpack_require__ !== 'function' ) {
+      // const
+      //   _buffer =
+      //     await Buffer.from(
+      //       _content);
+      _string =
+        _content.toString(
+          "base64");
+    }
+    else {
+      _string =
+        await btoa(
+          _content);
+    }
   }
   return _string;
 }
@@ -207,20 +286,21 @@ async function
     _block_last) {
   let
     _chunk,
-    _chunks,
+    _chunk_start,
     _content,
     _cut,
-    _head,
     _msg,
     _out;
   const
     _total =
       _in.length;
-  _chunks =
-    Math.ceil(
-      _chunk_current +
-      _total /
-        _length);
+  const
+    _chunks =
+      Math.ceil(
+        _chunk_current +
+        _total /
+          _length);
+  console.log("prefix", _prefix);
   if ( _chunks < 2 ) {
     _out =
       _prefix;
@@ -255,7 +335,7 @@ async function
     _msg_info(
       _msg);
     if ( _chunk < _chunks ) {
-      printf(
+      _file_write(
         _out,
         _cut);
     }
@@ -268,12 +348,13 @@ async function
       else if ( _block_last == "false" ) {
         _msg =
           "Last chunk of non-last block, " +
-          "adding a newline character at the end (nope).";
+          "non adding a newline character at the end.";
         _msg_info(
           _msg);
         _file_write(
           _out,
-          _cut);
+          `${_cut}\n`);
+          // _cut);
       }
     }
   }
@@ -293,26 +374,30 @@ async function
     _length,
     _out,
     _block_last,
-    _amount_only) {
+    _amount_only,
+    _encoding_type) {
   let
     _msg;
   const
     _txt =
-      _base64_block_encode(
-        _block);
+      await _base64_block_encode(
+        _block,
+        _encoding_type);
   _msg =
     `Block '${_block}' encoded ` +
     `length: ${_txt.length}.`;
   _msg_info(
     _msg);
   if ( _amount_only === "false" ) {
-    _chunk_current =
-      await _chunk_split(
-        _txt,
-        _chunk_current,
-        _length,
-        _out,
-        _block_last);
+    if ( _encoding_type === "memory" ) {
+      _chunk_current =
+        await _chunk_split(
+          _txt,
+          _chunk_current,
+          _length,
+          _out,
+          _block_last);
+    }
   }
   else if ( _amount_only === "true" ) {
     const
@@ -322,7 +407,7 @@ async function
           _txt.length /
             _length);
     _chunk_current =
-      _chunk_total;
+      _chunks_total;
   }
   else {
     _msg =
@@ -362,31 +447,45 @@ async function
     _format,
     _length,
     _buffer_size_bytes,
-    _amount_only) {
+    _amount_only,
+    _encoding_type) {
   let
     _block,
-    _blocks_total,
-    _chunk_current,
-    _chunks_total,
     _block_current,
     _block_last,
+    _blocks,
+    _chunk_current,
+    _chunks_total,
     _msg,
-    _rm_args,
     _worker;
   if ( typeof window !== 'undefined' ) {
-    await _fs_worker_start(
-        "fs-worker.js");
+    const
+      _worker =
+        await _fs_worker_start(
+          "fs-worker.js");
+    _msg =
+      `OPFS worker '${_worker}' started.`;
+    _msg_info(
+      _msg);
   }
   _input_data_check(
     _in);
-  const
+  console.log(_encoding_type);
+  if ( _encoding_type == "stream" ) {
+    _blocks = [
+      `${_in}`
+    ];
+  }
+  else if ( _encoding_type == "memory" ) {
     _blocks =
       await _buffer_prepare(
         _in,
         _out,
         _buffer_size_bytes);
-  _blocks_total =
-    _blocks.length;
+  }
+  const
+    _blocks_total =
+      _blocks.length;
   _chunk_current =
     0;
   _block_current =
@@ -408,13 +507,14 @@ async function
     }
     if ( _format === "base64" ) {
       _chunk_current =
-        _base64_encode(
+        await _base64_encode(
           _block,
           _chunk_current,
           _length,
           _out,
           _block_last,
-          _amount_only);
+          _amount_only,
+          _encoding_type);
       _msg_info(
         `Current chunk: '${_chunk_current}'.`);
     _block_current =
@@ -430,17 +530,21 @@ async function
     }
   }
   for ( _block of _blocks ) {
-    _rm_args = [
-      _block
-    ];
-    _rm(
-      _rm_args);
+    if ( _block != _in ) {
+      _rm(
+        _block);
+    }
   }
   if ( _amount_only === "true" ) {
     _chunks_total =
       _chunk_current;
-    console.log(
-      _chunks_total);
+    _msg =
+      `File '${_in}' is base64 encoded and ` +
+      `split in '${_chunks_total}' ` +
+      `files of length '${_length}'.`;
+    _msg_info(
+      _msg);
+    return _chunks_total;
   }
   else if ( _amount_only === "false" ) {
     _msg =

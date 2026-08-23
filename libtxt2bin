@@ -27,51 +27,107 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* eslint-disable
+     no-unused-vars */
+
+const
+  _buffer =
+    require(
+      "buffer");
 const
   _libcrash =
-  require(
-    'crash-js');
+    require(
+      'crash-js');
+/* global
+     _cat */
 const
-  _error_display =
-    _libcrash._error_display;
+  _cat =
+    _libcrash._cat;
+/* global
+     _ext_rm */
 const
   _ext_rm =
     _libcrash._ext_rm;
+/* global
+     _file_append */
+const
+  _file_append =
+    _libcrash._file_append;
+/* global
+     _file_exists */
+const
+  _file_exists =
+    _libcrash._file_exists;
+/* global
+     _file_read */
 const
   _file_read =
     _libcrash._file_read;
+/* global
+     _file_write */
 const
   _file_write =
     _libcrash._file_write;
+/* global
+     _fs_worker_start */
 const
   _fs_worker_start =
     _libcrash._fs_worker_start;
+/* global
+     _json_read */
 const
   _json_read =
     _libcrash._json_read;
+/* global
+     _ls */
 const
   _ls =
     _libcrash._ls;
+/* global
+     _mkdir */
 const
   _mkdir =
     _libcrash._mkdir;
+/* global
+     _mktemp */
+const
+  _mktemp =
+    _libcrash._mktemp;
+/* global
+     _msg_info */
 const
   _msg_info =
     _libcrash._msg_info;
+/* global
+     _msg_error */
 const
   _msg_error =
     _libcrash._msg_error;
+/* global
+     _path_join */
+const
+  _path_join =
+    _libcrash._path_join;
+/* global
+     _rm */
+const
+  _rm =
+    _libcrash._rm;
 
 async function
   _assemble(
+    _output_file,
     _input_files,
-    _output_path,
     _argument_type) {
   let
-    _file,
+    _block,
+    _block_current,
+    _block_end,
     _data,
     _dir,
     _file,
+    _file_current,
+    _merge_list,
     _msg,
     _worker;
   if ( _argument_type == "list" ) {
@@ -81,7 +137,7 @@ async function
           0];
     _msg =
       `Merging files from list at ` +
-      `'${_list}' into '${_output_file}'.`
+      `'${_list}' into '${_output_file}'.`;
   }
   else if ( _argument_type == "file" ) {
     _msg =
@@ -94,27 +150,70 @@ async function
     _fs_worker_started =
       await _fs_worker_start(
           "fs-worker.js");
+  _file_current =
+    1;
+  _block_current =
+    1;
+  const
+    _file_read_opts = {
+      "encoding":
+        "utf-8"
+    };
+  const
+    _file_append_opts = {
+      "encoding":
+        null
+    };
+  _block =
+    "";
   for ( _file of _input_files ) {
     _data =
       _file_read(
-        _file);
-    _file_append(
-      _data,
-      _out);
+        _file,
+        _file_read_opts);
+    _block_end =
+      false;
+    if (_data.endsWith(
+          '\n') ||
+        _file_current == _input_files.length ) {
+       _block_end =
+         true;
+    }
+    _block =
+      _block +
+      _data;
+    if ( _block_end ) {
+      const
+        _content =
+          Buffer.from(
+            _block,
+            'base64');
+      _block_current =
+        _block_current + 1;
+      _file_append(
+        _output_file,
+        _content,
+        _file_append_opts);
+      _block =
+        "";
+    }
+    _file_current =
+      _file_current + 1;
   }
-  _msg =
-    `Merging finished.`;
-  _msg_info(
-    _msg);
+  return true;
 }
 
-function
+async function
   _base64_decode(
     _output_file,
-    _input_files) {
+    _input_files,
+    _argument_type,
+    _encoding_type) {
   let
     _data,
+    _merge_list,
     _msg,
+    _output_path_encoded_prefix,
     _txt;
   if ( typeof(
          _input_files) == "undefined" ||
@@ -126,24 +225,90 @@ function
       _msg,
       1);
   }
-  _txt =
+
+  _merge_list = [
     _input_files[
-      0];
+      0]
+  ];
   if ( 0 < _input_files.length ) {
-    _txt =
-      "";
+    const
+      _tmp_dir =
+        await _mktemp();
+    _output_path_encoded_prefix =
+      _path_join( [
+        _tmp_dir,
+        "merge.base64" ]);
+    _merge_list =
+      await _assemble(
+        _output_file,
+        _input_files,
+        _argument_type);
   }
-  true
 }
 
 function
+  _input_texts_check(
+    _input_texts) {
+  let
+    _file,
+    _input_file_exists;
+  for ( _file of _input_texts ) {
+    _input_file_exists =
+      _file_exists(
+        _file);
+    if ( ! _input_file_exists ) {
+      const
+        _msg =
+          `Input file '${_file}' does not ` +
+          `exist.`;
+        _msg_error(
+          _msg,
+          1);
+    }
+  }
+}
+
+function
+  _output_file_check(
+    _output_file) {
+  const
+    _output_file_exists =
+      _file_exists(
+        _output_file);
+  if ( _output_file_exists ) {
+    const
+      _msg =
+        `Input file '${_output_file}' does ` +
+        `already exist, deleting.`;
+    _msg_info(
+      _msg);
+    _rm(
+      _output_file);
+  }
+}
+
+async function
   _txt2bin(
     _output_file,
     _encoding_format,
     _argument_type,
-    _input_files) {
-  let
-    _list;
+    _encoding_type,
+    _input_files,
+    _input_files_sanity_check) {
+  const
+    _input_files_sanity_check_type =
+      typeof(
+        _input_files_sanity_check);
+  if ( _input_files_sanity_check_type == "undefined" ||
+         _input_files_sanity_check == "" ||
+         _input_files_sanity_check == "true" ) {
+    _input_files_sanity_check =
+      true;
+  }
+  if ( _input_files_sanity_check == "false" ) {
+    _input_files_sanity_check =
+      false;
+  }
   if ( _argument_type == "list" ) {
     const
       _list =
@@ -154,14 +319,27 @@ function
         _list).split(
           "\n");
   }
-  if ( _encoding_format == "base64" ) {
-    _base64_decode(
-      _output_file,
+  if ( _input_files_sanity_check ) {
+    _input_texts_check(
       _input_files);
+  }
+  _output_file_check(
+    _output_file);
+  if ( _encoding_format == "base64" ) {
+    const
+      _decoded =
+        await _base64_decode(
+          _output_file,
+          _input_files,
+          _argument_type,
+          _encoding_type);
+    return _decoded;
   }
 }
 
 module.exports = {
+  _input_texts_check:
+    _input_texts_check,
   _txt2bin:
     _txt2bin
-}
+};

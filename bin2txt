@@ -27,6 +27,14 @@
  *     If not, see <https://www.gnu.org/licenses/>.
  */
 
+/* eslint-disable
+     no-unused-vars */
+
+/* Crash Javascript global variables */
+
+/* global
+     runtime_environment:
+       writable */
 
 const
   _libcrash =
@@ -38,10 +46,20 @@ const
 _argv_get =
   _libcrash._argv_get;
 /* global
+     _argv_url_get */
+const
+  _argv_url_get =
+    _libcrash._argv_url_get;
+/* global
      _cmdline_check */
 const
   _cmdline_check =
     _libcrash._cmdline_check;
+/* global
+     _get_date_human */
+const
+_get_date_human =
+  _libcrash._get_date_human;
 /* global
      _msg_info */
 const
@@ -115,6 +133,16 @@ function
   amount_only =
     "";
   /* global
+       encoding_type:
+         writable */
+  encoding_type =
+    "";
+  /* global
+       verbose:
+         writable */
+  verbose =
+    "";
+  /* global
        quiet:
          writable */
   quiet =
@@ -151,6 +179,12 @@ function
     amount_only =
       "false";
   }
+  if ( encoding_type == "" ||
+       typeof(
+         encoding_type) == "undefined" ) {
+    encoding_type =
+      "memory";
+  }
 }
 
 function
@@ -160,12 +194,13 @@ function
   const
     _text = [
       `${app_name} configuration:`,
-      `                Call date:   ${call_date}`,
+      `                Call date:   ${make_date}`,
       `      Runtime environment:   ${runtime_environment}`,
       `          Encoding format:   ${encoding_format}`,
       `              Buffer size:   ${buffer_size}`,
       `      Chunk string length:   ${string_length}`,
       `       Chunks amount only:   ${amount_only}`,
+      `            Encoding type:   ${encoding_type}`,
       `                  In file:   ${in_file}`,
       `          Out text prefix:   ${out_txt_prefix}`,
     ];
@@ -179,42 +214,44 @@ function
   _usage(
     _exit_code) {
   let
-    _line,
-    _text;
-  _text = [
-    "Converts binary to ascii text.",
-    "",
-    "Usage:",
-    "",
-    "  bin2txt",
-    "    <in-file>",
-    "    <out-txt-prefix>",
-    "",
-    "  arguments:",
-    "    <in-file>                        An input file.",
-    "    <out-file-prefix>                Prefix for the output file(s).",
-    "",
-    "  options:",
-    "",
-    "     -f --encoding-format            Encoding format ('base64').",
-    `       <encoding-format>             Default: '${encoding_format}'.`,
-    "",
-    "     -B --buffer-size                Size in bytes the input file will",
-    "       <buffer-size>                 be split before being read",
-    "                                     in memory and passed to",
-    "                                     the encoder.",
-    `                                     Default: '${buffer_size}'.`,
-    "",
-    "     -L --string-length              String chunk length.",
-    `       <string-length>               Default: '${string_length}'`,
-    "",
-    "     -s --amount-only                Only print chunks amount.",
-    `                                     Default: '${amount_only}'.`,
-    "",
-    "     -h --help                       This message.",
-    "     -v --verbose                    Enable verbose output.",
-    ""
-  ];
+    _line;
+  const
+    _text = [
+      "Converts binary to ascii text.",
+      "",
+      "Usage:",
+      "",
+      "  bin2txt",
+      "    <in-file>",
+      "    <out-txt-prefix>",
+      "",
+      "  arguments:",
+      "    <in-file>                        An input file.",
+      "    <out-file-prefix>                Prefix for the output file(s).",
+      "",
+      "  options:",
+      "",
+      "     -f --encoding-format            Encoding format ('base64').",
+      `       <encoding-format>             Default: '${encoding_format}'.`,
+      "",
+      "     -B --buffer-size                Size in bytes the input file will",
+      "       <buffer-size>                 be split before being read",
+      "                                     in memory and passed to",
+      "                                     the encoder.",
+      `                                     Default: '${buffer_size}'.`,
+      "",
+      "     -L --string-length              String chunk length.",
+      `       <string-length>               Default: '${string_length}'`,
+      "",
+      "     -s --amount-only                Only print chunks amount.",
+      `                                     Default: '${amount_only}'.`,
+      "     -t --encoding-type              It can be 'stream' and 'memory'.",
+      `                                     Default: '${encoding_type}'.`,
+      "",
+      "     -h --help                       This message.",
+      "     -v --verbose                    Enable verbose output.",
+      ""
+    ];
   for ( _line of _text ) {
     console.log(
       _line);
@@ -249,11 +286,13 @@ function
     "y";
   _help_display =
     false;
-  if ( "h" in _argv ) {
+  if ( _argv[
+         "h"] ) {
     _help_display =
       true;
   }
-  if ( "help" in _argv ) {
+  if ( _argv[
+         "help"] ) {
     _help_display =
       true;
   }
@@ -295,6 +334,12 @@ function
       in_file +
       ".base64";
   }
+  else {
+    out_txt_prefix =
+      _argv[
+        "_"][
+          1];
+  }
   if ( "L" in _argv ) {
     string_length =
       _argv[
@@ -315,6 +360,16 @@ function
       _argv[
         "amount-only"];
   }
+  if ( "t" in _argv ) {
+    encoding_type =
+      _argv[
+        "t"];
+  }
+  if ( "encoding-type" in _argv ) {
+    encoding_type =
+      _argv[
+        "encoding_type"];
+  }
   if ( "v" in _argv ) {
     verbose =
       true;
@@ -331,24 +386,40 @@ function
 
 function
   _url_parse() {
-  let
-    _argv;
   runtime_environment =
     "browser";
-  _argv =
-    _argv_url_get();
   in_file =
     _argv_url_get(
       "in_file")[
         0];
-  target_planet =
+  out_txt_prefix =
     _argv_url_get(
       "out_txt_prefix")[
+        0];
+  string_length =
+    _argv_url_get(
+      "string_length")[
+        0];
+  amount_only =
+    _argv_url_get(
+      "amount_only")[
+        0];
+  encoding_type =
+    _argv_url_get(
+      "encoding_type")[
+        0];
+  verbose =
+    _argv_url_get(
+      "verbose")[
         0];
   quiet =
     _argv_url_get(
       "quiet");
   if ( quiet.length === 0 ) {
+    quiet =
+      "n";
+  }
+  if ( verbose ) {
     quiet =
       "n";
   }
@@ -369,7 +440,8 @@ app_opts = [
   encoding_format,  
   string_length,
   buffer_size,
-  amount_only 
+  amount_only,
+  encoding_type
 ];
 _bin2txt.apply(
   null,
