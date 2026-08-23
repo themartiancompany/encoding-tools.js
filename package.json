@@ -62,7 +62,7 @@
     "buffer":
       "^6.0.3",
     "crash-js-webpack":
-      "^0.0.28",
+      "^0.0.31",
     "eslint":
       "^10.3.0",
     "globals":
@@ -82,7 +82,7 @@
     "base64-stream":
       "^1.0.0",
     "crash-js":
-      "^0.1.134",
+      "^0.1.11",
     "tmcfs":
       "npm:@themartiancompany/fs@^0.0.12",
     "tmcsplit":
