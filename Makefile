@@ -19,17 +19,18 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-SHELL=bash
+_NPM ?= false
+SHELL ?= bash
 PREFIX ?= /usr/local
 _PROJECT_NPM=encoding-tools
-_PROJECT=$(_PROJECT_NPM).js
+_PROJECT=$(_PROJECT_NPM)
 _NAMESPACE=themartiancompany
 DOC_DIR=$(DESTDIR)$(PREFIX)/share/doc/$(_PROJECT)
 USR_DIR=$(DESTDIR)$(PREFIX)
 BIN_DIR=$(DESTDIR)$(PREFIX)/bin
 LIB_DIR=$(DESTDIR)$(PREFIX)/lib/$(_PROJECT)
 MAN_DIR?=$(DESTDIR)$(PREFIX)/share/man
-NODE_DIR=$(PREFIX)/lib/node_modules/$(_PROJECT)
+NODE_DIR=$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)
 BUILD_NPM_DIR=build
 
 _INSTALL_FILE=\
@@ -83,21 +84,63 @@ install: install-scripts install-doc install-examples install-man
 
 install-scripts:
 
-	for _file in $(NPM_FILES); do
-	  $(_INSTALL_FILE) \
-	    "$${_file}" \
-	    "$(LIB_DIR)/$${_file}"; \
-	done
-	ln \
-	  -s \
-	  "$(PREFIX)/lib/$(_PROJECT)/bin2txt" \
-	  "$(BIN_DIR)/bin2txt" || \
-	true
-	ln \
-	  -s \
-	  "$(PREFIX)/lib/$(_PROJECT)/bin2txt" \
-	  "$(BIN_DIR)/bin2txt" || \
-	true
+	if [[ "$(_NPM)" == "false" ]]; then \
+	  $(_MAKE_EXE) \
+	    "$(LIB_DIR)/nodejs/$(_PROJECT)"; \
+	  if [[ ! -s "$(BIN_DIR)/$(_PROJECT)" && \
+	        ! -e "$(BIN_DIR)/$(_PROJECT)"  ]]; then \
+	    $(_MAKE_LINK) \
+	      "$(PREFIX)/lib/$(_PROJECT)/nodejs/$(_PROJECT)" \
+	      "$(BIN_DIR)/$(_PROJECT)"; \
+	  fi; \
+	  $(_MAKE_LINK) \
+	    "$(PREFIX)/lib/$(_PROJECT)/nodejs/$(_PROJECT)" \
+	    "$(BIN_DIR)/$(_PROJECT).js" || \
+	    true; \
+	  $(_INSTALL_DIR) \
+	    "$(LIB_DIR)/nodejs"; \
+	  rm \
+	    -rf \
+	    "$(LIB_DIR)/node_modules" || \
+	    true; \
+	  if [[ ! -s "$(LIB_DIR)/node_modules" ]]; then \
+	    $(_MAKE_LINK) \
+	      "$(PREFIX)/lib/node_modules" \
+	      "$(LIB_DIR)/nodejs/node_modules"; \
+	  fi; \
+	  rm \
+	    -rf \
+	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" \
+	    "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT_NPM)"; \
+	  if [[ ! -s "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT).js" ]]; then \
+	    $(_MAKE_LINK) \
+	      "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
+	      "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT).js"; \
+	  fi; \
+	  if [[ ! -s "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" ]]; then \
+	    $(_MAKE_LINK) \
+	      "$(PREFIX)/lib/$(_PROJECT)/nodejs" \
+	      "$(DESTDIR)$(PREFIX)/lib/node_modules/$(_PROJECT)" || \
+	      true; \
+	  fi; \
+	  cp \
+	    -r \
+	    $$(printf \
+	         "$${PWD}/%s " \
+	         $$(cat \
+	              "$${PWD}/package.json" | \
+	              jq \
+	                --raw-output \
+	                '.files[]')) \
+	    "$(LIB_DIR)/nodejs"; \
+	elif [[ "$(_NPM)" == "true" ]]; then \
+	  make \
+	    install-npm; \
+	  $(_MAKE_LINK) \
+	    "$(PREFIX)/lib/node_modules/$(_PROJECT_NPM)" \
+	    "$(LIB_DIR)/nodejs" || \
+	  true; \
+	fi
 
 build-man:
 
@@ -165,6 +208,9 @@ build-npm:
 	      "$${PWD}" \
 	      "version")"; \
 	npm \
+	  install \
+	  --save-dev; \
+	npm \
 	  install; \
 	npm \
 	  run \
@@ -195,7 +241,7 @@ install-npm:
 	  "$(DESTDIR)$(PREFIX)/lib"; \
 	ln \
 	  -s \
-	  "$(NODE_DIR)" \
+          "$(PREFIX)/lib/node_modules/$(_PROJECT_NPM)" \
 	  "$(LIB_DIR)" || \
 	true
 
@@ -225,5 +271,10 @@ install-man:
 	$(_INSTALL_FILE) \
 	  "build/man/txt2bin.js.1" \
 	  "$(MAN_DIR)/man1/txt2bin.js.1"
+
+uninstall-scripts:
+	rm \
+	  -rf \
+	  "$(NODE_DIR)"
 
 .PHONY: check build-man build-npm install install-doc install-man install-npm install-scripts shellcheck

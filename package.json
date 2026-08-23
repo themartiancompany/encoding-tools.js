@@ -2,7 +2,7 @@
   "name":
     "encoding-tools",
   "version":
-    "0.0.15",
+    "0.0.16",
   "description":
     "A multi-language collection of encoding tools.",
   "funding": {
@@ -25,7 +25,6 @@
     "libbin2txt",
     "libtxt2bin",
     "fs-worker.webpack.config.js",
-    "index.html",
     "package.json",
     "serve.json",
     "txt2bin",

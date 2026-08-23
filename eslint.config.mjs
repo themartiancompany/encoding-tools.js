@@ -35,11 +35,21 @@ const
   _ignores = [
     "build/**",
     "dist/**",
-    "fs-worker.js",
+    `**/bin2txt.js`,
+    `**/*.bin2txt.js`,
+    `**/*.${_project}.js`,
     `${_project}.js`,
-    "node_modules/**",
     "eslint.config.js",
-    "man/**"
+    "fs-worker.js",
+    "**/*.fs-worker.js",
+    `**/libbin2txt.js`,
+    `**/libtxt2bin.js`,
+    `**/*.libbin2txt.js`,
+    `**/*.libtxt2bin.js`,
+    "man/**",
+    "node_modules/**",
+    `**/txt2bin.js`,
+    `**/*.txt2bin.js`
   ];
 export default defineConfig([
  {
@@ -75,13 +85,7 @@ export default defineConfig([
        "prefer-const":
          "error" },
    files:
-     [ "**/*.js",
-       `**/bin2txt`,
-       `**/${_project}`,
-       `**/lib${_project}`,
-       `**/libbin2txt`,
-       `**/libtxt2bin`,
-       `**/txt2bin`
+     [ "**/*.{cjs,js}",
      ],
    languageOptions:
      { sourceType:
