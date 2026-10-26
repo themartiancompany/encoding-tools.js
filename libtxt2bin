@@ -33,7 +33,7 @@
 const
   _libcrash =
     require(
-      'crash-js');
+      'libcrash-js');
 /* global
      _cat */
 const

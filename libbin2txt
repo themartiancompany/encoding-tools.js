@@ -33,7 +33,7 @@
 const
   _libcrash =
     await import(
-      "crash-js");
+      "libcrash-js");
 /* global
      _cat */
 const
