@@ -540,11 +540,14 @@ async function
     _worker;
   _chunks_files =
     [];
-  if ( typeof window !== 'undefined' ) {
-    const
-      _worker =
-        await _fs_worker_start(
-          "fs-worker.js");
+  const
+    _window_type =
+      typeof(
+        window);
+  if ( _window_type !== 'undefined' ) {
+    _worker =
+      await _fs_worker_start(
+        "fs-worker.js");
     _msg =
       `OPFS worker '${_worker}' started.`;
     _msg_info(
@@ -657,8 +660,6 @@ async function
         `Current chunk: '${_chunk_current}'.`;
       _msg_info(
         _msg);
-    _block_current =
-      _block_current + 1;
     }
     else {
       _msg =
@@ -669,6 +670,8 @@ async function
         0);
       throw _msg;
     }
+    _block_current =
+      _block_current + 1;
   }
   _chunks_total =
     _chunk_current;
