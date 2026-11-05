@@ -532,6 +532,7 @@ async function
     _block_last,
     _blocks,
     _chunk_current,
+    _chunk_file_path,
     _chunks_files,
     _chunks_files_new,
     _chunks_total,
@@ -684,7 +685,19 @@ async function
       `files of length '${_length}'.`;
     _msg_info(
       _msg);
-    return _chunks_total;
+    if ( 1 < _chunks_total ) {
+      for ( _chunk of _seq(1,
+                           _chunks_total) ) {
+        _chunk_file_path =
+          `${_out}.${_chunk}`;
+        _chunks_files.push(
+          _chunk_file_path);
+      }
+    }
+    else {
+      _chunks_files.push(
+        _out);
+    }
   }
   else if ( _amount_only === "false" ) {
     _msg =
