@@ -307,6 +307,9 @@ async function
     _msg,
     _out;
   const
+    _chunks_files =
+      [];
+  const
     _total =
       _in.length;
   const
@@ -338,64 +341,75 @@ async function
     _file_write(
       _out,
       _in);
-    return 0;
+    _chunks_files.push(
+      _out);
+    _chunk_current =
+      1;
   }
-  _msg =
-    `Chunking '${_total}' ` +
-    `letters into '${_chunks}' ` +
-    `chunks of length '${_length}'.`;
-  _msg_info(
-    _msg);
-  for ( _chunk of _seq(
-                    _chunk_current + 1,
-                    _chunks) ) {
-    _chunk_start =
-      ( ( _chunk -
-          _chunk_current ) *
-        _length ) -
-      _length;
-    _cut =
-      _in.substring(
-        _chunk_start,
-        _chunk_start + _length);
-    _out =
-      `${_prefix}.${_chunk}`;
+  else {
     _msg =
-      `Writing chunk ${_chunk} in file '${_out}' ` +
-      `of length ${_cut.length} out of ${_chunks}.`;
+      `Chunking '${_total}' ` +
+      `letters into '${_chunks}' ` +
+      `chunks of length '${_length}'.`;
     _msg_info(
       _msg);
-    if ( _chunk < _chunks ) {
-      _file_write(
-        _out,
-        _cut);
-    }
-    else if ( _chunk == _chunks ) {
-      if ( _block_last == "true" ) {
+    for ( _chunk of _seq(
+                      _chunk_current + 1,
+                      _chunks) ) {
+      _chunk_start =
+        ( ( _chunk -
+            _chunk_current ) *
+          _length ) -
+        _length;
+      _cut =
+        _in.substring(
+          _chunk_start,
+          _chunk_start + _length);
+      _out =
+        `${_prefix}.${_chunk}`;
+      _msg =
+        `Writing chunk ${_chunk} in file '${_out}' ` +
+        `of length ${_cut.length} out of ${_chunks}.`;
+      _msg_info(
+        _msg);
+      _chunks_files.push(
+        _out);
+      if ( _chunk < _chunks ) {
         _file_write(
           _out,
           _cut);
       }
-      else if ( _block_last == "false" ) {
-        _msg =
-          "Last chunk of non-last block, " +
-          "non adding a newline character at the end.";
-        _msg_info(
-          _msg);
-        _file_write(
-          _out,
-          `${_cut}\n`);
-          // _cut);
+      else if ( _chunk == _chunks ) {
+        if ( _block_last == "true" ) {
+          _file_write(
+            _out,
+            _cut);
+        }
+        else if ( _block_last == "false" ) {
+          _msg =
+            "Last chunk of non-last block, " +
+            "non adding a newline character at the end.";
+          _msg_info(
+            _msg);
+          _file_write(
+            _out,
+            `${_cut}\n`);
+            // _cut);
+        }
       }
     }
-  }
-  _chunk_current =
-    _chunks;
-  _msg=
-    "Finished encoding block.";
-  _msg_info(
-    _msg);
-  return _chunk_current;
+    _chunk_current =
+      _chunks;
+    _msg=
+      "Finished encoding block.";
+    _msg_info(
+      _msg);
+  const
+    _output = [
+      _chunk_current,
+      _chunks_files
+    ];
+  return _output;
 }
 
 async function
@@ -421,13 +435,35 @@ async function
     _msg);
   if ( _amount_only === "false" ) {
     if ( _encoding_type === "memory" ) {
-      _chunk_current =
-        await _chunk_split(
+      const
+        _chunk_split_args = [
           _txt,
           _chunk_current,
           _length,
           _out,
-          _block_last);
+          _block_last
+        ];
+      try {
+        [ _chunk_current,
+          _chunks_files ] =
+          await _chunk_split.apply(
+            null
+            _chunk_split_args);
+      }
+      catch(
+        _error) {
+        _msg =
+          "Error running '_chunk_split' " +
+          "with arguments:";
+        _msg_error(
+          _msg,
+          0);
+        _echo2(
+          _chunk_split_args);
+        _echo2(
+          _error);
+        throw _error;
+      }
     }
   }
   else if ( _amount_only === "true" ) {
@@ -594,6 +630,8 @@ async function
         1);
     }
   }
+  _chunks_total =
+    _chunk_current;
   for ( _block of _blocks ) {
     if ( _block != _in ) {
       _rm(
@@ -601,8 +639,6 @@ async function
     }
   }
   if ( _amount_only === "true" ) {
-    _chunks_total =
-      _chunk_current;
     _msg =
       `File '${_in}' is base64 encoded and ` +
       `split in '${_chunks_total}' ` +
@@ -618,6 +654,10 @@ async function
     _msg_info(
       _msg);
   }
+  const
+    _output = [
+      _chunks_total
+    ];
 }
 
 // ES6 Module export
