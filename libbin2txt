@@ -416,12 +416,14 @@ async function
   _base64_encode(
     _block,
     _chunk_current,
+    _chunks_files,
     _length,
     _out,
     _block_last,
     _amount_only,
     _encoding_type) {
   let
+    _chunks_files_new,
     _msg;
   const
     _txt =
@@ -445,7 +447,7 @@ async function
         ];
       try {
         [ _chunk_current,
-          _chunks_files ] =
+          _chunks_files_new ] =
           await _chunk_split.apply(
             null
             _chunk_split_args);
@@ -464,6 +466,9 @@ async function
           _error);
         throw _error;
       }
+      _chunks_files =
+        _chunks_files.concat(
+          _chunks_files_new);
     }
   }
   else if ( _amount_only === "true" ) {
@@ -489,7 +494,12 @@ async function
     `'${_block}'.`;
   _msg_info(
     _msg);
-  return _chunk_current;
+  const
+    _output = [
+      _chunk_current,
+      _chunks_files
+    ];
+  return _output;
 }
 
 async function
