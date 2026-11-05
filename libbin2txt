@@ -75,6 +75,11 @@ const
   _fs_worker_start =
     _libcrash._fs_worker_start;
 /* global
+     _global_get */
+const
+  _global_get =
+    _libcrash._global_get;
+/* global
      _json_read */
 const
   _json_read =
@@ -480,13 +485,13 @@ async function
     _block_current,
     _block_last,
     _blocks,
-    _chunks,
     _chunk_current,
     _chunks_total,
     _msg,
     _worker;
-  _chunks =
-    [];
+  const
+    _chunks =
+      [];
   if ( typeof window !== 'undefined' ) {
     const
       _worker =
@@ -499,18 +504,49 @@ async function
   }
   _input_data_check(
     _in);
-  console.log(_encoding_type);
+  const
+    _global =
+      _global_get();
+  const
+    _quiet =
+      _global[
+        "quiet"];
+  if ( _quiet === "n" ) {
+    _echo(
+      _encoding_type);
+  }
   if ( _encoding_type == "stream" ) {
     _blocks = [
       `${_in}`
     ];
   }
   else if ( _encoding_type == "memory" ) {
-    _blocks =
-      await _buffer_prepare(
+    const
+      _buffer_prepare_args = [
         _in,
         _out,
-        _buffer_size_bytes);
+        _buffer_size_bytes
+      ];
+    try {
+      _blocks =
+        await _buffer_prepare.apply(
+          null,
+          _buffer_prepare_args);
+    }
+    catch(
+      _error) {
+      _msg =
+        "Error running '_buffer_prepare' " +
+        "with arguments:";
+      _msg_error(
+        _msg,
+        0);
+      _echo2(
+        _buffer_prepare_args);
+      _echo2(
+        _error);
+      throw _error;
+    }
   }
   const
     _blocks_total =
