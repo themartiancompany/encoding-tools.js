@@ -449,7 +449,7 @@ async function
         [ _chunk_current,
           _chunks_files_new ] =
           await _chunk_split.apply(
-            null
+            null,
             _chunk_split_args);
       }
       catch(
