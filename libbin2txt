@@ -45,6 +45,11 @@ const
   _dirname =
     _libcrash._dirname;
 /* global
+     _echo */
+const
+  _echo =
+    _libcrash._echo;
+/* global
      _error_display */
 const
   _error_display =
@@ -305,10 +310,26 @@ async function
         _chunk_current +
         _total /
           _length);
-  console.log("prefix", _prefix);
+  const
+    _global =
+      _global_get();
+  const
+    _quiet =
+      _global[
+        "quiet"];
+  if ( _quiet ) {
+    _echo(
+      "prefix",
+      _prefix);
+  }
   if ( _chunks < 2 ) {
     _out =
       _prefix;
+    _msg =
+      `Writing file '${_in}' ` +
+      `into file '${_out}'.`;
+    _msg_info(
+      _msg);
     _file_write(
       _out,
       _in);
@@ -459,10 +480,13 @@ async function
     _block_current,
     _block_last,
     _blocks,
+    _chunks,
     _chunk_current,
     _chunks_total,
     _msg,
     _worker;
+  _chunks =
+    [];
   if ( typeof window !== 'undefined' ) {
     const
       _worker =

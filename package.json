@@ -2,7 +2,7 @@
   "name":
     "encoding-tools",
   "version":
-    "0.0.20",
+    "0.0.21",
   "description":
     "A multi-language collection of encoding tools.",
   "funding": {
@@ -61,17 +61,17 @@
     "buffer":
       "^6.0.3",
     "crash-js-webpack":
-      "^0.0.78",
+      "^0.0.83",
     "flatted":
       "3.4.4",
     "eslint":
-      "^10.9.0",
+      "^10.14.0",
     "globals":
       "^17.3.0",
     "@eslint/js":
       "^10.0.1",
     "safely-serve":
-      "^0.0.16",
+      "^0.0.25",
     "stream-browserify":
       "^3.0.0",
     "webpack":
@@ -83,11 +83,11 @@
     "base64-stream":
       "^1.0.0",
     "libcrash-js":
-      "npm:crash-js@^1000000000000012.1000000000000001.1000000000000001",
+      "npm:crash-js@^1000000000000019.1000000000000001.1000000000000001",
     "tmcfs":
       "npm:@themartiancompany/fs@^0.0.27",
     "tmcsplit":
-      "^0.0.19",
+      "^0.0.21",
     "yargs":
       "18.0.0"
   },
@@ -126,7 +126,7 @@
       "npm run lint && npm run build-fs-worker && npm run build-lib && npm run build-bin",
     "lint":
       "npx eslint .",
-    "publish-pnm":
+    "publish-npm":
       "npm run build && npm publish --access public",
     "start":
       "npx safely-serve 'dist/encoding-tools'",
