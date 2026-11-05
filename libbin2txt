@@ -226,10 +226,46 @@ async function
     _file,
     _encoding_type) {
   let
+    _encoding_type_get,
+    _msg,
     _string;
-  if ( typeof(
-         _encoding_type) == "undefined" ||
-       _encoding_type == "" ) {
+  _encoding_type_get =
+    false;
+  const
+    _encoding_type_type =
+      typeof(
+        _encoding_type);
+  if ( _encoding_type_type === "undefined" ||
+       _encoding_type === "" ) {
+    _msg =
+      "Encoding type is undefined, " +
+      "auto-detecting.";
+    _msg_info(
+      _msg);
+    _encoding_type_get =
+      true;
+  }
+  else if ( _encoding_type_type === "string" ) {
+    if ( _encoding_type.length < 1 ) {
+      _msg =
+        "Encoding type is an empty string, " +
+        "auto-detecting.";
+      _msg_info(
+        _msg);
+      _encoding_type_get =
+        true;
+    }
+  }
+  else {
+    _msg =
+      `Unknown type '${_encoding_type_type}' ` +
+      `for variable 'encoding type'.`;
+    _msg_error(
+      _msg,
+      0);
+    throw _msg;
+  }
+  if ( _encoding_type_get ) {
     _encoding_type =
       "memory";
   }
@@ -339,7 +375,7 @@ async function
     _out =
       _prefix;
     _msg =
-      `Writing file '${_in}' ` +
+      `Writing content with length '${_in.length}' ` +
       `into file '${_out}'.`;
     _msg_info(
       _msg);
@@ -441,7 +477,8 @@ async function
     `length: ${_txt.length}.`;
   _msg_info(
     _msg);
-  if ( _amount_only === "false" ) {
+  if ( _amount_only === "false" ||
+       _amount_only === "n" ) {
     if ( _encoding_type === "memory" ) {
       const
         _chunk_split_args = [
@@ -477,7 +514,8 @@ async function
           _chunks_files_new);
     }
   }
-  else if ( _amount_only === "true" ) {
+  else if ( _amount_only === "true" ||
+            _amount_only === "y" ) {
     const
       _chunks_total =
         Math.ceil(
@@ -489,8 +527,9 @@ async function
   }
   else {
     _msg =
-      `Value of the 'amount_only' can ` +
-      `be true or false. Current: '${_amount_only}'.`;
+      "Value of the 'amount_only' can " +
+      "be 'true' or 'false' or 'y' or 'n'. " +
+      `Current: '${_amount_only}'.`;
     _msg_error(
       _msg,
       0);
@@ -534,6 +573,7 @@ async function
     _amount_only,
     _encoding_type) {
   let
+    _base64_encode_args,
     _block,
     _block_current,
     _block_last,
@@ -629,16 +669,25 @@ async function
         "true";
     }
     if ( _format === "base64" ) {
-      const
-        _base64_encode_args = [
-          _block,
-          _chunk_current,
-          _length,
-          _out,
-          _block_last,
-          _amount_only,
-          _encoding_type
-        ];
+      _base64_encode_args = [
+        _block,
+        _chunk_current,
+        _chunks_files,
+        _length,
+        _out,
+        _block_last,
+        _amount_only,
+        _encoding_type
+      ];
+      _msg =
+        "Running '_base64_encode' with " +
+        "arguments:";
+      _msg_info(
+        _msg);
+      if ( _quiet === "n" ) {
+        _echo(
+          _base64_encode_args);
+      }
       try {
         [ _chunk_current,
           _chunks_files_new ] =
@@ -689,7 +738,8 @@ async function
         _block);
     }
   }
-  if ( _amount_only === "true" ) {
+  if ( _amount_only === "true" ||
+       _amount_only === "y" ) {
     _msg =
       `File '${_in}' is base64 encoded and ` +
       `split in '${_chunks_total}' ` +
@@ -710,7 +760,8 @@ async function
         _out);
     }
   }
-  else if ( _amount_only === "false" ) {
+  else if ( _amount_only === "false" ||
+            _amount_only === "n" ) {
     _msg =
       `Finished '${_format}' encoding ` +
       `input file '${_in}'.`;
