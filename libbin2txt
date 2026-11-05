@@ -654,7 +654,7 @@ async function
         throw _error;
       }
       _msg =
-        `Current chunk: '${_chunk_current}'.`);
+        `Current chunk: '${_chunk_current}'.`;
       _msg_info(
         _msg);
     _block_current =
