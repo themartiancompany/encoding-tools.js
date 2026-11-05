@@ -538,6 +538,7 @@ async function
     _block_current,
     _block_last,
     _blocks,
+    _chunk,
     _chunk_current,
     _chunk_file_path,
     _chunks_files,
