@@ -404,6 +404,7 @@ async function
       "Finished encoding block.";
     _msg_info(
       _msg);
+  }
   const
     _output = [
       _chunk_current,
@@ -487,7 +488,8 @@ async function
       `be true or false. Current: '${_amount_only}'.`;
     _msg_error(
       _msg,
-      1);
+      0);
+    throw _msg;
   }
   _msg =
     "Finished encoding block " +
