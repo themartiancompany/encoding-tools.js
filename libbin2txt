@@ -532,12 +532,13 @@ async function
     _block_last,
     _blocks,
     _chunk_current,
+    _chunks_files,
+    _chunks_files_new,
     _chunks_total,
     _msg,
     _worker;
-  const
-    _chunks =
-      [];
+  _chunks_files =
+    [];
   if ( typeof window !== 'undefined' ) {
     const
       _worker =
@@ -617,17 +618,44 @@ async function
         "true";
     }
     if ( _format === "base64" ) {
-      _chunk_current =
-        await _base64_encode(
+      const
+        _base64_encode_args = [
           _block,
           _chunk_current,
           _length,
           _out,
           _block_last,
           _amount_only,
-          _encoding_type);
-      _msg_info(
+          _encoding_type
+        ];
+      try {
+        [ _chunk_current,
+          _chunks_files_new ] =
+          await _base64_encode.apply(
+            null,
+            _base64_encode_args);
+        _chunks_files =
+          _chunks_files.concat(
+            _chunks_files_new);
+      }
+      catch(
+        _error) {
+        _msg =
+          "Error running '_base64_encode' " +
+          "with arguments:";
+        _msg_error(
+          _msg,
+          0);
+        _echo2(
+          _base64_encode_args);
+        _echo2(
+          _error);
+        throw _error;
+      }
+      _msg =
         `Current chunk: '${_chunk_current}'.`);
+      _msg_info(
+        _msg);
     _block_current =
       _block_current + 1;
     }
@@ -637,7 +665,8 @@ async function
         `${_format}.`;
       _msg_error(
         _msg,
-        1);
+        0);
+      throw _msg;
     }
   }
   _chunks_total =
@@ -666,8 +695,10 @@ async function
   }
   const
     _output = [
-      _chunks_total
+      _chunks_total,
+      _chunks_files
     ];
+  return _output;
 }
 
 // ES6 Module export
