@@ -50,6 +50,11 @@ const
   _echo =
     _libcrash._echo;
 /* global
+     _echo2 */
+const
+  _echo2 =
+    _libcrash._echo2;
+/* global
      _error_display */
 const
   _error_display =
@@ -537,7 +542,6 @@ async function
     _chunk_file_path,
     _chunks_files,
     _chunks_files_new,
-    _chunks_total,
     _msg,
     _worker;
   _chunks_files =
@@ -675,8 +679,9 @@ async function
     _block_current =
       _block_current + 1;
   }
-  _chunks_total =
-    _chunk_current;
+  const
+    _chunks_total =
+      _chunk_current;
   for ( _block of _blocks ) {
     if ( _block != _in ) {
       _rm(
