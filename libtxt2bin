@@ -40,6 +40,11 @@ const
   _cat =
     _libcrash._cat;
 /* global
+     _echo2 */
+const
+  _echo2 =
+    _libcrash._echo2;
+/* global
      _ext_rm */
 const
   _ext_rm =
@@ -310,7 +315,7 @@ function
   if ( _argument_type_type === "undefined" ) {
     _msg =
       "Argument type undefined, setting " +
-      `default '${_default}'.`
+      `default '${_default}'.`;
     _msg_info(
       _msg);
     _argument_type_get =
@@ -322,7 +327,7 @@ function
         true;
       _msg =
         "Argument type undefined, setting " +
-        `default '${_default}'.`
+        `default '${_default}'.`;
       _msg_info(
         _msg);
     }
@@ -558,7 +563,8 @@ async function
     _input_files,
     _input_files_sanity_check) {
   let
-    _decoded;
+    _decoded,
+    _msg;
   const
     _argument_type_check_args = [
       _argument_type
@@ -589,7 +595,7 @@ async function
     _input_files_sanity_check =
       _input_files_sanity_check_check.apply(
         null,
-        _input_files_sanity_check_args);
+        _input_files_sanity_check_check_args);
   }
   catch(
     _error) {
