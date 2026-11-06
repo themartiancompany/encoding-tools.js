@@ -366,7 +366,7 @@ async function
     _quiet =
       _global[
         "quiet"];
-  if ( _quiet ) {
+  if ( _quiet == "n" ) {
     _echo(
       "prefix",
       _prefix);

@@ -213,6 +213,77 @@ async function
   return true;
 }
 
+function
+  _input_files_check(
+    _input_files) {
+  let
+    _exists,
+    _file,
+    _flag_undefined,
+    _msg;
+  _flag_undefined =
+    false;
+  const
+    _input_files_type =
+      typeof(
+        _input_files);
+  if ( _input_files_type === "undefined" ) {
+    _flag_undefined =
+      true;
+  }
+  else if ( _input_files_type === "string" ) {
+    if ( _input_files.length < 1 ) {
+      _flag_undefined =
+        true;
+    }
+  }
+  else if ( _input_files_type === "object" ) {
+    const
+      _input_files_keys =
+        Object.keys(
+          _input_files);
+    if ( _input_files_keys.length < 1 ) {
+      _flag_undefined =
+        true;
+    }
+    else {
+      for ( _file of _input_files ) {
+        _exists =
+          _file_exists(
+            _file);
+        if ( ! _exists ) {
+          _msg =
+            `File '${_file}' ` +
+            "does not exist.";
+          _msg_error(
+            _msg,
+            0);
+          throw _msg;
+	}
+      }
+    }
+  }
+  else {
+    _msg =
+      `Unknown type '${_input_files_type}' ` +
+      "for variable 'input files'. Expected " +
+      "value is a list of paths.";
+    _msg_error(
+      _msg,
+      0);
+    throw _msg;
+  }
+  if ( _flag_undefined ) {
+    _msg =
+      "No input files given in input.";
+    _msg_error(
+      _msg,
+      0);
+    throw _msg;
+  }
+  return _input_files;
+}
+
 async function
   _base64_decode(
     _output_file,
@@ -225,35 +296,41 @@ async function
     _msg,
     _output_path_encoded_prefix,
     _txt;
-  if ( typeof(
-         _input_files) == "undefined" ||
-       _input_files == [] ||
-       _input_files == "" ) {
+  const
+    _input_files_check_args = [
+      _input_files
+    ];
+  try {
+    _input_files =
+      _input_files_check.apply(
+        null,
+        _input_files_check_args);
+  }
+  catch(
+    _error) {
     _msg =
-      "No input files given in input.";
+      "Error running '_input_files_check'.";
     _msg_error(
       _msg,
-      1);
+      0);
+    throw _error;
   }
-
   _merge_list = [
     _input_files[
       0]
   ];
-  if ( 0 < _input_files.length ) {
-    const
-      _tmp_dir =
-        await _mktemp();
-    _output_path_encoded_prefix =
-      _path_join( [
-        _tmp_dir,
-        "merge.base64" ]);
-    _merge_list =
-      await _assemble(
-        _output_file,
-        _input_files,
-        _argument_type);
-  }
+  const
+    _tmp_dir =
+      await _mktemp();
+  _output_path_encoded_prefix =
+    _path_join( [
+      _tmp_dir,
+      "merge.base64" ]);
+  _merge_list =
+    await _assemble(
+      _output_file,
+      _input_files,
+      _argument_type);
 }
 
 function
