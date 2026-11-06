@@ -294,7 +294,6 @@ async function
     _data,
     _merge_list,
     _msg,
-    _output_path_encoded_prefix,
     _txt;
   const
     _input_files_check_args = [
@@ -322,15 +321,38 @@ async function
   const
     _tmp_dir =
       await _mktemp();
-  _output_path_encoded_prefix =
-    _path_join( [
-      _tmp_dir,
-      "merge.base64" ]);
-  _merge_list =
-    await _assemble(
+  const
+    _output_path_encoded_prefix =
+      _path_join( [
+        _tmp_dir,
+        "merge.base64" ]);
+  const
+    _assemble_args = [
       _output_file,
       _input_files,
-      _argument_type);
+      _argument_type
+    ];
+  try {
+    _merge_list =
+      await _assemble.apply(
+        null,
+        _assemble_args);
+  }
+  catch(
+    _error) {
+    _msg =
+      "Error running '_assemble' with " +
+      "arguments:";
+    _msg_error(
+      _msg,
+      0);
+    _echo2(
+      _assemble_args);
+    _echo2(
+      _error);
+    throw _error;
+  }
+  return _output_file;
 }
 
 function
