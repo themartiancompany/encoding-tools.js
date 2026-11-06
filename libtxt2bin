@@ -292,6 +292,263 @@ function
   }
 }
 
+function
+  _argument_type_check(
+    _argument_type) {
+  let
+    _argument_type_get,
+    _msg;
+  _argument_type_get =
+    false;
+  const
+    _default =
+      "file";
+  const
+    _argument_type_type =
+      typeof(
+        _argument_type);
+  if ( _argument_type_type === "undefined" ) {
+    _msg =
+      "Argument type undefined, setting " +
+      `default '${_default}'.`
+    _msg_info(
+      _msg);
+    _argument_type_get =
+      true;
+  }
+  else if ( _argument_type_type === "string" ) {
+    if ( _argument_type.length < 1 ) {
+      _argument_type_get =
+        true;
+      _msg =
+        "Argument type undefined, setting " +
+        `default '${_default}'.`
+      _msg_info(
+        _msg);
+    }
+    else {
+      if ( _argument_type !== "file" &&
+           _argument_type !== "list" ) {
+        _msg =
+          "Argument type variable should be a " +
+          "string with values 'file' or 'list'.";
+        _msg_error(
+          _msg,
+          0);
+        throw _msg;
+      }
+    }
+  }
+  else {
+    _msg =
+      "Argument type variable has type " +
+      `'${_argument_type_type}', should have ` +
+      "string with values 'file' or 'list'.";
+    _msg_error(
+      _msg,
+      0);
+    throw _msg;
+  }
+  if ( _argument_type_get ) {
+    _argument_type =
+      _default;
+  }
+  return _argument_type;
+}
+
+function
+  _input_files_sanity_check_check(
+    _input_files_sanity_check) {
+  let
+    _input_files_sanity_check_get,
+    _msg;
+  _input_files_sanity_check_get =
+    false;
+  const
+    _default =
+      true;
+  const
+    _input_files_sanity_check_type =
+       typeof(
+        _input_files_sanity_check);
+  if ( _input_files_sanity_check_type == "undefined" ) {
+    _msg =
+      "Variable 'input files sanity check' is " +
+      `undefined, setting default '${_default}'.`;
+    _msg_info(
+      _msg);
+    _input_files_sanity_check_get =
+      true;
+  }
+  else if ( _input_files_sanity_check_type == "string" ) {
+    if ( _input_files_sanity_check.length < 1 ) {
+      _msg =
+        "Variable 'input files sanity check' is " +
+        `an empty string, setting default '${_default}'.`;
+      _msg_info(
+        _msg);
+      _input_files_sanity_check_get =
+        true;
+    }
+    else {
+      if ( _input_files_sanity_check === "true" ||
+           _input_files_sanity_check === "y" ) {
+        _input_files_sanity_check =
+          true;
+      }
+      else if ( _input_files_sanity_check === "false" ||
+                _input_files_sanity_check === "n" ) {
+        _input_files_sanity_check =
+          false;
+      }
+      else {
+        _msg =
+          "Variable 'input files sanity check' " +
+          `has value '${_input_files_sanity_check}'. ` +
+          "Allowed values are 'true', 'false', 'y', 'n'.";
+        _msg_error(
+          _msg,
+          0);
+        throw _msg;
+      }
+    }
+  }
+  else if ( _input_files_sanity_check_type == "boolean" ) {
+    true;
+  }
+  else if ( _input_files_sanity_check_type == "object" ) {
+    const
+      _input_files_sanity_check_keys =
+        Object.keys(
+          _input_files_sanity_check);
+    if ( _input_files_sanity_check_keys.length < 1 ) {
+      _msg =
+        "Variable 'input files sanity check' is " +
+        `an empty object, setting default '${_default}'.`;
+      _msg_info(
+        _msg);
+      _input_files_sanity_check_get =
+        true;
+    }
+    else {
+      _msg =
+        "Variable 'input files sanity check' " +
+        `is an non-empty object. ` +
+        "Allowed values are 'true', 'false', 'y', 'n'.";
+      _msg_error(
+        _msg,
+        0);
+      throw _msg;
+    }
+  }
+  else {
+    _msg =
+      "Variable 'input files sanity check' " +
+      `has type '${_input_files_sanity_check_type}'. ` +
+      "It should have type 'string' and its allowed " +
+      "values are 'true', 'false', 'y', 'n'.";
+    _msg_error(
+      _msg,
+      0);
+    throw _msg;
+  }
+  if ( _input_files_sanity_check_get ) {
+    _input_files_sanity_check =
+      _default;
+  }
+  return _input_files_sanity_check;
+}
+
+function
+  _encoding_format_check(
+    _encoding_format) {
+  let
+    _encoding_format_get,
+    _msg;
+  _encoding_format_get =
+    false;
+  const
+    _default =
+      "base64";
+  const
+    _encoding_format_type =
+       typeof(
+        _encoding_format);
+  if ( _encoding_format_type == "undefined" ) {
+    _msg =
+      "Variable 'encoding format' is " +
+      `undefined, setting default '${_default}'.`;
+    _msg_info(
+      _msg);
+    _encoding_format_get =
+      true;
+  }
+  else if ( _encoding_format_type == "string" ) {
+    if ( _encoding_format.length < 1 ) {
+      _msg =
+        "Variable 'encoding format' is " +
+        `an empty string, setting default '${_default}'.`;
+      _msg_info(
+        _msg);
+      _encoding_format_get =
+        true;
+    }
+    else {
+      if ( _encoding_format !== "base64" ) {
+        _msg =
+          "Variable 'encoding format' " +
+          `has value '${_encoding_format}'. ` +
+          "Allowed values are 'base64'.";
+        _msg_error(
+          _msg,
+          0);
+        throw _msg;
+      }
+    }
+  }
+  else if ( _encoding_format_type == "object" ) {
+    const
+      _encoding_format_keys =
+        Object.keys(
+          _encoding_format);
+    if ( _encoding_format_keys.length < 1 ) {
+      _msg =
+        "Variable 'encoding format' is " +
+        `an empty object, setting default '${_default}'.`;
+      _msg_info(
+        _msg);
+      _encoding_format_get =
+        true;
+    }
+    else {
+      _msg =
+        "Variable 'encoding format' " +
+        `is an non-empty object. ` +
+        "Allowed values are 'base64'.";
+      _msg_error(
+        _msg,
+        0);
+      throw _msg;
+    }
+  }
+  else {
+    _msg =
+      "Variable 'encoding format' " +
+      `has type '${_encoding_format_type}'. ` +
+      "It should have type 'string' and its allowed " +
+      "values are 'base64'.";
+    _msg_error(
+      _msg,
+      0);
+    throw _msg;
+  }
+  if ( _encoding_format_get ) {
+    _encoding_format =
+      _default;
+  }
+  return _encoding_format;
+}
+
 async function
   _txt2bin(
     _output_file,
@@ -300,19 +557,71 @@ async function
     _encoding_type,
     _input_files,
     _input_files_sanity_check) {
+  let
+    _decoded;
   const
-    _input_files_sanity_check_type =
-      typeof(
-        _input_files_sanity_check);
-  if ( _input_files_sanity_check_type == "undefined" ||
-         _input_files_sanity_check == "" ||
-         _input_files_sanity_check == "true" ) {
-    _input_files_sanity_check =
-      true;
+    _argument_type_check_args = [
+      _argument_type
+    ];
+  try {
+    _argument_type =
+      _argument_type_check.apply(
+        null,
+        _argument_type_check_args);
   }
-  if ( _input_files_sanity_check == "false" ) {
+  catch(
+    _error) {
+    _msg =
+      "Error running '_argument_type_check' with " +
+      `argument '${_argument_type_check_args}'.`;
+    _msg_error(
+      _msg,
+      0);
+    _echo2(
+      _error);
+    throw _error;
+  }
+  const
+    _input_files_sanity_check_check_args = [
+      _input_files_sanity_check
+    ];
+  try {
     _input_files_sanity_check =
-      false;
+      _input_files_sanity_check_check.apply(
+        null,
+        _input_files_sanity_check_args);
+  }
+  catch(
+    _error) {
+    _msg =
+      "Error running '_input_files_sanity_check'.";
+    _msg_error(
+      _msg,
+      0);
+    _echo2(
+      _error);
+    throw _error;
+  }
+  const
+    _encoding_format_check_args = [
+      _encoding_format
+    ];
+  try {
+    _encoding_format =
+      _encoding_format_check.apply(
+        null,
+        _encoding_format_check_args);
+  }
+  catch(
+    _error) {
+    _msg =
+      "Error running '_encoding_format_check'.";
+    _msg_error(
+      _msg,
+      0);
+    _echo2(
+      _error);
+    throw _error;
   }
   if ( _argument_type == "list" ) {
     const
@@ -328,18 +637,36 @@ async function
     _input_texts_check(
       _input_files);
   }
-  _output_file_check(
-    _output_file);
-  if ( _encoding_format == "base64" ) {
-    const
-      _decoded =
-        await _base64_decode(
-          _output_file,
-          _input_files,
-          _argument_type,
-          _encoding_type);
-    return _decoded;
+  const
+    _output_file_check_args = [
+      _output_file
+    ];
+  try {
+    _output_file =
+      _output_file_check.apply(
+        null,
+        _output_file_check_args);
   }
+  catch(
+    _error) {
+    _msg =
+      "Error running '_output_file_check'.";
+    _msg_error(
+      _msg,
+      0);
+    _echo2(
+      _error);
+    throw _error;
+  }
+  if ( _encoding_format == "base64" ) {
+    _decoded =
+      await _base64_decode(
+        _output_file,
+        _input_files,
+        _argument_type,
+        _encoding_type);
+  }
+  return _decoded;
 }
 
 // ES6 Modules exports
