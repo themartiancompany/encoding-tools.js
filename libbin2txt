@@ -208,9 +208,10 @@ function
     }
   }
   else if ( _buffer_size_bytes_type === "object" ) {
-    _buffer_size_bytes_keys =
-      Object.keys(
-        _buffer_size_bytes);
+    const
+      _buffer_size_bytes_keys =
+        Object.keys(
+          _buffer_size_bytes);
     if ( _buffer_size_bytes_keys.length < 0 ) {
       _msg =
         "Buffer size variable is an empty object, " +
