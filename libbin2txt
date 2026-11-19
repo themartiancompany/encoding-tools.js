@@ -161,6 +161,82 @@ const
   _split =
     _tmcsplit._split;
 
+function
+  _buffer_size_bytes_check(
+    _buffer_size_bytes) {
+  let
+    _buffer_size_bytes_get,
+    _msg;
+  const
+    _buffer_size_bytes_type =
+      typeof(
+        _buffer_size_bytes);
+  const
+    _default =
+      "2000000"; // 2MB
+  _buffer_size_bytes_get =
+    false;
+  if ( _buffer_size_bytes_type === "undefined" ) {
+    _msg =
+      "Buffer size variable is undefined, " +
+      `setting default (${_default}).`;
+    _msg_info(
+      _msg);
+    _buffer_size_bytes_get =
+      true;
+  }
+  else if ( _buffer_size_bytes_type === "string" ) {
+    if ( _buffer_size_bytes.length < 1 ) {
+      _msg =
+        "Buffer size variable is an empty string, " +
+        `setting default (${_default}).`;
+      _msg_info(
+        _msg);
+      _buffer_size_bytes_get =
+        true;
+    }
+  }
+  else if ( _buffer_size_bytes_type === "number" ) {
+    if ( _buffer_size_bytes < 0 ) {
+      _msg =
+        "Buffer size variable is a negative number, " +
+        `setting default (${_default}).`;
+      _msg_info(
+        _msg);
+      _buffer_size_bytes_get =
+        true;
+    }
+  }
+  else if ( _buffer_size_bytes_type === "object" ) {
+    _buffer_size_bytes_keys =
+      Object.keys(
+        _buffer_size_bytes);
+    if ( _buffer_size_bytes_keys.length < 0 ) {
+      _msg =
+        "Buffer size variable is an empty object, " +
+        `setting default (${_default}).`;
+      _msg_info(
+        _msg);
+      _buffer_size_bytes_get =
+        true;
+    }
+  }
+  else {
+    _msg =
+      "Buffer size variable has type " +
+      `${_buffer_size_bytes_type}, but it should be a number.`;
+    _msg_error(
+      _msg,
+      0);
+    throw _msg;
+  }
+  if ( _buffer_size_bytes_get ) {
+    _buffer_size_bytes =
+      _default;
+  }
+  return _buffer_size_bytes;
+}
+
 async function
   _buffer_prepare(
     _in,
@@ -585,6 +661,20 @@ async function
     _chunks_files_new,
     _msg,
     _worker;
+  try {
+    _buffer_size_bytes =
+      _buffer_size_bytes_check(
+        _buffer_size_bytes);
+  }
+  catch(
+    _error) {
+    _msg =
+      "Error running '_buffer_size_bytes_check'.";
+    _msg_error(
+      _msg,
+      0);
+    throw _msg;
+  }
   _chunks_files =
     [];
   const
