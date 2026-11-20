@@ -2,7 +2,7 @@
   "name":
     "encoding-tools",
   "version":
-    "0.0.31",
+    "0.0.32",
   "description":
     "A multi-language collection of encoding tools.",
   "funding": {
@@ -63,7 +63,7 @@
     "compression":
       "^1.8.2",
     "crash-js-webpack":
-      "^0.0.86",
+      "^0.0.88",
     "flatted":
       "3.4.4",
     "eslint":
@@ -75,7 +75,7 @@
     "minimatch":
       "^11.0.4",
     "safely-serve":
-      "^0.0.25",
+      "^0.0.26",
     "stream-browserify":
       "^3.0.0",
     "webpack":
@@ -91,7 +91,7 @@
     "tmcfs":
       "npm:@themartiancompany/fs@^0.0.31",
     "tmcsplit":
-      "^0.0.21",
+      "^0.0.24",
     "yargs":
       "18.0.0"
   },
