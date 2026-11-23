@@ -55,6 +55,11 @@ const
   _echo2 =
     _libcrash._echo2;
 /* global
+     _exit */
+const
+  _exit =
+    _libcrash._exit;
+/* global
      _error_display */
 const
   _error_display =
@@ -529,6 +534,15 @@ async function
             `${_cut}\n`);
             // _cut);
         }
+      }
+      if ( _chunk_current > 10 ) {
+        _msg =
+          "Debug exit.";
+        _msg_error(
+          _msg,
+          0);
+        _exit(
+          1);
       }
     }
     _chunk_current =
