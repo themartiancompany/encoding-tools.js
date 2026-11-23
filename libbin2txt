@@ -424,6 +424,8 @@ async function
     _block_last) {
   let
     _chunk,
+    _chunk_actual_start, // debug var
+    _what_the,           // debug var
     _chunk_start,
     _cut,
     _msg,
@@ -478,6 +480,21 @@ async function
     for ( _chunk of _seq(
                       _chunk_current + 1,
                       _chunks) ) {
+      _msg =
+        `Current chunk: ${_chunk_current}`;
+      _msg_info(
+        _msg);
+      _chunk_actual_start =
+        _chunk - _chunk_current;
+      _msg =
+        `Chunk actual start: ${_chunk_actual_start}`;
+      _what_the =
+        _chunk_actual_start * _length;
+      _msg =
+        "Javascript and types, yet again:" +
+        `${_what_the}.`;
+      _msg_info(
+        _msg);
       _chunk_start =
         ( ( _chunk -
             _chunk_current ) *
@@ -513,9 +530,13 @@ async function
       _chunks_files.push(
         _out);
       if ( _chunk < _chunks ) {
-        _file_write(
-          _out,
-          _cut);
+        _msg =
+          "fake write";
+        _msg_info(
+          _msg);
+        // _file_write(
+        //   _out,
+        //   _cut);
       }
       else if ( _chunk == _chunks ) {
         if ( _block_last == "true" ) {
@@ -535,7 +556,7 @@ async function
             // _cut);
         }
       }
-      if ( _chunk_current > 10 ) {
+      if ( _chunk > 10 ) {
         _msg =
           "Debug exit.";
         _msg_error(
