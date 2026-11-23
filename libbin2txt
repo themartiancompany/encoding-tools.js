@@ -303,6 +303,7 @@ async function
     _file,
     _encoding_type) {
   let
+    _content,
     _encoding_type_get,
     _msg,
     _string;
@@ -344,7 +345,7 @@ async function
   }
   if ( _encoding_type_get ) {
     _encoding_type =
-      "memory";
+      "stream";
   }
   if ( _encoding_type == "stream" ) {
     const
@@ -384,11 +385,10 @@ async function
           null,
         "flag":
           "r"};
-    const
-      _content =
-        _cat(
-          _file,
-          _cat_opts);
+    _content =
+      _cat(
+        _file,
+        _cat_opts);
     if ( typeof window === 'undefined' &&
          ( typeof global !== 'undefined' &&
            global.global === global ) &&
@@ -420,7 +420,6 @@ async function
   let
     _chunk,
     _chunk_start,
-    _content,
     _cut,
     _msg,
     _out;
@@ -443,11 +442,11 @@ async function
     _quiet =
       _global[
         "quiet"];
-  if ( _quiet == "n" ) {
-    _echo(
-      "prefix",
-      _prefix);
-  }
+  // if ( _quiet == "n" ) {
+  //   _echo(
+  //     "prefix",
+  //     _prefix);
+  // }
   if ( _chunks < 2 ) {
     _out =
       _prefix;
@@ -479,10 +478,26 @@ async function
             _chunk_current ) *
           _length ) -
         _length;
+      _msg =
+        "This cut should be long " +
+        String(
+          _chunk_start + _length - _chunk_start);
+      _msg_info(
+        _msg);
       _cut =
         _in.substring(
           _chunk_start,
           _chunk_start + _length);
+      _msg =
+        "Yet this cut is long " +
+        String(
+          _cut.length);
+      _msg_info(
+        _msg);
+      // _cut =
+      //   _in.substring(
+      //     _chunk_start,
+      //     _length);
       _out =
         `${_prefix}.${_chunk}`;
       _msg =
@@ -549,9 +564,11 @@ async function
       await _base64_block_encode(
         _block,
         _encoding_type);
-  _msg =
-    `Block '${_block}' encoded ` +
-    `length: ${_txt.length}.`;
+  // _echo(
+  //   _txt);
+  // _msg =
+  //   `Block '${_block}' encoded ` +
+  //   `length: ${_txt.length}.`;
   _msg_info(
     _msg);
   if ( _amount_only === "false" ||
