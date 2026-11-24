@@ -451,7 +451,7 @@ function
         _msg);
       try {
         _length =
-          String(
+          Number(
             _length);
       }
       catch(
@@ -464,6 +464,7 @@ function
         _echo2(
           _error);
         throw _error; 
+      }
     }
   }
   else if ( _length_type === "object" ) {
