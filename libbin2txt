@@ -178,7 +178,7 @@ function
         _buffer_size_bytes);
   const
     _default =
-      "2000000"; // 2MB
+      2000000; // 2MB
   _buffer_size_bytes_get =
     false;
   if ( _buffer_size_bytes_type === "undefined" ) {
@@ -199,6 +199,30 @@ function
         _msg);
       _buffer_size_bytes_get =
         true;
+    }
+    else {
+      _msg =
+        `Buffer size variable '${_buffer_size_bytes}' ` +
+        "is a string, converting to a number.";
+      _msg_info(
+        _msg);
+      try {
+        _buffer_size_bytes =
+          Number(
+            _buffer_size);
+      }
+      catch(
+        _error) {
+        _msg =
+          "Error converting buffer size variable " +
+          "into a number.";
+        _msg_error(
+          _msg,
+          0);
+        echo2(
+          _error);
+        throw _error;
+      }
     }
   }
   else if ( _buffer_size_bytes_type === "number" ) {
@@ -582,46 +606,16 @@ async function
     for ( _chunk of _seq(
                       _chunk_current + 1,
                       _chunks) ) {
-      _msg =
-        `Current chunk: ${_chunk_current}`;
-      _msg_info(
-        _msg);
       _chunk_actual_start =
         _chunk - _chunk_current;
-      _msg =
-        `Chunk actual start: ${_chunk_actual_start}`;
-      _msg_info(
-        _msg);
       _what_the =
         _chunk_actual_start * _length;
-      _msg =
-        "Javascript and types, yet again:" +
-        `${_what_the}.`;
-      _msg_info(
-        _msg);
       _chunk_start =
         _what_the - _length;
-      _echo(
-        typeof(_length));
-      _msg =
-        "This cut should be long " +
-          _chunk_start + _length - _chunk_start;
-      _msg_info(
-        _msg);
       _cut =
         _in.substring(
           _chunk_start,
           _chunk_start + _length);
-      _msg =
-        "Yet this cut is long " +
-        String(
-          _cut.length);
-      _msg_info(
-        _msg);
-      // _cut =
-      //   _in.substring(
-      //     _chunk_start,
-      //     _length);
       _out =
         `${_prefix}.${_chunk}`;
       _msg =
