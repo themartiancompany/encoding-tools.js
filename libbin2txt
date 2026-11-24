@@ -626,13 +626,9 @@ async function
       _chunks_files.push(
         _out);
       if ( _chunk < _chunks ) {
-        _msg =
-          "fake write";
-        _msg_info(
-          _msg);
-        // _file_write(
-        //   _out,
-        //   _cut);
+        _file_write(
+          _out,
+          _cut);
       }
       else if ( _chunk == _chunks ) {
         if ( _block_last == "true" ) {
