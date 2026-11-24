@@ -418,6 +418,102 @@ async function
 function
   _length_check(
     _length) {
+  let
+    _msg;
+  const
+    _length_type =
+      typeof(
+        _length);
+  if ( _length_type === "undefined" ) {
+    _msg =
+      "Length is undefined but " +
+      "it should be a positive number.";
+    _msg_error(
+      _msg,
+      0);
+    throw _msg;
+  }
+  else if ( _length_type === "string" ) {
+    if ( _length.length < 1 ) {
+      _msg =
+        "Length is an empty string but " +
+        "it should be a positive number.";
+      _msg_error(
+        _msg,
+        0);
+      throw _msg;
+    }
+    else {
+      _msg =
+        `Length '${_length}' is a string, converting ` +
+        "to number.";
+      _msg_info(
+        _msg);
+      try {
+        _length =
+          String(
+            _length);
+      }
+      catch(
+        _error) {
+        _msg =
+          "Error converting length string into a number.";
+        _msg_error(
+          _msg,
+          0);
+        _echo2(
+          _error);
+        throw _error; 
+    }
+  }
+  else if ( _length_type === "object" ) {
+    if ( _length === null ) {
+      _msg =
+        "Length is null but " +
+        "it should be a positive number.";
+      _msg_error(
+        _msg,
+        0);
+      throw _msg;
+    }
+    else {
+      _length_keys =
+        Object.keys(
+          _length);
+      if ( _length_keys.length < 1 ) {
+        _msg =
+          "Length is an empty object but " +
+          "it should be a positive number.";
+        _msg_error(
+          _msg,
+          0);
+        throw _msg;
+      }
+    }
+  }
+  else if ( _length_type === "number" ) {
+    true;
+  }
+  else {
+    _msg =
+      "Length has type " +
+      `'${_length_type}' but it should be ` +
+      "a positive number.";
+    _msg_error(
+      _msg,
+      0);
+    throw _msg;
+  }
+  if ( _length < 1 ) {
+    _msg =
+      "Length should be a positive number " +
+      `(current value: '${_length}').`;
+    _msg_error(
+      _msg,
+      0);
+    throw _msg;
+  }
+  return _length;
 }
 
 async function
@@ -719,6 +815,22 @@ async function
     _chunks_files_new,
     _msg,
     _worker;
+  try {
+    _length =
+      _length_check(
+        _length);
+  }
+  catch(
+    _error) {
+    _msg =
+      "Error checking length."
+    _msg_error(
+      _msg,
+      0);
+    _echo2(
+      _error);
+    throw _error;
+  }
   try {
     _buffer_size_bytes =
       _buffer_size_bytes_check(
