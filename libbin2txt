@@ -648,15 +648,6 @@ async function
             // _cut);
         }
       }
-      if ( _chunk > 10 ) {
-        _msg =
-          "Debug exit.";
-        _msg_error(
-          _msg,
-          0);
-        _exit(
-          1);
-      }
     }
     _chunk_current =
       _chunks;
