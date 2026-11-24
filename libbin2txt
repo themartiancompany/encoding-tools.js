@@ -209,7 +209,7 @@ function
       try {
         _buffer_size_bytes =
           Number(
-            _buffer_size);
+            _buffer_size_bytes);
       }
       catch(
         _error) {
