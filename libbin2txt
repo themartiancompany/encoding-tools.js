@@ -226,9 +226,9 @@ function
     }
   }
   else if ( _buffer_size_bytes_type === "number" ) {
-    if ( _buffer_size_bytes < 0 ) {
+    if ( _buffer_size_bytes < 1 ) {
       _msg =
-        "Buffer size variable is a negative number, " +
+        "Buffer size variable is not a positive number, " +
         `setting default (${_default}).`;
       _msg_info(
         _msg);
