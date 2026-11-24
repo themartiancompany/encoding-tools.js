@@ -415,6 +415,11 @@ async function
   return _string;
 }
 
+function
+  _length_check(
+    _length) {
+}
+
 async function
   _chunk_split(
     _in,
@@ -488,6 +493,8 @@ async function
         _chunk - _chunk_current;
       _msg =
         `Chunk actual start: ${_chunk_actual_start}`;
+      _msg_info(
+        _msg);
       _what_the =
         _chunk_actual_start * _length;
       _msg =
@@ -496,14 +503,12 @@ async function
       _msg_info(
         _msg);
       _chunk_start =
-        ( ( _chunk -
-            _chunk_current ) *
-          _length ) -
-        _length;
+        _what_the - _length;
+      _echo(
+        typeof(_length));
       _msg =
         "This cut should be long " +
-        String(
-          _chunk_start + _length - _chunk_start);
+          _chunk_start + _length - _chunk_start;
       _msg_info(
         _msg);
       _cut =
